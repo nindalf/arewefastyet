@@ -1,0 +1,10 @@
+[
+    {
+        "name": "ripgrep",
+        "url": "https://github.com/burntsushi/ripgrep",
+        "touch_file": "crates/core/main.rs",
+        "commit_hash": "3193d57",
+        "min_version": "V1_34",
+        "max_version": "V1_42"
+    }
+]
