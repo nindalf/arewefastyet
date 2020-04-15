@@ -1,22 +1,21 @@
-
-use std::process::Command;
+use crate::repo::{Mode, Repo, Version};
 use std::collections::HashMap;
-use crate::repo::{Version, Repo, Mode};
+use std::process::Command;
 
 pub(crate) fn create_working_directory() {
     println!("Creating working directory");
     let home = dirs::home_dir().unwrap();
     let working_dir = home.join("arewefast-workdir");
-        
+
     let res = std::fs::create_dir(working_dir);
     match res {
         Ok(_) => {
             println!("Successfully created working directory");
-        },
+        }
         Err(err) => {
             if err.kind() != std::io::ErrorKind::AlreadyExists {
                 panic!("Failed to create directory");
-            } 
+            }
         }
     }
 }
@@ -39,7 +38,7 @@ pub(crate) fn clone_repo(repo: &Repo) {
             println!("Failed to clone repo {}. Stderr - {}", &repo.name, stderr);
         }
     }
-    
+
     Command::new("git")
         .current_dir(&path)
         .args(&["checkout", &repo.commit_hash])
@@ -47,32 +46,39 @@ pub(crate) fn clone_repo(repo: &Repo) {
         .expect("failed to git checkout");
 }
 
-pub(crate) fn benchmark(repo: &Repo, version: Version) ->  HashMap<Mode, String> {
+pub(crate) fn benchmark(repo: &Repo, version: Version) -> HashMap<Mode, Vec<String>> {
     download_toolchain(version);
     switch_toolchain(version);
     cargo_check(repo); // download dependencies
     remove_target_folder(repo);
     let mut results = HashMap::new();
+    let times = 10;
 
-    let check_first = cargo_check(repo);
-    results.insert(Mode::Check, check_first);
-    touch_src(repo);
-    let check_incremental = cargo_check(repo);
-    results.insert(Mode::CheckIncremental, check_incremental);
+    let (base, incremental) = repeat(cargo_check, repo, times);
+    results.insert(Mode::Check, base);
+    results.insert(Mode::CheckIncremental, incremental);
 
-    let debug_first = cargo_debug(repo);
-    results.insert(Mode::Debug, debug_first);
-    touch_src(repo);
-    let debug_incremental = cargo_debug(repo);
-    results.insert(Mode::DebugIncremental, debug_incremental);
+    let (base, incremental) = repeat(cargo_debug, repo, times);
+    results.insert(Mode::Debug, base);
+    results.insert(Mode::DebugIncremental, incremental);
 
-    let release_first = cargo_release(repo);
-    results.insert(Mode::Release, release_first);
-    touch_src(repo);
-    let release_incremental = cargo_release(repo);
-    results.insert(Mode::ReleaseIncremental, release_incremental);
+    let (base, incremental) = repeat(cargo_release, repo, times);
+    results.insert(Mode::Release, base);
+    results.insert(Mode::ReleaseIncremental, incremental);
 
     results
+}
+
+fn repeat(f: fn(&Repo) -> String, repo: &Repo, times: u32) -> (Vec<String>, Vec<String>) {
+    let mut result_base = Vec::new();
+    let mut result_incremental = Vec::new();
+    for _ in 0..times {
+        remove_target_folder(repo);
+        result_base.push(f(repo));
+        touch_src(repo);
+        result_incremental.push(f(repo));
+    }
+    (result_base, result_incremental)
 }
 
 fn cargo_check(repo: &Repo) -> String {
@@ -120,6 +126,7 @@ fn remove_target_folder(repo: &Repo) {
     let path = repo.get_target_directory();
     if !std::path::Path::new(&path).exists() {
         println!("Directory {} doesn't exist. Skipping delete", &path);
+        return;
     }
     std::fs::remove_dir_all(path).unwrap();
 }
@@ -142,7 +149,10 @@ fn download_toolchain(version: Version) {
         println!("Successfully downloaded toolchain {}.", version);
     } else {
         let stderr = std::str::from_utf8(&output.stderr).expect("failed to decode output");
-        println!("Failed to download toolchain {}. Stderr - {}", version, stderr);
+        println!(
+            "Failed to download toolchain {}. Stderr - {}",
+            version, stderr
+        );
     }
 }
 
@@ -157,7 +167,10 @@ fn switch_toolchain(version: Version) {
         println!("Successfully switched toolchain {}.", version);
     } else {
         let stderr = std::str::from_utf8(&output.stderr).expect("failed to decode output");
-        println!("Failed to switch toolchain {}. Stderr - {}", version, stderr);
+        println!(
+            "Failed to switch toolchain {}. Stderr - {}",
+            version, stderr
+        );
     }
 }
 

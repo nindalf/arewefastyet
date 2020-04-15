@@ -1,0 +1,42 @@
+[
+    {
+        "name": "ripgrep",
+        "url": "https://github.com/burntsushi/ripgrep",
+        "touch_file": "crates/core/main.rs",
+        "commit_hash": "3193d57",
+        "min_version": "V1_34",
+        "max_version": "V1_42"
+    },
+    {
+        "name": "cargo",
+        "url": "https://github.com/rust-lang/cargo",
+        "touch_file": "src/cargo/lib.rs",
+        "commit_hash": "74e3a7d",
+        "min_version": "V1_34",
+        "max_version": "V1_42"
+    },
+    {
+        "name": "syn",
+        "url": "https://github.com/dtolnay/syn",
+        "touch_file": "src/lib.rs",
+        "commit_hash": "4104331",
+        "min_version": "V1_34",
+        "max_version": "V1_42"
+    },
+    {
+        "name": "regex",
+        "url": "https://github.com/rust-lang/regex",
+        "touch_file": "src/lib.rs",
+        "commit_hash": "3221cdb",
+        "min_version": "V1_34",
+        "max_version": "V1_42"
+    },
+    {
+        "name": "helloworld",
+        "url": "https://github.com/nindalf/helloworld",
+        "touch_file": "src/main.rs",
+        "commit_hash": "0ee163a",
+        "min_version": "V1_34",
+        "max_version": "V1_42"
+    }
+]
