@@ -1,16 +1,20 @@
-mod command;
+mod cargo;
 mod repo;
+mod rustup;
+
+static TIMES: u32 = 10;
 
 fn main() -> Result<(), &'static str> {
-    command::set_profile_minimal();
-    command::create_working_directory();
+    rustup::set_profile_minimal();
+    repo::create_working_directory();
     let repos = repo::get_repos("data/repos.json")?;
     let mut results: Vec<repo::Perf> = Vec::new();
     for repo in &repos {
-        command::clone_repo(repo);
+        repo.clone_repo();
         let mut perf = repo::Perf::new(repo.clone());
         for version in repo.supported_versions() {
-            let bench = command::benchmark(repo, version);
+            rustup::set_version(version);
+            let bench = cargo::benchmark(repo, TIMES);
             perf.add_bench(version, bench);
         }
         results.push(perf);

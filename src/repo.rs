@@ -2,13 +2,18 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
 use std::fs::File;
+use std::process::Command;
+
+use crate::cargo::Mode;
+use crate::rustup::Version;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub(crate) struct Repo {
     pub name: String,
-    pub url: String,
+    sub_directory: String,
+    url: String,
     touch_file: String,
-    pub commit_hash: String,
+    commit_hash: String,
     min_version: Version,
     max_version: Version,
 }
@@ -52,16 +57,58 @@ impl Perf {
 }
 
 impl Repo {
+    pub(crate) fn clone_repo(self: &Repo) {
+        let path = self.get_base_directory();
+        if !std::path::Path::new(&path).exists() {
+            println!("Cloning {}", &self.name);
+            let output = Command::new("git")
+                .current_dir("/home/nindalf/arewefast-workdir")
+                .args(&["clone", &self.url])
+                .output()
+                .expect("failed to git clone");
+            if output.status.success() {
+                println!("Successfully cloned repo {}", &self.name);
+            } else {
+                let stderr = std::str::from_utf8(&output.stderr).expect("failed to decode output");
+                println!("Failed to clone repo {}. Stderr - {}", &self.name, stderr);
+                return;
+            }
+        }
+
+        Command::new("git")
+            .current_dir(&path)
+            .args(&["checkout", &self.commit_hash])
+            .output()
+            .expect("failed to git checkout");
+    }
+
+    pub(crate) fn remove_target_folder(self: &Repo) {
+        let path = self.get_target_directory();
+        if !std::path::Path::new(&path).exists() {
+            println!("Directory {} doesn't exist. Skipping delete", &path);
+            return;
+        }
+        std::fs::remove_dir_all(path).unwrap();
+    }
+
+    pub(crate) fn touch_src(self: &Repo) {
+        Command::new("touch")
+            .args(&[self.get_touch_file()])
+            .output()
+            .expect("failed to execute touch");
+    }
+
     pub(crate) fn get_base_directory(self: &Repo) -> String {
         let home = dirs::home_dir().unwrap();
         home.join("arewefast-workdir")
             .join(&self.name)
+            .join(&self.sub_directory)
             .to_str()
             .unwrap()
             .to_string()
     }
 
-    pub(crate) fn get_target_directory(self: &Repo) -> String {
+    fn get_target_directory(self: &Repo) -> String {
         let home = dirs::home_dir().unwrap();
         home.join("arewefast-workdir")
             .join(&self.name)
@@ -71,10 +118,11 @@ impl Repo {
             .to_string()
     }
 
-    pub(crate) fn get_touch_file(self: &Repo) -> String {
+    fn get_touch_file(self: &Repo) -> String {
         let home = dirs::home_dir().unwrap();
         home.join("arewefast-workdir")
             .join(&self.name)
+            .join(&self.sub_directory)
             .join(&self.touch_file)
             .to_str()
             .unwrap()
@@ -82,6 +130,8 @@ impl Repo {
     }
 
     pub(crate) fn supported_versions(self: &Repo) -> Vec<Version> {
+        let min = self.min_version as u8;
+        let max = self.max_version as u8;
         vec![
             Version::V1_34,
             Version::V1_35,
@@ -92,47 +142,29 @@ impl Repo {
             Version::V1_40,
             Version::V1_41,
             Version::V1_42,
-        ]
+        ].iter()
+        .map(|v| *v)
+        .filter(|v| *v as u8 >= min && *v as u8 <= max)
+        .collect()
     }
 }
 
-#[derive(Debug, Copy, Clone, Hash, Serialize, Deserialize, Eq, PartialEq)]
-pub(crate) enum Version {
-    V1_34,
-    V1_35,
-    V1_36,
-    V1_37,
-    V1_38,
-    V1_39,
-    V1_40,
-    V1_41,
-    V1_42,
-}
+pub(crate) fn create_working_directory() {
+    println!("Creating working directory");
+    let home = dirs::home_dir().unwrap();
+    let working_dir = home.join("arewefast-workdir");
 
-impl Version {
-    pub(crate) fn get_string(self: Self) -> &'static str {
-        match self {
-            Version::V1_34 => "1.34.0",
-            Version::V1_35 => "1.35.0",
-            Version::V1_36 => "1.36.0",
-            Version::V1_37 => "1.37.0",
-            Version::V1_38 => "1.38.0",
-            Version::V1_39 => "1.39.0",
-            Version::V1_40 => "1.40.0",
-            Version::V1_41 => "1.41.0",
-            Version::V1_42 => "1.42.0",
+    let res = std::fs::create_dir(working_dir);
+    match res {
+        Ok(_) => {
+            println!("Successfully created working directory");
+        }
+        Err(err) => {
+            if err.kind() != std::io::ErrorKind::AlreadyExists {
+                panic!("Failed to create directory");
+            }
         }
     }
-}
-
-#[derive(Debug, Copy, Clone, Hash, Serialize, Deserialize, Eq, PartialEq)]
-pub(crate) enum Mode {
-    Check,
-    CheckIncremental,
-    Debug,
-    DebugIncremental,
-    Release,
-    ReleaseIncremental,
 }
 
 pub(crate) fn get_repos(repo_file: &str) -> Result<Vec<Repo>, &'static str> {
