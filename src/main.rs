@@ -49,21 +49,24 @@ fn get_arg<'a>(matches: &'a ArgMatches<'a>, arg: &str) -> Result<&'a str> {
 }
 
 fn main() -> Result<()> {
-    rustup::set_profile_minimal();
+    rustup::set_profile_minimal()?;
 
     let matches = get_clap_app().get_matches();
+
     let working_directory = get_arg(&matches, "dir")?;
     repo::create_working_directory(working_directory)?;
 
     let repos_file = get_arg(&matches, "repos")?;
     let repos = repo::get_repos(repos_file)?;
-    let mut results: Vec<repo::Perf> = Vec::new();
+
     let times = u32::from_str(get_arg(&matches, "times")?)?;
+
+    let mut results: Vec<repo::Perf> = Vec::new();
     for repo in &repos {
         repo.clone_repo()?;
         let mut perf = repo::Perf::new(repo.clone());
         for version in repo.supported_versions() {
-            rustup::set_version(version);
+            rustup::set_version(version)?;
             let bench = cargo::benchmark(repo, times)?;
             perf.add_bench(version, bench);
         }

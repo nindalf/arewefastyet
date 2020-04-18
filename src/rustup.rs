@@ -16,7 +16,7 @@ pub(crate) enum Version {
 }
 
 impl Version {
-    pub(crate) fn get_string(self: Self) -> &'static str {
+    pub fn get_string(self: Self) -> &'static str {
         match self {
             Version::V1_34 => "1.34.0",
             Version::V1_35 => "1.35.0",
@@ -31,50 +31,31 @@ impl Version {
     }
 }
 
-pub(crate) fn set_profile_minimal() {
-    println!("Setting profile to minimal");
-    let output = Command::new("rustup")
-        .args(&["set", "profile", "minimal"])
-        .output()
-        .expect("failed to execute process");
-    if output.status.success() {
-        println!("Successfully set profile");
-    } else {
-        println!("Failed to set profile");
-    }
+pub(crate) fn set_profile_minimal() -> Result<()> {
+    rustup(&["set", "profile", "minimal"])?;
+    println!("Set profile to minimal");
+    Ok(())
 }
 
-pub(crate) fn set_version(version: Version) {
-    download_toolchain(version);
-    set_toolchain(version);
-}
-
-fn download_toolchain(version: Version) {
+pub(crate) fn set_version(version: Version) -> Result<()> {
     let version = version.get_string();
-    let output = Command::new("rustup")
-        .args(&["toolchain", "install", version])
-        .output()
-        .expect("failed to execute process");
-    if !output.status.success() {
-        let stderr = std::str::from_utf8(&output.stderr).expect("failed to decode output");
-        println!(
-            "Failed to download toolchain {}. Stderr - {}",
-            version, stderr
-        );
-    }
+    rustup(&["toolchain", "install", version])?;
+    rustup(&["default", version])?;
+    println!("Switched to version {}", version);
+    Ok(())
 }
 
-fn set_toolchain(version: Version) {
-    let version = Version::get_string(version);
+fn rustup(args: &[&str]) -> Result<()> {
     let output = Command::new("rustup")
-        .args(&["default", version])
+        .args(args)
         .output()
-        .expect("failed to execute process");
+        .with_context(|| "failed to execute rustup")?;
     if !output.status.success() {
-        let stderr = std::str::from_utf8(&output.stderr).expect("failed to decode output");
-        println!(
-            "Failed to switch toolchain {}. Stderr - {}",
-            version, stderr
-        );
+        let stderr = std::str::from_utf8(&output.stderr).with_context(|| "failed to decode output")?;
+        return Err(anyhow!(
+            "Failed to execute rustup. Stderr - {}",
+            stderr
+        ));
     }
+    Ok(())
 }
