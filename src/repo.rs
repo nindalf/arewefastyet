@@ -105,38 +105,10 @@ impl Repo {
             .ok_or_else(|| anyhow!("Could not find repo dir"))?;
         if !repo_dir.exists() {
             println!("Cloning {}", &self.name);
-            let output = Command::new("git")
-                .current_dir(working_directory)
-                .args(&["clone", &self.url])
-                .output()
-                .with_context(|| "failed to execute git clone")?;
-            if !output.status.success() {
-                let stderr = std::str::from_utf8(&output.stderr)
-                    .with_context(|| "failed to decode git stderr")?;
-                return Err(anyhow!(
-                    "Failed to clone repo {}. Stderr - {}",
-                    &self.name,
-                    stderr
-                ));
-            }
+            git(&["clone", &self.url], working_directory)?;
             println!("Successfully cloned repo {}", &self.name);
         }
-
-        let output = Command::new("git")
-            .current_dir(&repo_dir)
-            .args(&["checkout", &self.commit_hash])
-            .output()
-            .with_context(|| "failed to execute git checkout")?;
-        if !output.status.success() {
-            let stderr = std::str::from_utf8(&output.stderr)
-                .with_context(|| "failed to decode git stderr")?;
-            return Err(anyhow!(
-                "Failed to git checkout. Repo - {}, commit - {}.\n Stderr - {}",
-                &self.name,
-                &self.commit_hash,
-                stderr
-            ));
-        }
+        git(&["checkout", &self.commit_hash], &repo_dir)?;
         Ok(())
     }
 
@@ -208,5 +180,23 @@ pub(crate) fn create_working_directory(working_directory: &str) -> Result<()> {
     WORKING_DIRECTORY
         .set(working_dir)
         .map_err(|_| anyhow!("Failed to set global variable"))?;
+    Ok(())
+}
+
+fn git(args: &[&str], dir: &PathBuf) -> Result<()> {
+    let output = Command::new("git")
+        .current_dir(&dir)
+        .args(args)
+        .output()
+        .with_context(|| "failed to execute git")?;
+    if !output.status.success() {
+        let stderr =
+            std::str::from_utf8(&output.stderr).with_context(|| "failed to decode git stderr")?;
+        return Err(anyhow!(
+            "Failed to execute git. Args - {:?}.\n Stderr - {}",
+            &args,
+            stderr
+        ));
+    }
     Ok(())
 }
