@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
 use std::fs::File;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::{Command, Output};
 
 use crate::cargo::Mode;
@@ -64,73 +64,85 @@ impl Perf {
 }
 
 impl Repo {
-    pub(crate) fn clone_repo(self: &Repo) {
-        let repo_path = self.get_base_directory();
+    pub(crate) fn clone_repo(self: &Repo) -> Result<Output> {
         let working_directory = WORKING_DIRECTORY
             .get()
-            .expect("Working directory not created yet");
-        if !Path::new(&repo_path).exists() {
+            .ok_or(anyhow!("Working directory not set"))?;
+        let repo_dir = self
+            .get_base_directory()
+            .ok_or(anyhow!("Could not find repo dir"))?;
+        if !repo_dir.exists() {
             println!("Cloning {}", &self.name);
             let output = Command::new("git")
                 .current_dir(working_directory)
                 .args(&["clone", &self.url])
                 .output()
-                .expect("failed to git clone");
+                .with_context(|| "failed to execute git clone")?;
             if output.status.success() {
                 println!("Successfully cloned repo {}", &self.name);
             } else {
-                let stderr = std::str::from_utf8(&output.stderr).expect("failed to decode output");
-                println!("Failed to clone repo {}. Stderr - {}", &self.name, stderr);
-                return;
+                let stderr = std::str::from_utf8(&output.stderr)
+                    .with_context(|| "failed to decode command output")?;
+                return Err(anyhow!(
+                    "Failed to clone repo {}. Stderr - {}",
+                    &self.name,
+                    stderr
+                ));
             }
         }
 
         Command::new("git")
-            .current_dir(&repo_path)
+            .current_dir(&repo_dir)
             .args(&["checkout", &self.commit_hash])
             .output()
-            .expect("failed to git checkout");
+            .with_context(|| "failed to git checkout")
     }
 
-    pub(crate) fn remove_target_folder(self: &Repo) {
-        let path = self.get_target_directory();
-        if !path.exists() {
-            println!("Directory {:?} doesn't exist. Skipping delete", &path);
-            return;
+    pub(crate) fn remove_target_dir(self: &Repo) -> Result<()> {
+        let target_dir = self
+            .get_target_directory()
+            .ok_or(anyhow!("Could not find target directory"))?;
+        if !target_dir.exists() {
+            println!("Directory {:?} doesn't exist. Skipping delete", &target_dir);
+            return Ok(());
         }
-        std::fs::remove_dir_all(path).unwrap();
+        std::fs::remove_dir_all(target_dir).with_context(|| "failed to remove target directory")
     }
 
-    pub(crate) fn touch_src(self: &Repo) {
+    pub(crate) fn touch_src(self: &Repo) -> Result<Output> {
+        let touch_file = self
+            .get_touch_file()
+            .ok_or(anyhow!("Could not find touch file"))?;
+        if !touch_file.exists() {
+            return Err(anyhow!("Touch file does not exist"));
+        }
         Command::new("touch")
-            .args(&[self.get_touch_file()])
+            .args(&[touch_file])
             .output()
-            .expect("failed to execute touch");
+            .with_context(|| "failed to execute touch")
     }
 
-    pub(crate) fn get_base_directory(self: &Repo) -> PathBuf {
-        WORKING_DIRECTORY
-            .get()
-            .expect("Working directory not created yet")
-            .join(&self.name)
-            .join(&self.sub_directory)
+    pub(crate) fn get_base_directory(self: &Repo) -> Option<PathBuf> {
+        let dir = WORKING_DIRECTORY.get()?;
+        Some(
+            dir.join(&self.name)
+                .join(&self.name)
+                .join(&self.sub_directory),
+        )
     }
 
-    fn get_target_directory(self: &Repo) -> PathBuf {
-        WORKING_DIRECTORY
-            .get()
-            .expect("Working directory not created yet")
-            .join(&self.name)
-            .join("target")
+    fn get_target_directory(self: &Repo) -> Option<PathBuf> {
+        let dir = WORKING_DIRECTORY.get()?;
+        Some(dir.join(&self.name).join(&self.name).join("target"))
     }
 
-    fn get_touch_file(self: &Repo) -> PathBuf {
-        WORKING_DIRECTORY
-            .get()
-            .expect("Working directory not created yet")
-            .join(&self.name)
-            .join(&self.sub_directory)
-            .join(&self.touch_file)
+    fn get_touch_file(self: &Repo) -> Option<PathBuf> {
+        let dir = WORKING_DIRECTORY.get()?;
+        Some(
+            dir.join(&self.name)
+                .join(&self.sub_directory)
+                .join(&self.touch_file),
+        )
     }
 
     pub(crate) fn supported_versions(self: &Repo) -> Vec<Version> {
@@ -161,8 +173,7 @@ pub(crate) fn create_working_directory(working_directory: &str) -> Result<()> {
         working_dir.push(ARE_WE_FAST_YET);
     }
     if !working_dir.exists() {
-        std::fs::create_dir(&working_dir)
-            .with_context(|| "Failed to create working directory")?;
+        std::fs::create_dir(&working_dir).with_context(|| "Failed to create working directory")?;
     }
     println!("Successfully created working directory - {:?}", working_dir);
     WORKING_DIRECTORY
@@ -172,8 +183,7 @@ pub(crate) fn create_working_directory(working_directory: &str) -> Result<()> {
 }
 
 pub(crate) fn get_repos(repo_file: &str) -> Result<Vec<Repo>> {
-    let file = File::open(repo_file)
-        .with_context(|| "Failed to open repo file")?;
+    let file = File::open(repo_file).with_context(|| "Failed to open repo file")?;
     let repos = serde_json::from_reader(file)?;
     Ok(repos)
 }

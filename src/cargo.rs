@@ -38,7 +38,7 @@ fn repeat(f: fn(&Repo) -> String, repo: &Repo, times: u32) -> (Vec<String>, Vec<
     let mut result_base = Vec::new();
     let mut result_incremental = Vec::new();
     for _ in 0..times {
-        repo.remove_target_folder();
+        repo.remove_target_dir();
         result_base.push(f(repo));
         repo.touch_src();
         result_incremental.push(f(repo));
@@ -58,19 +58,19 @@ fn cargo(dir: &PathBuf, args: &[&str]) -> String {
 
 fn cargo_check(repo: &Repo) -> String {
     println!("{} - Running cargo check", &repo.name);
-    let dir = repo.get_base_directory();
+    let dir = repo.get_base_directory().unwrap();
     cargo(&dir, &["check"])
 }
 
 fn cargo_debug(repo: &Repo) -> String {
     println!("{} - Running cargo build", &repo.name);
-    let dir = repo.get_base_directory();
+    let dir = repo.get_base_directory().unwrap();
     cargo(&dir, &["build"])
 }
 
 fn cargo_release(repo: &Repo) -> String {
     println!("{} - Running cargo release", &repo.name);
-    let dir = repo.get_base_directory();
+    let dir = repo.get_base_directory().unwrap();
     cargo(&dir, &["build", "--release"])
 }
 
