@@ -1,5 +1,6 @@
 use crate::repo::Repo;
 use std::collections::HashMap;
+use std::path::PathBuf;
 use std::process::Command;
 
 use serde::{Deserialize, Serialize};
@@ -45,7 +46,7 @@ fn repeat(f: fn(&Repo) -> String, repo: &Repo, times: u32) -> (Vec<String>, Vec<
     (result_base, result_incremental)
 }
 
-fn cargo(dir: &str, args: &[&str]) -> String {
+fn cargo(dir: &PathBuf, args: &[&str]) -> String {
     let output = Command::new("cargo")
         .current_dir(dir)
         .args(args)
