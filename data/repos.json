@@ -50,7 +50,7 @@
         "url": "https://github.com/servo/html5ever",
         "touch_file": "src/lib.rs",
         "commit_hash": "7efca84",
-        "min_version": "V1_34",
+        "min_version": "V1_36",
         "max_version": "V1_42"
     },
     {
@@ -59,7 +59,7 @@
         "url": "https://github.com/servo/webrender",
         "touch_file": "src/lib.rs",
         "commit_hash": "f5db59b",
-        "min_version": "V1_34",
+        "min_version": "V1_37",
         "max_version": "V1_42"
     },
     {
