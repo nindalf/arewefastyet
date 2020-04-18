@@ -1,4 +1,5 @@
 use crate::repo::Repo;
+use anyhow::{anyhow, Context, Result};
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::process::Command;
@@ -15,66 +16,78 @@ pub(crate) enum Mode {
     ReleaseIncremental,
 }
 
-pub(crate) fn benchmark(repo: &Repo, times: u32) -> HashMap<Mode, Vec<String>> {
-    cargo_check(repo); // download dependencies
+pub(crate) fn benchmark(repo: &Repo, times: u32) -> Result<HashMap<Mode, Vec<String>>> {
+    cargo_check(repo)?; // download dependencies
     let mut results = HashMap::new();
 
-    let (base, incremental) = repeat(cargo_check, repo, times);
+    let (base, incremental) = repeat(cargo_check, repo, times)?;
     results.insert(Mode::Check, base);
     results.insert(Mode::CheckIncremental, incremental);
 
-    let (base, incremental) = repeat(cargo_debug, repo, times);
+    let (base, incremental) = repeat(cargo_debug, repo, times)?;
     results.insert(Mode::Debug, base);
     results.insert(Mode::DebugIncremental, incremental);
 
-    let (base, incremental) = repeat(cargo_release, repo, times);
+    let (base, incremental) = repeat(cargo_release, repo, times)?;
     results.insert(Mode::Release, base);
     results.insert(Mode::ReleaseIncremental, incremental);
 
-    results
+    Ok(results)
 }
 
-fn repeat(f: fn(&Repo) -> String, repo: &Repo, times: u32) -> (Vec<String>, Vec<String>) {
+fn repeat(
+    f: fn(&Repo) -> Result<String>,
+    repo: &Repo,
+    times: u32,
+) -> Result<(Vec<String>, Vec<String>)> {
     let mut result_base = Vec::new();
     let mut result_incremental = Vec::new();
     for _ in 0..times {
-        repo.remove_target_dir();
-        result_base.push(f(repo));
-        repo.touch_src();
-        result_incremental.push(f(repo));
+        repo.remove_target_dir()?;
+        result_base.push(f(repo)?);
+        repo.touch_src()?;
+        result_incremental.push(f(repo)?);
     }
-    (result_base, result_incremental)
+    Ok((result_base, result_incremental))
 }
 
-fn cargo(dir: &PathBuf, args: &[&str]) -> String {
+fn cargo(dir: &PathBuf, args: &[&str]) -> Result<String> {
     let output = Command::new("cargo")
         .current_dir(dir)
         .args(args)
         .output()
-        .expect("failed to execute cargo");
-    let stderr = std::str::from_utf8(&output.stderr).expect("failed to decode output");
-    parse_run_time(stderr)
+        .with_context(|| "failed to execute cargo")?;
+    let stderr =
+        std::str::from_utf8(&output.stderr).with_context(|| "failed to decode stderr of cargo")?;
+    parse_run_time(stderr).ok_or(anyhow!("Failed to parse cargo output"))
 }
 
-fn cargo_check(repo: &Repo) -> String {
+fn cargo_check(repo: &Repo) -> Result<String> {
     println!("{} - Running cargo check", &repo.name);
-    let dir = repo.get_base_directory().unwrap();
+    let dir = repo
+        .get_base_directory()
+        .ok_or(anyhow!("Could not find repo dir"))?;
     cargo(&dir, &["check"])
 }
 
-fn cargo_debug(repo: &Repo) -> String {
+fn cargo_debug(repo: &Repo) -> Result<String> {
     println!("{} - Running cargo build", &repo.name);
-    let dir = repo.get_base_directory().unwrap();
+    let dir = repo
+        .get_base_directory()
+        .ok_or(anyhow!("Could not find repo dir"))?;
     cargo(&dir, &["build"])
 }
 
-fn cargo_release(repo: &Repo) -> String {
+fn cargo_release(repo: &Repo) -> Result<String> {
     println!("{} - Running cargo release", &repo.name);
-    let dir = repo.get_base_directory().unwrap();
+    let dir = repo
+        .get_base_directory()
+        .ok_or(anyhow!("Could not find repo dir"))?;
     cargo(&dir, &["build", "--release"])
 }
 
-fn parse_run_time(stderr: &str) -> String {
-    let line = stderr.lines().last().unwrap();
-    line.split("in ").last().unwrap().to_string()
+fn parse_run_time(stderr: &str) -> Option<String> {
+    let line = stderr.lines().last()?;
+    let end = line.split("in ").last()?;
+    Some(end.to_string())
 }

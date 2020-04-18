@@ -59,11 +59,11 @@ fn main() -> Result<()> {
     let mut results: Vec<repo::Perf> = Vec::new();
     let times = u32::from_str(get_arg(&matches, "times")?)?;
     for repo in &repos {
-        repo.clone_repo();
+        repo.clone_repo()?;
         let mut perf = repo::Perf::new(repo.clone());
         for version in repo.supported_versions() {
             rustup::set_version(version);
-            let bench = cargo::benchmark(repo, times);
+            let bench = cargo::benchmark(repo, times)?;
             perf.add_bench(version, bench);
         }
         results.push(perf);
