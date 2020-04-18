@@ -53,7 +53,7 @@ fn rustup(args: &[&str]) -> Result<()> {
     if !output.status.success() {
         let stderr = std::str::from_utf8(&output.stderr).with_context(|| "failed to decode output")?;
         return Err(anyhow!(
-            "Failed to execute rustup. Stderr - {}",
+            "Failed to execute rustup. Stderr - {:?}",
             stderr
         ));
     }

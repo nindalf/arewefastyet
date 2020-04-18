@@ -57,6 +57,13 @@ fn cargo(dir: &PathBuf, args: &[&str]) -> Result<String> {
         .args(args)
         .output()
         .with_context(|| "failed to execute cargo")?;
+    if !output.status.success() {
+        let stderr = std::str::from_utf8(&output.stderr).with_context(|| "failed to decode output")?;
+        return Err(anyhow!(
+            "Failed to execute cargo. Stderr - {:?}",
+            stderr
+        ));
+    }
     let stderr =
         std::str::from_utf8(&output.stderr).with_context(|| "failed to decode stderr of cargo")?;
     parse_run_time(stderr).ok_or(anyhow!("Failed to parse cargo output"))

@@ -65,7 +65,7 @@ impl Perf {
 }
 
 impl Repo {
-    pub(crate) fn clone_repo(self: &Repo) -> Result<Output> {
+    pub(crate) fn clone_repo(self: &Repo) -> Result<()> {
         let working_directory = WORKING_DIRECTORY
             .get()
             .ok_or(anyhow!("Working directory not set"))?;
@@ -79,24 +79,34 @@ impl Repo {
                 .args(&["clone", &self.url])
                 .output()
                 .with_context(|| "failed to execute git clone")?;
-            if output.status.success() {
-                println!("Successfully cloned repo {}", &self.name);
-            } else {
+            if !output.status.success() {
                 let stderr = std::str::from_utf8(&output.stderr)
-                    .with_context(|| "failed to decode git output")?;
+                    .with_context(|| "failed to decode git stderr")?;
                 return Err(anyhow!(
                     "Failed to clone repo {}. Stderr - {}",
                     &self.name,
                     stderr
                 ));
             }
+            println!("Successfully cloned repo {}", &self.name);
         }
 
-        Command::new("git")
+        let output = Command::new("git")
             .current_dir(&repo_dir)
             .args(&["checkout", &self.commit_hash])
             .output()
-            .with_context(|| "failed to git checkout")
+            .with_context(|| "failed to execute git checkout")?;
+        if !output.status.success() {
+            let stderr = std::str::from_utf8(&output.stderr)
+                .with_context(|| "failed to decode git stderr")?;
+            return Err(anyhow!(
+                "Failed to git checkout. Repo - {}, commit - {}.\n Stderr - {}",
+                &self.name,
+                &self.commit_hash,
+                stderr
+            ));
+        }
+        Ok(())
     }
 
     pub(crate) fn remove_target_dir(self: &Repo) -> Result<()> {
@@ -110,17 +120,28 @@ impl Repo {
         std::fs::remove_dir_all(target_dir).with_context(|| "failed to remove target directory")
     }
 
-    pub(crate) fn touch_src(self: &Repo) -> Result<Output> {
+    pub(crate) fn touch_src(self: &Repo) -> Result<()> {
         let touch_file = self
             .get_touch_file()
             .ok_or(anyhow!("Could not find touch file"))?;
         if !touch_file.exists() {
             return Err(anyhow!("Touch file does not exist"));
         }
-        Command::new("touch")
-            .args(&[touch_file])
+        let output = Command::new("touch")
+            .args(&[&touch_file])
             .output()
-            .with_context(|| "failed to execute touch")
+            .with_context(|| "failed to execute touch")?;
+        if !output.status.success() {
+            let stderr = std::str::from_utf8(&output.stderr)
+                .with_context(|| "failed to decode touch stderr")?;
+            return Err(anyhow!(
+                "Failed to touch file. Repo - {}, touch file - {:?}.\n Stderr - {}",
+                &self.name,
+                touch_file,
+                stderr
+            ));
+        }
+        Ok(())
     }
 
     pub(crate) fn get_base_directory(self: &Repo) -> Option<PathBuf> {
