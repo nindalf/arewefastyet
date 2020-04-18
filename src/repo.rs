@@ -83,7 +83,7 @@ impl Repo {
                 println!("Successfully cloned repo {}", &self.name);
             } else {
                 let stderr = std::str::from_utf8(&output.stderr)
-                    .with_context(|| "failed to decode command output")?;
+                    .with_context(|| "failed to decode git output")?;
                 return Err(anyhow!(
                     "Failed to clone repo {}. Stderr - {}",
                     &self.name,
@@ -125,16 +125,12 @@ impl Repo {
 
     pub(crate) fn get_base_directory(self: &Repo) -> Option<PathBuf> {
         let dir = WORKING_DIRECTORY.get()?;
-        Some(
-            dir.join(&self.name)
-                .join(&self.name)
-                .join(&self.sub_directory),
-        )
+        Some(dir.join(&self.name).join(&self.sub_directory))
     }
 
     fn get_target_directory(self: &Repo) -> Option<PathBuf> {
         let dir = WORKING_DIRECTORY.get()?;
-        Some(dir.join(&self.name).join(&self.name).join("target"))
+        Some(dir.join(&self.name).join("target"))
     }
 
     fn get_touch_file(self: &Repo) -> Option<PathBuf> {
