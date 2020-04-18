@@ -3,11 +3,10 @@ use std::path::PathBuf;
 use std::process::Command;
 
 use anyhow::{anyhow, Context, Result};
-use serde::{Deserialize, Serialize};
 
 use crate::repo::Repo;
 
-#[derive(Debug, Copy, Clone, Hash, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq)]
 pub(crate) enum Mode {
     Check,
     CheckIncremental,
