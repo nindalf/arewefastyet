@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::fs::File;
 use std::path::PathBuf;
-use std::process::{Command, Output};
+use std::process::Command;
 
 use anyhow::{anyhow, Context, Result};
 use serde::{Deserialize, Serialize};
@@ -68,10 +68,10 @@ impl Repo {
     pub(crate) fn clone_repo(self: &Repo) -> Result<()> {
         let working_directory = WORKING_DIRECTORY
             .get()
-            .ok_or(anyhow!("Working directory not set"))?;
+            .ok_or_else(|| anyhow!("Working directory not set"))?;
         let repo_dir = self
             .get_base_directory()
-            .ok_or(anyhow!("Could not find repo dir"))?;
+            .ok_or_else(|| anyhow!("Could not find repo dir"))?;
         if !repo_dir.exists() {
             println!("Cloning {}", &self.name);
             let output = Command::new("git")
@@ -112,7 +112,7 @@ impl Repo {
     pub(crate) fn remove_target_dir(self: &Repo) -> Result<()> {
         let target_dir = self
             .get_target_directory()
-            .ok_or(anyhow!("Could not find target directory"))?;
+            .ok_or_else(|| anyhow!("Could not find target directory"))?;
         if !target_dir.exists() {
             println!("Directory {:?} doesn't exist. Skipping delete", &target_dir);
             return Ok(());
@@ -123,7 +123,7 @@ impl Repo {
     pub(crate) fn touch_src(self: &Repo) -> Result<()> {
         let touch_file = self
             .get_touch_file()
-            .ok_or(anyhow!("Could not find touch file"))?;
+            .ok_or_else(|| anyhow!("Could not find touch file"))?;
         if !touch_file.exists() {
             return Err(anyhow!("Touch file does not exist"));
         }

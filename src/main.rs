@@ -45,7 +45,7 @@ fn get_clap_app<'a, 'b>() -> App<'a, 'b> {
 fn get_arg<'a>(matches: &'a ArgMatches<'a>, arg: &str) -> Result<&'a str> {
     matches
         .value_of(arg)
-        .ok_or(anyhow!("Could not find arg - {}", arg))
+        .ok_or_else(|| anyhow!("Could not find arg - {}", arg))
 }
 
 fn main() -> Result<()> {

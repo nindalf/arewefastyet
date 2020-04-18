@@ -58,22 +58,20 @@ fn cargo(dir: &PathBuf, args: &[&str]) -> Result<String> {
         .output()
         .with_context(|| "failed to execute cargo")?;
     if !output.status.success() {
-        let stderr = std::str::from_utf8(&output.stderr).with_context(|| "failed to decode output")?;
-        return Err(anyhow!(
-            "Failed to execute cargo. Stderr - {:?}",
-            stderr
-        ));
+        let stderr =
+            std::str::from_utf8(&output.stderr).with_context(|| "failed to decode output")?;
+        return Err(anyhow!("Failed to execute cargo. Stderr - {:?}", stderr));
     }
     let stderr =
         std::str::from_utf8(&output.stderr).with_context(|| "failed to decode stderr of cargo")?;
-    parse_run_time(stderr).ok_or(anyhow!("Failed to parse cargo output"))
+    parse_run_time(stderr).ok_or_else(|| anyhow!("Failed to parse cargo output"))
 }
 
 fn cargo_check(repo: &Repo) -> Result<String> {
     println!("{} - Running cargo check", &repo.name);
     let dir = repo
         .get_base_directory()
-        .ok_or(anyhow!("Could not find repo dir"))?;
+        .ok_or_else(|| anyhow!("Could not find repo dir"))?;
     cargo(&dir, &["check"])
 }
 
@@ -81,7 +79,7 @@ fn cargo_debug(repo: &Repo) -> Result<String> {
     println!("{} - Running cargo build", &repo.name);
     let dir = repo
         .get_base_directory()
-        .ok_or(anyhow!("Could not find repo dir"))?;
+        .ok_or_else(|| anyhow!("Could not find repo dir"))?;
     cargo(&dir, &["build"])
 }
 
@@ -89,7 +87,7 @@ fn cargo_release(repo: &Repo) -> Result<String> {
     println!("{} - Running cargo release", &repo.name);
     let dir = repo
         .get_base_directory()
-        .ok_or(anyhow!("Could not find repo dir"))?;
+        .ok_or_else(|| anyhow!("Could not find repo dir"))?;
     cargo(&dir, &["build", "--release"])
 }
 
