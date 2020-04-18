@@ -1,16 +1,13 @@
 use std::collections::HashMap;
-use std::fs::File;
 use std::path::PathBuf;
 use std::process::Command;
 
 use anyhow::{anyhow, Context, Result};
+use once_cell::sync::OnceCell;
 use serde::{Deserialize, Serialize};
-use serde_json;
 
 use crate::cargo::Mode;
 use crate::rustup::Version;
-
-use once_cell::sync::OnceCell;
 
 static ARE_WE_FAST_YET: &'static str = "arewefastyet-dir";
 static WORKING_DIRECTORY: OnceCell<PathBuf> = OnceCell::new();
@@ -26,9 +23,9 @@ pub(crate) struct Repo {
     max_version: Version,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub(crate) struct Perf {
-    repo: Repo,
+    pub repo: Repo,
     check: HashMap<Version, Vec<String>>,
     check_incremental: HashMap<Version, Vec<String>>,
     debug: HashMap<Version, Vec<String>>,
@@ -61,6 +58,40 @@ impl Perf {
                 Mode::ReleaseIncremental => self.release_incremental.insert(version, times),
             };
         }
+    }
+
+    pub(crate) fn versions_to_profile(self: &Perf) -> Vec<Version> {
+        let min = self.repo.min_version as u8;
+        let max = self.repo.max_version as u8;
+        vec![
+            Version::V1_34,
+            Version::V1_35,
+            Version::V1_36,
+            Version::V1_37,
+            Version::V1_38,
+            Version::V1_39,
+            Version::V1_40,
+            Version::V1_41,
+            Version::V1_42,
+        ]
+        .iter()
+        .map(|v| *v)
+        .filter(|v| *v as u8 >= min && *v as u8 <= max)
+        .filter(|v| !self.version_profiled(v))
+        .collect()
+    }
+
+    fn version_profiled(self: &Perf, version: &Version) -> bool {
+        self.check.contains_key(version)
+            && self.check_incremental.contains_key(version)
+            && self.debug.contains_key(version)
+            && self.debug_incremental.contains_key(version)
+            && self.release.contains_key(version)
+            && self.release_incremental.contains_key(version)
+    }
+
+    pub(crate) fn set_repo(self: &mut Perf, repo: Repo) {
+        self.repo = repo;
     }
 }
 
@@ -162,26 +193,6 @@ impl Repo {
                 .join(&self.touch_file),
         )
     }
-
-    pub(crate) fn supported_versions(self: &Repo) -> Vec<Version> {
-        let min = self.min_version as u8;
-        let max = self.max_version as u8;
-        vec![
-            Version::V1_34,
-            Version::V1_35,
-            Version::V1_36,
-            Version::V1_37,
-            Version::V1_38,
-            Version::V1_39,
-            Version::V1_40,
-            Version::V1_41,
-            Version::V1_42,
-        ]
-        .iter()
-        .map(|v| *v)
-        .filter(|v| *v as u8 >= min && *v as u8 <= max)
-        .collect()
-    }
 }
 
 pub(crate) fn create_working_directory(working_directory: &str) -> Result<()> {
@@ -198,10 +209,4 @@ pub(crate) fn create_working_directory(working_directory: &str) -> Result<()> {
         .set(working_dir)
         .map_err(|_| anyhow!("Failed to set global variable"))?;
     Ok(())
-}
-
-pub(crate) fn get_repos(repo_file: &str) -> Result<Vec<Repo>> {
-    let file = File::open(repo_file).with_context(|| "Failed to open repo file")?;
-    let repos = serde_json::from_reader(file)?;
-    Ok(repos)
 }

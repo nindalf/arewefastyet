@@ -1,6 +1,7 @@
 mod cargo;
 mod repo;
 mod rustup;
+mod store;
 
 use std::str::FromStr;
 
@@ -56,25 +57,23 @@ fn main() -> Result<()> {
     let working_directory = get_arg(&matches, "dir")?;
     repo::create_working_directory(working_directory)?;
 
-    let repos_file = get_arg(&matches, "repos")?;
-    let repos = repo::get_repos(repos_file)?;
-
     let times = u32::from_str(get_arg(&matches, "times")?)?;
 
-    let mut results: Vec<repo::Perf> = Vec::new();
-    for repo in &repos {
-        repo.clone_repo()?;
-        let mut perf = repo::Perf::new(repo.clone());
-        for version in repo.supported_versions() {
+    let repo_file = get_arg(&matches, "repos")?;
+    let results_file = get_arg(&matches, "results")?;
+    let mut results = store::get_results(results_file, repo_file)?;
+
+    // hack to allow writing of results after every iteration
+    let repo_names: Vec<String> = results.keys().map(|s| s.to_owned()).collect();
+    for repo in repo_names {
+        let perf = results.get_mut(&repo).ok_or(anyhow!("impossible"))?;
+        perf.repo.clone_repo()?;
+        for version in perf.versions_to_profile() {
             rustup::set_version(version)?;
-            let bench = cargo::benchmark(repo, times)?;
+            let bench = cargo::benchmark(&perf.repo, times)?;
             perf.add_bench(version, bench);
         }
-        results.push(perf);
+        store::overwrite_results(results_file, &results)?;
     }
-    println!("Output - {:?}", &results);
-    let results_file = get_arg(&matches, "results")?;
-    let output = std::fs::File::create(results_file)?;
-    serde_json::to_writer_pretty(output, &results)?;
     Ok(())
 }
