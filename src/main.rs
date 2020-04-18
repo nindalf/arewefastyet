@@ -2,9 +2,10 @@ mod cargo;
 mod repo;
 mod rustup;
 
+use std::str::FromStr;
+
 use anyhow::{anyhow, Result};
 use clap::{App, Arg, ArgMatches};
-use std::str::FromStr;
 
 fn get_clap_app<'a, 'b>() -> App<'a, 'b> {
     App::new("arewefastyet")

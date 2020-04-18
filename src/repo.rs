@@ -1,10 +1,11 @@
-use anyhow::{anyhow, Context, Result};
-use serde::{Deserialize, Serialize};
-use serde_json;
 use std::collections::HashMap;
 use std::fs::File;
 use std::path::PathBuf;
 use std::process::{Command, Output};
+
+use anyhow::{anyhow, Context, Result};
+use serde::{Deserialize, Serialize};
+use serde_json;
 
 use crate::cargo::Mode;
 use crate::rustup::Version;
