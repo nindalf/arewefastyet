@@ -1,11 +1,12 @@
 use std::collections::HashMap;
+use std::path::PathBuf;
 use std::fs::File;
 
 use anyhow::Result;
 
 use crate::repo::{Perf, Repo};
 
-pub(crate) fn get_results(results_file: &str, repo_file: &str) -> Result<HashMap<String, Perf>> {
+pub(crate) fn get_results(results_file: &PathBuf, repo_file: &PathBuf) -> Result<HashMap<String, Perf>> {
     let file = File::open(results_file)?;
     let mut perf = serde_json::from_reader(file).unwrap_or(HashMap::new());
     let file = File::open(repo_file)?;
@@ -20,7 +21,7 @@ pub(crate) fn get_results(results_file: &str, repo_file: &str) -> Result<HashMap
     Ok(perf)
 }
 
-pub(crate) fn overwrite_results(results_file: &str, results: &HashMap<String, Perf>) -> Result<()> {
+pub(crate) fn overwrite_results(results_file: &PathBuf, results: &HashMap<String, Perf>) -> Result<()> {
     let output = File::create(results_file)?;
     serde_json::to_writer_pretty(output, results)?;
     Ok(())

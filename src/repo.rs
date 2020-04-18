@@ -23,7 +23,7 @@ pub(crate) struct Repo {
     max_version: Version,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct Perf {
     pub repo: Repo,
     check: HashMap<Version, Vec<String>>,
@@ -167,16 +167,14 @@ impl Repo {
     }
 }
 
-pub(crate) fn create_working_directory(working_directory: &str) -> Result<()> {
-    let mut working_dir = PathBuf::new();
-    working_dir.push(working_directory);
-    if !working_directory.ends_with(ARE_WE_FAST_YET) {
+pub(crate) fn create_working_directory(mut working_dir: PathBuf) -> Result<()> {
+    if !working_dir.ends_with(ARE_WE_FAST_YET) {
         working_dir.push(ARE_WE_FAST_YET);
     }
     if !working_dir.exists() {
         std::fs::create_dir(&working_dir).with_context(|| "Failed to create working directory")?;
     }
-    println!("Successfully created working directory - {:?}", working_dir);
+    println!("Created working directory - {:?}", working_dir);
     WORKING_DIRECTORY
         .set(working_dir)
         .map_err(|_| anyhow!("Failed to set global variable"))?;
