@@ -73,6 +73,10 @@ impl Perf {
             Version::V1_40,
             Version::V1_41,
             Version::V1_42,
+            Version::V1_43,
+            Version::V1_44,
+            Version::V1_45,
+            Version::V1_46,
         ]
         .iter()
         .map(|v| *v)
@@ -172,7 +176,8 @@ pub(crate) fn create_working_directory(mut working_dir: PathBuf) -> Result<()> {
         working_dir.push(ARE_WE_FAST_YET);
     }
     if !working_dir.exists() {
-        std::fs::create_dir(&working_dir).with_context(|| "Failed to create working directory")?;
+        println!("Creating {:?}", &working_dir);
+        std::fs::create_dir_all(&working_dir).with_context(|| "Failed to create working directory")?;
     }
     println!("Created working directory - {:?}", working_dir);
     WORKING_DIRECTORY

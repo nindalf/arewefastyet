@@ -15,9 +15,9 @@ struct Opt {
     times: u32,
     #[structopt(short, long, default_value = "/tmp/prof", parse(from_os_str))]
     working_directory: PathBuf,
-    #[structopt(long, default_value = "data/repos.json", parse(from_os_str))]
+    #[structopt(long, default_value = "../data/repos.json", parse(from_os_str))]
     repos: PathBuf,
-    #[structopt(long, default_value = "data/results.json", parse(from_os_str))]
+    #[structopt(long, default_value = "../data/results.json", parse(from_os_str))]
     results: PathBuf,
 }
 

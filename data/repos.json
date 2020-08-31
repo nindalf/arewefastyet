@@ -6,7 +6,7 @@
         "touch_file": "crates/core/main.rs",
         "commit_hash": "3193d57",
         "min_version": "V1_34",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "cargo",
@@ -15,7 +15,7 @@
         "touch_file": "src/cargo/lib.rs",
         "commit_hash": "74e3a7d",
         "min_version": "V1_34",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "syn",
@@ -24,7 +24,7 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "4104331",
         "min_version": "V1_34",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "regex",
@@ -33,7 +33,7 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "3221cdb",
         "min_version": "V1_34",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "helloworld",
@@ -42,7 +42,7 @@
         "touch_file": "src/main.rs",
         "commit_hash": "0ee163a",
         "min_version": "V1_34",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "html5ever",
@@ -51,7 +51,7 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "7efca84",
         "min_version": "V1_36",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "webrender",
@@ -60,7 +60,7 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "f5db59b",
         "min_version": "V1_37",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "clap",
@@ -69,7 +69,7 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "d210b9f",
         "min_version": "V1_34",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "serde",
@@ -78,7 +78,7 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "b6def53",
         "min_version": "V1_34",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "image",
@@ -87,7 +87,7 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "b808079",
         "min_version": "V1_34",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "inflate",
@@ -96,7 +96,7 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "5a8c979",
         "min_version": "V1_34",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "packed_simd",
@@ -105,7 +105,7 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "93af7ef",
         "min_version": "V1_34",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "hyper",
@@ -114,7 +114,7 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "5f6ce3c",
         "min_version": "V1_39",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "futures-rs",
@@ -123,7 +123,7 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "6ba6716",
         "min_version": "V1_39",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "async-std",
@@ -132,7 +132,7 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "b446cd0",
         "min_version": "V1_39",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     },
     {
         "name": "tokio",
@@ -141,6 +141,6 @@
         "touch_file": "src/lib.rs",
         "commit_hash": "8381dff",
         "min_version": "V1_39",
-        "max_version": "V1_42"
+        "max_version": "V1_46"
     }
 ]

@@ -1,2 +1,2 @@
-/target
+cmd/target
 **/*.rs.bk
