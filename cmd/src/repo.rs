@@ -21,7 +21,6 @@ pub(crate) struct Repo {
     touch_file: String,
     commit_hash: String,
     min_version: Version,
-    max_version: Version,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -63,9 +62,8 @@ impl Perf {
 
     pub(crate) fn versions_to_profile(self: &Perf) -> Vec<Version> {
         let min = self.repo.min_version as u8;
-        let max = self.repo.max_version as u8;
         Version::into_enum_iter()
-            .filter(|v| *v as u8 >= min && *v as u8 <= max)
+            .filter(|v| *v as u8 >= min)
             .filter(|v| !self.version_profiled(v))
             .collect()
     }
