@@ -36,8 +36,10 @@ fn main() -> Result<()> {
         perf.repo.clone_repo()?;
         for version in perf.versions_to_profile() {
             rustup::set_version(version)?;
-            let bench = cargo::benchmark(&perf.repo, opt.times)?;
-            perf.add_bench(version, bench);
+            match cargo::benchmark(&perf.repo, opt.times) {
+                Ok(bench) => perf.add_bench(version, bench),
+                Err(_) => {},
+            };
         }
         store::overwrite_results(&opt.results, &results)?;
     }

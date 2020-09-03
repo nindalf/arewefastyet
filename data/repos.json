@@ -5,8 +5,7 @@
         "url": "https://github.com/burntsushi/ripgrep",
         "touch_file": "crates/core/main.rs",
         "commit_hash": "3193d57",
-        "min_version": "V1_34",
-        "max_version": "V1_46"
+        "min_version": "V1_34"
     },
     {
         "name": "cargo",
@@ -14,8 +13,7 @@
         "url": "https://github.com/rust-lang/cargo",
         "touch_file": "src/cargo/lib.rs",
         "commit_hash": "74e3a7d",
-        "min_version": "V1_34",
-        "max_version": "V1_46"
+        "min_version": "V1_34"
     },
     {
         "name": "syn",
@@ -23,8 +21,7 @@
         "url": "https://github.com/dtolnay/syn",
         "touch_file": "src/lib.rs",
         "commit_hash": "4104331",
-        "min_version": "V1_34",
-        "max_version": "V1_46"
+        "min_version": "V1_34"
     },
     {
         "name": "regex",
@@ -32,8 +29,7 @@
         "url": "https://github.com/rust-lang/regex",
         "touch_file": "src/lib.rs",
         "commit_hash": "3221cdb",
-        "min_version": "V1_34",
-        "max_version": "V1_46"
+        "min_version": "V1_34"
     },
     {
         "name": "helloworld",
@@ -41,8 +37,7 @@
         "url": "https://github.com/nindalf/helloworld",
         "touch_file": "src/main.rs",
         "commit_hash": "0ee163a",
-        "min_version": "V1_34",
-        "max_version": "V1_46"
+        "min_version": "V1_34"
     },
     {
         "name": "html5ever",
@@ -50,8 +45,7 @@
         "url": "https://github.com/servo/html5ever",
         "touch_file": "src/lib.rs",
         "commit_hash": "7efca84",
-        "min_version": "V1_36",
-        "max_version": "V1_46"
+        "min_version": "V1_36"
     },
     {
         "name": "webrender",
@@ -59,8 +53,7 @@
         "url": "https://github.com/servo/webrender",
         "touch_file": "src/lib.rs",
         "commit_hash": "f5db59b",
-        "min_version": "V1_37",
-        "max_version": "V1_46"
+        "min_version": "V1_37"
     },
     {
         "name": "clap",
@@ -68,8 +61,7 @@
         "url": "https://github.com/clap-rs/clap",
         "touch_file": "src/lib.rs",
         "commit_hash": "d210b9f",
-        "min_version": "V1_34",
-        "max_version": "V1_46"
+        "min_version": "V1_34"
     },
     {
         "name": "serde",
@@ -77,8 +69,7 @@
         "url": "https://github.com/serde-rs/serde",
         "touch_file": "src/lib.rs",
         "commit_hash": "b6def53",
-        "min_version": "V1_34",
-        "max_version": "V1_46"
+        "min_version": "V1_34"
     },
     {
         "name": "image",
@@ -86,8 +77,7 @@
         "url": "https://github.com/image-rs/image",
         "touch_file": "src/lib.rs",
         "commit_hash": "b808079",
-        "min_version": "V1_34",
-        "max_version": "V1_46"
+        "min_version": "V1_34"
     },
     {
         "name": "inflate",
@@ -95,8 +85,7 @@
         "url": "https://github.com/image-rs/inflate",
         "touch_file": "src/lib.rs",
         "commit_hash": "5a8c979",
-        "min_version": "V1_34",
-        "max_version": "V1_46"
+        "min_version": "V1_34"
     },
     {
         "name": "packed_simd",
@@ -104,8 +93,7 @@
         "url": "https://github.com/rust-lang/packed_simd",
         "touch_file": "src/lib.rs",
         "commit_hash": "93af7ef",
-        "min_version": "V1_34",
-        "max_version": "V1_46"
+        "min_version": "V1_34"
     },
     {
         "name": "hyper",
@@ -113,8 +101,7 @@
         "url": "https://github.com/hyperium/hyper",
         "touch_file": "src/lib.rs",
         "commit_hash": "5f6ce3c",
-        "min_version": "V1_39",
-        "max_version": "V1_46"
+        "min_version": "V1_39"
     },
     {
         "name": "futures-rs",
@@ -122,8 +109,7 @@
         "url": "https://github.com/rust-lang/futures-rs/",
         "touch_file": "src/lib.rs",
         "commit_hash": "6ba6716",
-        "min_version": "V1_39",
-        "max_version": "V1_46"
+        "min_version": "V1_39"
     },
     {
         "name": "async-std",
@@ -131,8 +117,7 @@
         "url": "https://github.com/async-rs/async-std",
         "touch_file": "src/lib.rs",
         "commit_hash": "b446cd0",
-        "min_version": "V1_39",
-        "max_version": "V1_46"
+        "min_version": "V1_39"
     },
     {
         "name": "tokio",
@@ -140,7 +125,6 @@
         "url": "https://github.com/tokio-rs/tokio",
         "touch_file": "src/lib.rs",
         "commit_hash": "8381dff",
-        "min_version": "V1_39",
-        "max_version": "V1_46"
+        "min_version": "V1_39"
     }
 ]
