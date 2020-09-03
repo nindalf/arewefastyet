@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 use anyhow::{anyhow, Context, Result};
+use enum_iterator::IntoEnumIterator;
 use once_cell::sync::OnceCell;
 use serde::{Deserialize, Serialize};
 
@@ -63,14 +64,10 @@ impl Perf {
     pub(crate) fn versions_to_profile(self: &Perf) -> Vec<Version> {
         let min = self.repo.min_version as u8;
         let max = self.repo.max_version as u8;
-        vec![
-            Version::V1_34,
-        ]
-        .iter()
-        .map(|v| *v)
-        .filter(|v| *v as u8 >= min && *v as u8 <= max)
-        .filter(|v| !self.version_profiled(v))
-        .collect()
+        Version::into_enum_iter()
+            .filter(|v| *v as u8 >= min && *v as u8 <= max)
+            .filter(|v| !self.version_profiled(v))
+            .collect()
     }
 
     fn version_profiled(self: &Perf, version: &Version) -> bool {

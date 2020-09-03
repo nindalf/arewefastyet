@@ -1,8 +1,10 @@
+use enum_iterator::IntoEnumIterator;
 use anyhow::{anyhow, Context, Result};
+
 use serde::{Deserialize, Serialize};
 
 use std::process::Command;
-#[derive(Debug, Copy, Clone, Hash, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Hash, IntoEnumIterator, Serialize, Deserialize, Eq, PartialEq)]
 pub(crate) enum Version {
     V1_34 = 34,
     V1_35 = 35,
