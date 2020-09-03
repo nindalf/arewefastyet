@@ -26,12 +26,12 @@ pub(crate) struct Repo {
 #[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct Perf {
     pub repo: Repo,
-    check: HashMap<Version, Vec<String>>,
-    check_incremental: HashMap<Version, Vec<String>>,
-    debug: HashMap<Version, Vec<String>>,
-    debug_incremental: HashMap<Version, Vec<String>>,
-    release: HashMap<Version, Vec<String>>,
-    release_incremental: HashMap<Version, Vec<String>>,
+    check: HashMap<Version, Vec<u32>>,
+    check_incremental: HashMap<Version, Vec<u32>>,
+    debug: HashMap<Version, Vec<u32>>,
+    debug_incremental: HashMap<Version, Vec<u32>>,
+    release: HashMap<Version, Vec<u32>>,
+    release_incremental: HashMap<Version, Vec<u32>>,
 }
 
 impl Perf {
@@ -47,7 +47,7 @@ impl Perf {
         }
     }
 
-    pub(crate) fn add_bench(self: &mut Perf, version: Version, bench: HashMap<Mode, Vec<String>>) {
+    pub(crate) fn add_bench(self: &mut Perf, version: Version, bench: HashMap<Mode, Vec<u32>>) {
         for (mode, times) in bench {
             match mode {
                 Mode::Check => self.check.insert(version, times),
@@ -65,18 +65,6 @@ impl Perf {
         let max = self.repo.max_version as u8;
         vec![
             Version::V1_34,
-            Version::V1_35,
-            Version::V1_36,
-            Version::V1_37,
-            Version::V1_38,
-            Version::V1_39,
-            Version::V1_40,
-            Version::V1_41,
-            Version::V1_42,
-            Version::V1_43,
-            Version::V1_44,
-            Version::V1_45,
-            Version::V1_46,
         ]
         .iter()
         .map(|v| *v)

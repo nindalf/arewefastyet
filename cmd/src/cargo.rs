@@ -1,8 +1,10 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::process::Command;
+use std::time::Duration;
 
 use anyhow::{anyhow, Context, Result};
+use parse_duration::parse;
 
 use crate::repo::Repo;
 
@@ -16,7 +18,7 @@ pub(crate) enum Mode {
     ReleaseIncremental,
 }
 
-pub(crate) fn benchmark(repo: &Repo, times: u32) -> Result<HashMap<Mode, Vec<String>>> {
+pub(crate) fn benchmark(repo: &Repo, times: u32) -> Result<HashMap<Mode, Vec<u32>>> {
     cargo_check(repo)?; // download dependencies
     let mut results = HashMap::new();
 
@@ -36,10 +38,10 @@ pub(crate) fn benchmark(repo: &Repo, times: u32) -> Result<HashMap<Mode, Vec<Str
 }
 
 fn repeat(
-    f: fn(&Repo) -> Result<String>,
+    f: fn(&Repo) -> Result<u32>,
     repo: &Repo,
     times: u32,
-) -> Result<(Vec<String>, Vec<String>)> {
+) -> Result<(Vec<u32>, Vec<u32>)> {
     let mut result_base = Vec::new();
     let mut result_incremental = Vec::new();
     for _ in 0..times {
@@ -51,7 +53,7 @@ fn repeat(
     Ok((result_base, result_incremental))
 }
 
-fn cargo(dir: &PathBuf, args: &[&str]) -> Result<String> {
+fn cargo(dir: &PathBuf, args: &[&str]) -> Result<u32> {
     let output = Command::new("cargo")
         .current_dir(dir)
         .args(args)
@@ -67,7 +69,7 @@ fn cargo(dir: &PathBuf, args: &[&str]) -> Result<String> {
     parse_run_time(stderr).ok_or_else(|| anyhow!("Failed to parse cargo output"))
 }
 
-fn cargo_check(repo: &Repo) -> Result<String> {
+fn cargo_check(repo: &Repo) -> Result<u32> {
     println!("{} - Running cargo check", &repo.name);
     let dir = repo
         .get_base_directory()
@@ -75,7 +77,7 @@ fn cargo_check(repo: &Repo) -> Result<String> {
     cargo(&dir, &["check"])
 }
 
-fn cargo_debug(repo: &Repo) -> Result<String> {
+fn cargo_debug(repo: &Repo) -> Result<u32> {
     println!("{} - Running cargo build", &repo.name);
     let dir = repo
         .get_base_directory()
@@ -83,7 +85,7 @@ fn cargo_debug(repo: &Repo) -> Result<String> {
     cargo(&dir, &["build"])
 }
 
-fn cargo_release(repo: &Repo) -> Result<String> {
+fn cargo_release(repo: &Repo) -> Result<u32> {
     println!("{} - Running cargo release", &repo.name);
     let dir = repo
         .get_base_directory()
@@ -91,8 +93,10 @@ fn cargo_release(repo: &Repo) -> Result<String> {
     cargo(&dir, &["build", "--release"])
 }
 
-fn parse_run_time(stderr: &str) -> Option<String> {
+fn parse_run_time(stderr: &str) -> Option<u32> {
     let line = stderr.lines().last()?;
     let end = line.split("in ").last()?;
-    Some(end.to_string())
+    let duration = parse(end).ok()?;
+
+    Some(duration.as_millis() as u32)
 }
