@@ -7,8 +7,12 @@ use anyhow::Result;
 use crate::repo::{Perf, Repo};
 
 pub(crate) fn get_results(results_file: &PathBuf, repo_file: &PathBuf) -> Result<HashMap<String, Perf>> {
-    let file = File::open(results_file)?;
-    let mut perf = serde_json::from_reader(file).unwrap_or(HashMap::new());
+    let mut perf = if results_file.exists() {
+        let file = File::open(results_file)?;
+        serde_json::from_reader(file).unwrap_or(HashMap::new())
+    } else {
+        HashMap::new()
+    };
     let file = File::open(repo_file)?;
     let repos: Vec<Repo> = serde_json::from_reader(file)?;
 
