@@ -5,8 +5,6 @@
  */
 
 module.exports = {
-  siteMetadata: {
-    title: `Are We Fast Yet`,
-  },
+  /* Your site config here */
   plugins: [],
 }
