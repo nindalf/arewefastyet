@@ -1,40 +1,21 @@
 import * as d3 from "d3"
 import styles from '../styles/Home.module.css'
 import React, { Component } from "react"
+import ChartData from '../data/profiling'
 
-// const data = function(){
-//     // massage our data into this
-//     const data = Results["helloworld"]["check"];
-//     const x_axis = ["V1_34", "V1_35", "V1_36"]
-//     return {
-//         y: "Compile time",
-//         series: [{
-//             name: "Ripgrep check",
-//             values: x_axis.map(x => data[x])
-//         }],
-//         dates: x_axis
-//     };
-// }
-
-
-class LineChart extends Component {
+class LineChart extends Component<ChartData> {
     constructor(props) {
         super(props);
         this.state = {
             myRef: React.createRef(),
-            name: this.props.perfData['repo']['name'],
-            url: this.props.perfData['repo']['url']
         }
     }
 
     componentDidMount() {
-        // this.setState();
-        
-        const data = [2, 4, 2, 6, 8]
-        this.drawBarChart(data)
+        this.drawBarChart()
     }
 
-    drawBarChart(data) {
+    drawBarChart() {
         var margin = { top: 10, right: 30, bottom: 30, left: 60 },
             width = 460 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
@@ -45,13 +26,38 @@ class LineChart extends Component {
             .append("g")
             .attr("transform",
                 "translate(" + margin.left + "," + margin.top + ")");
-        d3.scaleLinear().domain()
 
+        const x = d3.scaleOrdinal()
+            .domain(this.props.compiler_versions)
+            .range(Array.from({ length: this.props.compiler_versions.length }, (_, k) => k * width / this.props.compiler_versions.length))
+        // .range([0, width]);
+        svgCanvas.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+        const y = d3.scaleLinear()
+            .domain([0, 200])
+            .range([height, 0]);
+        svgCanvas.append("g")
+            .call(d3.axisLeft(y));
+        Object.keys(this.props.profiles).forEach(profileType => {
+            let profile = this.props.profiles[profileType];
+            svgCanvas
+                .append("path")
+                .datum(profile)
+                .attr("fill", "none")
+                .attr("stroke", "steelblue")
+                .attr("stroke-width", 1.5)
+                .attr("d", d3.line()
+                    .x(function (d) { return x(d.x) })
+                    .y(function (d) { return y(d.y) })
+                )
+        })
     }
+
     render() {
-        return <a href={this.state.url} className={styles.card} key={this.state.name}>
-            <h3>{this.state.name}</h3>
-            <p>Find in-depth information about this repo</p>
+        return <a href={this.props.url} className={styles.card} key={this.props.name}>
+            <h3>{this.props.name}</h3>
+            <div ref={this.state.myRef} />
         </a>
     }
 }

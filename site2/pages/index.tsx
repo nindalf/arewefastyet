@@ -18,9 +18,7 @@ export default function Home({allPerfData}) {
 
         <div className={styles.grid}>
           {Object.keys(allPerfData).map(repo => {
-            const name = allPerfData[repo]['repo']['name'];
-            const url = allPerfData[repo]['repo']['url']
-            return <LineChart perfData={allPerfData[repo]}/>
+            return <LineChart {...allPerfData[repo]}/>
           })
           }
         </div>
