@@ -67,19 +67,18 @@ function processProfiles(results): Array<ChartData> {
 function get_compiler_versions(min_version: string): Array<string> {
     const start = parseInt(min_version.split("_")[1])
     const end = MAX_COMPILER_VERSION
-    return Array.from({length: (end - start + 1)}, (v, k) => k + start).map(x => "V1_" + x)
+    return Array.from({length: (end - start + 1)}, (v, k) => k + start).map(x => "1." + x)
 }
 
 function processProfile(profile): Array<Point> {
     const result: Array<Point> = []
     Object.keys(profile).sort().map(compiler_version => {
-        const x = compiler_version;
+        const x = "1." + parseInt(compiler_version.split("_")[1]);
         const y = average(profile[compiler_version])/1000
         const [y1, y0] = confidenceIntervals(profile[compiler_version])
         result.push({
             x, y, y0, y1
         })
     })
-    console.log(result)
     return result
 }
