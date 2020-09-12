@@ -4,15 +4,7 @@
         "sub_directory": "",
         "url": "https://github.com/burntsushi/ripgrep",
         "touch_file": "crates/core/main.rs",
-        "commit_hash": "3193d57",
-        "min_version": "V1_34"
-    },
-    {
-        "name": "cargo",
-        "sub_directory": "",
-        "url": "https://github.com/rust-lang/cargo",
-        "touch_file": "src/cargo/lib.rs",
-        "commit_hash": "74e3a7d",
+        "commit_hash": "11c7b2a",
         "min_version": "V1_34"
     },
     {
@@ -20,15 +12,7 @@
         "sub_directory": "",
         "url": "https://github.com/dtolnay/syn",
         "touch_file": "src/lib.rs",
-        "commit_hash": "4104331",
-        "min_version": "V1_34"
-    },
-    {
-        "name": "regex",
-        "sub_directory": "",
-        "url": "https://github.com/rust-lang/regex",
-        "touch_file": "src/lib.rs",
-        "commit_hash": "3221cdb",
+        "commit_hash": "f88e703",
         "min_version": "V1_34"
     },
     {
@@ -44,31 +28,23 @@
         "sub_directory": "html5ever",
         "url": "https://github.com/servo/html5ever",
         "touch_file": "src/lib.rs",
-        "commit_hash": "7efca84",
+        "commit_hash": "36ee935",
         "min_version": "V1_36"
-    },
-    {
-        "name": "webrender",
-        "sub_directory": "webrender",
-        "url": "https://github.com/servo/webrender",
-        "touch_file": "src/lib.rs",
-        "commit_hash": "f5db59b",
-        "min_version": "V1_37"
     },
     {
         "name": "clap",
         "sub_directory": "",
         "url": "https://github.com/clap-rs/clap",
         "touch_file": "src/lib.rs",
-        "commit_hash": "d210b9f",
-        "min_version": "V1_34"
+        "commit_hash": "3e9ee86",
+        "min_version": "V1_40"
     },
     {
         "name": "serde",
         "sub_directory": "serde",
         "url": "https://github.com/serde-rs/serde",
         "touch_file": "src/lib.rs",
-        "commit_hash": "b6def53",
+        "commit_hash": "b539cb4",
         "min_version": "V1_34"
     },
     {
@@ -76,7 +52,7 @@
         "sub_directory": "",
         "url": "https://github.com/image-rs/image",
         "touch_file": "src/lib.rs",
-        "commit_hash": "b808079",
+        "commit_hash": "5ba026e",
         "min_version": "V1_34"
     },
     {
@@ -100,7 +76,7 @@
         "sub_directory": "",
         "url": "https://github.com/hyperium/hyper",
         "touch_file": "src/lib.rs",
-        "commit_hash": "5f6ce3c",
+        "commit_hash": "66fc127",
         "min_version": "V1_39"
     },
     {
@@ -108,7 +84,7 @@
         "sub_directory": "futures",
         "url": "https://github.com/rust-lang/futures-rs/",
         "touch_file": "src/lib.rs",
-        "commit_hash": "6ba6716",
+        "commit_hash": "32d970e",
         "min_version": "V1_39"
     },
     {
@@ -116,7 +92,7 @@
         "sub_directory": "",
         "url": "https://github.com/async-rs/async-std",
         "touch_file": "src/lib.rs",
-        "commit_hash": "b446cd0",
+        "commit_hash": "1aa148d",
         "min_version": "V1_39"
     },
     {
@@ -124,7 +100,15 @@
         "sub_directory": "tokio",
         "url": "https://github.com/tokio-rs/tokio",
         "touch_file": "src/lib.rs",
-        "commit_hash": "8381dff",
+        "commit_hash": "20ef286",
         "min_version": "V1_39"
+    },
+    {
+        "name": "rav1e",
+        "sub_directory": "",
+        "url": "https://github.com/xiph/rav1e",
+        "touch_file": "src/lib.rs",
+        "commit_hash": "92074b3",
+        "min_version": "V1_34"
     }
 ]
