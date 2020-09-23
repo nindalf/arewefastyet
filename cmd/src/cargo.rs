@@ -11,30 +11,36 @@ use crate::repo::Repo;
 pub(crate) enum Mode {
     Check,
     CheckIncremental,
+    CheckPrintIncremental,
     Debug,
     DebugIncremental,
+    DebugPrintIncremental,
     Release,
     ReleaseIncremental,
+    ReleasePrintIncremental,
 }
 
 pub(crate) fn benchmark(repo: &Repo, times: u32) -> Result<(HashMap<Mode, Vec<u32>>, u64, u64)> {
     cargo_check(repo)?; // download dependencies
     let mut results = HashMap::new();
 
-    let (base, incremental) = repeat(cargo_check, repo, times)?;
+    let (base, incremental, print_incremental) = repeat(cargo_check, repo, times)?;
     results.insert(Mode::Check, base);
     results.insert(Mode::CheckIncremental, incremental);
+    results.insert(Mode::CheckPrintIncremental, print_incremental);
 
-    let (base, incremental) = repeat(cargo_debug, repo, times)?;
+    let (base, incremental, print_incremental) = repeat(cargo_debug, repo, times)?;
     results.insert(Mode::Debug, base);
     results.insert(Mode::DebugIncremental, incremental);
+    results.insert(Mode::DebugPrintIncremental, print_incremental);
     let binary_path = repo.get_debug_binary_path().ok_or(anyhow!("no debug binary"))?;
     let debug_size = get_file_size(cargo_debug, repo, &binary_path)?;
 
-    let (base, incremental) = repeat(cargo_release, repo, times)?;
+    let (base, incremental, print_incremental) = repeat(cargo_release, repo, times)?;
     results.insert(Mode::Release, base);
     results.insert(Mode::ReleaseIncremental, incremental);
-    let binary_path = repo.get_release_binary_path().ok_or(anyhow!("no debug binary"))?;
+    results.insert(Mode::ReleasePrintIncremental, print_incremental);
+    let binary_path = repo.get_release_binary_path().ok_or(anyhow!("no release binary"))?;
     let release_size = get_file_size(cargo_release, repo, &binary_path)?;
 
     Ok((results, debug_size, release_size))
@@ -44,16 +50,20 @@ fn repeat(
     f: fn(&Repo) -> Result<u32>,
     repo: &Repo,
     times: u32,
-) -> Result<(Vec<u32>, Vec<u32>)> {
+) -> Result<(Vec<u32>, Vec<u32>, Vec<u32>)> {
     let mut result_base = Vec::new();
     let mut result_incremental = Vec::new();
+    let mut result_print_incremental = Vec::new();
     for _ in 0..times {
         repo.remove_target_dir()?;
         result_base.push(f(repo)?);
         repo.touch_src()?;
         result_incremental.push(f(repo)?);
+        repo.add_println()?;
+        result_print_incremental.push(f(repo)?);
+        repo.git_reset()?;
     }
-    Ok((result_base, result_incremental))
+    Ok((result_base, result_incremental, result_print_incremental))
 }
 
 fn cargo(dir: &PathBuf, args: &[&str]) -> Result<u32> {
@@ -110,7 +120,8 @@ fn get_file_size(
     file_name: &PathBuf
 ) -> Result<u64> {
     f(repo)?;
-    let file = std::fs::File::open(file_name).with_context(|| anyhow!("failed to find binary - {:?}", file_name))?;
+    let file = std::fs::File::open(file_name)
+        .with_context(|| anyhow!("failed to find binary - {:?}", file_name))?;
     let metadata = file.metadata()?;
     Ok(metadata.len())
 }
@@ -136,6 +147,7 @@ mod test {
         repo.clone_repo()?;
         let bench = benchmark(&repo, 2)?;
         println!("{:?}", bench);
+        // TODO - add assertions
         Ok(())
     }
 }

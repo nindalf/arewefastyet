@@ -60,6 +60,7 @@ impl Perf {
                 Mode::DebugIncremental => self.debug_incremental.insert(version, times),
                 Mode::Release => self.release.insert(version, times),
                 Mode::ReleaseIncremental => self.release_incremental.insert(version, times),
+                _ => None, // TODO handle println
             };
         }
         self.debug_size.insert(version, debug_size);
@@ -137,6 +138,28 @@ impl Repo {
                 stderr
             ));
         }
+        Ok(())
+    }
+
+    pub(crate) fn add_println(self: &Repo) -> Result<()> {
+        let touch_file = self
+            .get_touch_file()
+            .ok_or_else(|| anyhow!("Could not find touch file"))?;
+        if !touch_file.exists() {
+            return Err(anyhow!("Touch file does not exist"));
+        }
+        let contents = std::fs::read_to_string(&touch_file)?;
+        let re = regex::Regex::new("((fn main.*)|(pub fn.*))").unwrap();
+        let contents = re.replace(&contents, r#"$1 println!("hello");"#);
+        std::fs::write(&touch_file, contents.as_ref())?;
+        Ok(())
+    }
+
+    pub(crate) fn git_reset(self: &Repo) -> Result<()> {
+        let repo_dir = self
+            .get_base_directory()
+            .ok_or_else(|| anyhow!("Could not find repo dir"))?;
+        git(&["reset", "--hard"], &repo_dir)?;
         Ok(())
     }
 
