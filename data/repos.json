@@ -76,6 +76,7 @@
         "sub_directory": "",
         "url": "https://github.com/hyperium/hyper",
         "touch_file": "src/lib.rs",
+        "output": "libhyper.rlib",
         "commit_hash": "66fc127",
         "min_version": "V1_39"
     },
@@ -109,6 +110,14 @@
         "url": "https://github.com/xiph/rav1e",
         "touch_file": "src/lib.rs",
         "commit_hash": "92074b3",
+        "min_version": "V1_34"
+    },
+    {
+        "name": "alacritty",
+        "sub_directory": "alacritty",
+        "url": "https://github.com/alacritty/alacritty",
+        "touch_file": "src/main.rs",
+        "commit_hash": "56d25d1",
         "min_version": "V1_34"
     }
 ]

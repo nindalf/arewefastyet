@@ -4,7 +4,13 @@
 # cd arewefastyet
 # ./collect_samples.sh
 
-sudo apt-get install -y build-essential nasm # nasm required for rav1e
+sudo apt-get update
+sudo apt-get install -y build-essential 
+# required for rav1e
+sudo apt-get install -y nasm
+# required for alacritty
+sudo apt-get install -y cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev python3
+
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source $HOME/.cargo/env
 
