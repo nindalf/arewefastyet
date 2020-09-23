@@ -37,7 +37,7 @@ fn main() -> Result<()> {
         for version in perf.versions_to_profile() {
             rustup::set_version(version)?;
             match cargo::benchmark(&perf.repo, opt.times) {
-                Ok(bench) => perf.add_bench(version, bench),
+                Ok((bench, debug_size, release_size)) => perf.add_bench(version, bench,debug_size, release_size),
                 Err(_) => {},
             };
         }

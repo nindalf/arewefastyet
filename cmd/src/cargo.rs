@@ -17,7 +17,7 @@ pub(crate) enum Mode {
     ReleaseIncremental,
 }
 
-pub(crate) fn benchmark(repo: &Repo, times: u32) -> Result<HashMap<Mode, Vec<u32>>> {
+pub(crate) fn benchmark(repo: &Repo, times: u32) -> Result<(HashMap<Mode, Vec<u32>>, u64, u64)> {
     cargo_check(repo)?; // download dependencies
     let mut results = HashMap::new();
 
@@ -28,12 +28,16 @@ pub(crate) fn benchmark(repo: &Repo, times: u32) -> Result<HashMap<Mode, Vec<u32
     let (base, incremental) = repeat(cargo_debug, repo, times)?;
     results.insert(Mode::Debug, base);
     results.insert(Mode::DebugIncremental, incremental);
+    let binary_path = repo.get_debug_binary_path().ok_or(anyhow!("no debug binary"))?;
+    let debug_size = get_file_size(cargo_debug, repo, &binary_path)?;
 
     let (base, incremental) = repeat(cargo_release, repo, times)?;
     results.insert(Mode::Release, base);
     results.insert(Mode::ReleaseIncremental, incremental);
+    let binary_path = repo.get_release_binary_path().ok_or(anyhow!("no debug binary"))?;
+    let release_size = get_file_size(cargo_release, repo, &binary_path)?;
 
-    Ok(results)
+    Ok((results, debug_size, release_size))
 }
 
 fn repeat(
@@ -98,4 +102,40 @@ fn parse_run_time(stderr: &str) -> Option<u32> {
     let duration = parse(end).ok()?;
 
     Some(duration.as_millis() as u32)
+}
+
+fn get_file_size(
+    f: fn(&Repo) -> Result<u32>,
+    repo: &Repo,
+    file_name: &PathBuf
+) -> Result<u64> {
+    f(repo)?;
+    let file = std::fs::File::open(file_name).with_context(|| anyhow!("failed to find binary - {:?}", file_name))?;
+    let metadata = file.metadata()?;
+    Ok(metadata.len())
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use anyhow::Result;
+    #[test]
+    fn benchmark_hello_world() -> Result<()>{
+        crate::rustup::set_profile_minimal()?;
+        crate::repo::create_working_directory(std::path::PathBuf::from("/tmp/prof/"))?;
+
+        let repo: crate::repo::Repo = serde_json::from_str(r#"
+            {
+                "name": "helloworld",
+                "sub_directory": "",
+                "url": "https://github.com/nindalf/helloworld",
+                "touch_file": "src/main.rs",
+                "commit_hash": "0ee163a",
+                "min_version": "V1_45"
+            }"#)?;
+        repo.clone_repo()?;
+        let bench = benchmark(&repo, 2)?;
+        println!("{:?}", bench);
+        Ok(())
+    }
 }

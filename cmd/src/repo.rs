@@ -32,6 +32,8 @@ pub(crate) struct Perf {
     debug_incremental: HashMap<Version, Vec<u32>>,
     release: HashMap<Version, Vec<u32>>,
     release_incremental: HashMap<Version, Vec<u32>>,
+    debug_size: HashMap<Version, u64>,
+    release_size: HashMap<Version, u64>,
 }
 
 impl Perf {
@@ -44,10 +46,12 @@ impl Perf {
             debug_incremental: HashMap::new(),
             release: HashMap::new(),
             release_incremental: HashMap::new(),
+            debug_size: HashMap::new(),
+            release_size: HashMap::new(),
         }
     }
 
-    pub(crate) fn add_bench(self: &mut Perf, version: Version, bench: HashMap<Mode, Vec<u32>>) {
+    pub(crate) fn add_bench(self: &mut Perf, version: Version, bench: HashMap<Mode, Vec<u32>>, debug_size: u64, release_size: u64) {
         for (mode, times) in bench {
             match mode {
                 Mode::Check => self.check.insert(version, times),
@@ -58,6 +62,8 @@ impl Perf {
                 Mode::ReleaseIncremental => self.release_incremental.insert(version, times),
             };
         }
+        self.debug_size.insert(version, debug_size);
+        self.release_size.insert(version, release_size);
     }
 
     pub(crate) fn versions_to_profile(self: &Perf) -> Vec<Version> {
@@ -139,9 +145,22 @@ impl Repo {
         Some(dir.join(&self.name).join(&self.sub_directory))
     }
 
+    pub(crate) fn get_debug_binary_path(self: &Repo) -> Option<PathBuf> {
+        self.get_binary_path("debug")
+    }
+
+    pub(crate) fn get_release_binary_path(self: &Repo) -> Option<PathBuf> {
+        self.get_binary_path("release")
+    }
+
     fn get_target_directory(self: &Repo) -> Option<PathBuf> {
         let dir = WORKING_DIRECTORY.get()?;
         Some(dir.join(&self.name).join("target"))
+    }
+
+    fn get_binary_path(self: &Repo, folder: &str) -> Option<PathBuf> {
+        let target_directory = self.get_target_directory()?;
+        Some(target_directory.join(folder).join(&self.name)) // TODO change to binary name
     }
 
     fn get_touch_file(self: &Repo) -> Option<PathBuf> {
