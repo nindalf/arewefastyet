@@ -153,7 +153,7 @@ mod test {
     use super::*;
     use anyhow::Result;
     #[test]
-    fn cpu_profile_hello_world() -> Result<()> {
+    fn compile_hello_world() -> Result<()> {
         crate::rustup::set_profile_minimal()?;
         crate::repo::create_working_directory(std::path::PathBuf::from("/tmp/prof/"))?;
 
@@ -170,8 +170,16 @@ mod test {
             }"#,
         )?;
         repo.clone_repo()?;
-        let bench = compile_time_profile(&repo, 2)?;
-        // TODO - add assertions
+        let times: usize = 2;
+        let compile_times = compile_time_profile(&repo, times as u32)?; // run once on any version
+
+        for compiler_mode in CompilerMode::into_enum_iter() {
+            for profile_mode in ProfileMode::into_enum_iter() {
+                let result_times = compile_times.get(&compiler_mode).unwrap().get(&profile_mode).unwrap();
+                assert_eq!(result_times.len(), times);
+            }
+        }
+
         Ok(())
     }
 }
