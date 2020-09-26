@@ -3,6 +3,7 @@ use std::process::Command;
 
 use anyhow::{anyhow, Context, Result};
 use once_cell::sync::OnceCell;
+use once_cell::unsync::Lazy;
 use serde::{Deserialize, Serialize};
 
 use crate::rustup::Version;
@@ -83,7 +84,9 @@ impl Repo {
         }
         let contents = std::fs::read_to_string(&touch_file)
             .with_context(|| anyhow!("Failed to read touch file - {:?}"))?;
-        let re = regex::Regex::new("((fn main.*)|(pub fn.*))").unwrap();
+        let re = Lazy::new(|| {
+            regex::Regex::new("((fn main.*)|(pub fn.*))").unwrap()
+        });
         let contents = re.replace(&contents, r#"$1 println!("hello");"#);
         std::fs::write(&touch_file, contents.as_ref())
             .with_context(|| anyhow!("Failed to modify touch file - {:?}", touch_file))?;
