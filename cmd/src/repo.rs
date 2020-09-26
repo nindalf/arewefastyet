@@ -103,12 +103,12 @@ impl Repo {
         Some(dir.join(&self.name).join(&self.sub_directory))
     }
 
-    pub(crate) fn get_debug_binary_path(self: &Repo) -> Option<PathBuf> {
-        self.get_binary_path("debug")
+    pub(crate) fn get_debug_output_path(self: &Repo) -> Option<PathBuf> {
+        self.get_output_path("debug")
     }
 
-    pub(crate) fn get_release_binary_path(self: &Repo) -> Option<PathBuf> {
-        self.get_binary_path("release")
+    pub(crate) fn get_release_output_path(self: &Repo) -> Option<PathBuf> {
+        self.get_output_path("release")
     }
 
     fn get_target_directory(self: &Repo) -> Option<PathBuf> {
@@ -116,7 +116,7 @@ impl Repo {
         Some(dir.join(&self.name).join("target"))
     }
 
-    fn get_binary_path(self: &Repo, folder: &str) -> Option<PathBuf> {
+    fn get_output_path(self: &Repo, folder: &str) -> Option<PathBuf> {
         let target_directory = self.get_target_directory()?;
         Some(target_directory.join(folder).join(&self.output))
     }

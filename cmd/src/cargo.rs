@@ -130,20 +130,20 @@ fn parse_run_time(stderr: &str) -> Option<Milliseconds> {
 }
 
 fn get_file_size(repo: &Repo, compiler_mode: CompilerMode) -> Result<Bytes> {
-    let binary_path = match compiler_mode {
+    let output_path = match compiler_mode {
         CompilerMode::Debug => {
             cargo_debug(repo)?;
-            repo.get_debug_binary_path()
+            repo.get_debug_output_path()
         }
         CompilerMode::Release => {
             cargo_release(repo)?;
-            repo.get_release_binary_path()
+            repo.get_release_output_path()
         }
         _ => None,
     }
-    .ok_or(anyhow!("No associated binary"))?;
-    let file = std::fs::File::open(&binary_path)
-        .with_context(|| anyhow!("failed to find binary - {:?}", binary_path))?;
+    .ok_or(anyhow!("No associated output"))?;
+    let file = std::fs::File::open(&output_path)
+        .with_context(|| anyhow!("failed to find output - {:?}", output_path))?;
     let metadata = file.metadata()?;
     Ok(Bytes(metadata.len()))
 }
