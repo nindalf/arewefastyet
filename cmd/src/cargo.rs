@@ -3,70 +3,68 @@ use std::path::PathBuf;
 use std::process::Command;
 
 use anyhow::{anyhow, Context, Result};
+use enum_iterator::IntoEnumIterator;
 use parse_duration::parse;
+use serde::{Deserialize, Serialize};
 
 use crate::repo::Repo;
 
-#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq)]
-pub(crate) enum Mode {
+#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq, Serialize, Deserialize, IntoEnumIterator)]
+pub(crate) enum CompilerMode {
     Check,
-    CheckIncremental,
-    CheckPrintIncremental,
     Debug,
-    DebugIncremental,
-    DebugPrintIncremental,
     Release,
-    ReleaseIncremental,
-    ReleasePrintIncremental,
 }
 
-pub(crate) fn benchmark(repo: &Repo, times: u32) -> Result<(HashMap<Mode, Vec<u32>>, u64, u64)> {
+#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq, Serialize, Deserialize, IntoEnumIterator)]
+pub(crate) enum ProfileMode {
+    Clean,
+    Incremental,
+    PrintIncremental,
+}
+
+
+pub(crate) fn benchmark(repo: &Repo, times: u32) -> Result<(HashMap<CompilerMode, HashMap<ProfileMode,Vec<u64>>>, u64, u64)> {
     cargo_check(repo)?; // download dependencies
+    
     let mut results = HashMap::new();
+    results.insert(CompilerMode::Check, repeat(cargo_check, repo, times)?);
+    results.insert(CompilerMode::Debug, repeat(cargo_debug, repo, times)?);
+    results.insert(CompilerMode::Release, repeat(cargo_release, repo, times)?);
 
-    let (base, incremental, print_incremental) = repeat(cargo_check, repo, times)?;
-    results.insert(Mode::Check, base);
-    results.insert(Mode::CheckIncremental, incremental);
-    results.insert(Mode::CheckPrintIncremental, print_incremental);
-
-    let (base, incremental, print_incremental) = repeat(cargo_debug, repo, times)?;
-    results.insert(Mode::Debug, base);
-    results.insert(Mode::DebugIncremental, incremental);
-    results.insert(Mode::DebugPrintIncremental, print_incremental);
-    let binary_path = repo.get_debug_binary_path().ok_or(anyhow!("no debug binary"))?;
-    let debug_size = get_file_size(cargo_debug, repo, &binary_path)?;
-
-    let (base, incremental, print_incremental) = repeat(cargo_release, repo, times)?;
-    results.insert(Mode::Release, base);
-    results.insert(Mode::ReleaseIncremental, incremental);
-    results.insert(Mode::ReleasePrintIncremental, print_incremental);
-    let binary_path = repo.get_release_binary_path().ok_or(anyhow!("no release binary"))?;
-    let release_size = get_file_size(cargo_release, repo, &binary_path)?;
+    let debug_size = get_file_size( repo, CompilerMode::Debug)?;
+    let release_size = get_file_size( repo, CompilerMode::Release)?;
 
     Ok((results, debug_size, release_size))
 }
 
 fn repeat(
-    f: fn(&Repo) -> Result<u32>,
+    f: fn(&Repo) -> Result<u64>,
     repo: &Repo,
     times: u32,
-) -> Result<(Vec<u32>, Vec<u32>, Vec<u32>)> {
-    let mut result_base = Vec::new();
-    let mut result_incremental = Vec::new();
-    let mut result_print_incremental = Vec::new();
+) -> Result<HashMap<ProfileMode, Vec<u64>>> {
+    let mut result = HashMap::with_capacity(3);
     for _ in 0..times {
         repo.remove_target_dir()?;
-        result_base.push(f(repo)?);
+        result.entry(ProfileMode::Clean)
+            .or_insert(Vec::with_capacity(times as usize))
+            .push(f(repo)?);
+
         repo.touch_src()?;
-        result_incremental.push(f(repo)?);
+        result.entry(ProfileMode::Incremental)
+            .or_insert(Vec::with_capacity(times as usize))
+            .push(f(repo)?);
+
         repo.add_println()?;
-        result_print_incremental.push(f(repo)?);
+        result.entry(ProfileMode::PrintIncremental)
+            .or_insert(Vec::with_capacity(times as usize))
+            .push(f(repo)?);
         repo.git_reset()?;
     }
-    Ok((result_base, result_incremental, result_print_incremental))
+    Ok(result)
 }
 
-fn cargo(dir: &PathBuf, args: &[&str]) -> Result<u32> {
+fn cargo(dir: &PathBuf, args: &[&str]) -> Result<u64> {
     let output = Command::new("cargo")
         .current_dir(dir)
         .args(args)
@@ -82,7 +80,7 @@ fn cargo(dir: &PathBuf, args: &[&str]) -> Result<u32> {
     parse_run_time(stderr).ok_or_else(|| anyhow!("Failed to parse cargo output"))
 }
 
-fn cargo_check(repo: &Repo) -> Result<u32> {
+fn cargo_check(repo: &Repo) -> Result<u64> {
     println!("{} - Running cargo check", &repo.name);
     let dir = repo
         .get_base_directory()
@@ -90,7 +88,7 @@ fn cargo_check(repo: &Repo) -> Result<u32> {
     cargo(&dir, &["check"])
 }
 
-fn cargo_debug(repo: &Repo) -> Result<u32> {
+fn cargo_debug(repo: &Repo) -> Result<u64> {
     println!("{} - Running cargo build", &repo.name);
     let dir = repo
         .get_base_directory()
@@ -98,7 +96,7 @@ fn cargo_debug(repo: &Repo) -> Result<u32> {
     cargo(&dir, &["build"])
 }
 
-fn cargo_release(repo: &Repo) -> Result<u32> {
+fn cargo_release(repo: &Repo) -> Result<u64> {
     println!("{} - Running cargo release", &repo.name);
     let dir = repo
         .get_base_directory()
@@ -106,22 +104,31 @@ fn cargo_release(repo: &Repo) -> Result<u32> {
     cargo(&dir, &["build", "--release"])
 }
 
-fn parse_run_time(stderr: &str) -> Option<u32> {
+fn parse_run_time(stderr: &str) -> Option<u64> {
     let line = stderr.lines().last()?;
     let end = line.split("in ").last()?;
     let duration = parse(end).ok()?;
 
-    Some(duration.as_millis() as u32)
+    Some(duration.as_millis() as u64)
 }
 
 fn get_file_size(
-    f: fn(&Repo) -> Result<u32>,
     repo: &Repo,
-    file_name: &PathBuf
+    compiler_mode: CompilerMode
 ) -> Result<u64> {
-    f(repo)?;
-    let file = std::fs::File::open(file_name)
-        .with_context(|| anyhow!("failed to find binary - {:?}", file_name))?;
+    let binary_path = match compiler_mode {
+        CompilerMode::Debug => {
+            cargo_debug(repo)?;
+            repo.get_debug_binary_path()
+        },
+        CompilerMode::Release => {
+            cargo_release(repo)?;
+            repo.get_release_binary_path()
+        },
+        _ => None,
+    }.ok_or(anyhow!("No associated binary"))?;
+    let file = std::fs::File::open(&binary_path)
+        .with_context(|| anyhow!("failed to find binary - {:?}", binary_path))?;
     let metadata = file.metadata()?;
     Ok(metadata.len())
 }

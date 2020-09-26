@@ -7,7 +7,7 @@ use enum_iterator::IntoEnumIterator;
 use once_cell::sync::OnceCell;
 use serde::{Deserialize, Serialize};
 
-use crate::cargo::Mode;
+use crate::cargo::{CompilerMode, ProfileMode};
 use crate::rustup::Version;
 
 static ARE_WE_FAST_YET: &'static str = "arewefastyet-dir";
@@ -27,45 +27,48 @@ pub(crate) struct Repo {
 #[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct Perf {
     pub repo: Repo,
-    check: HashMap<Version, Vec<u32>>,
-    check_incremental: HashMap<Version, Vec<u32>>,
-    debug: HashMap<Version, Vec<u32>>,
-    debug_incremental: HashMap<Version, Vec<u32>>,
-    release: HashMap<Version, Vec<u32>>,
-    release_incremental: HashMap<Version, Vec<u32>>,
-    debug_size: HashMap<Version, u64>,
-    release_size: HashMap<Version, u64>,
+    cpu_profiles: HashMap<CompilerMode, HashMap<ProfileMode, CpuProfile>>,
+    binary_sizes: HashMap<CompilerMode, SizeProfile>,
 }
+
+type CpuProfile = HashMap<Version, Vec<u64>>;
+
+type SizeProfile = HashMap<Version, u64>;
 
 impl Perf {
     pub(crate) fn new(repo: Repo) -> Perf {
         Perf {
             repo,
-            check: HashMap::new(),
-            check_incremental: HashMap::new(),
-            debug: HashMap::new(),
-            debug_incremental: HashMap::new(),
-            release: HashMap::new(),
-            release_incremental: HashMap::new(),
-            debug_size: HashMap::new(),
-            release_size: HashMap::new(),
+            cpu_profiles: HashMap::with_capacity(3),
+            binary_sizes: HashMap::with_capacity(2),
         }
     }
 
-    pub(crate) fn add_bench(self: &mut Perf, version: Version, bench: HashMap<Mode, Vec<u32>>, debug_size: u64, release_size: u64) {
-        for (mode, times) in bench {
-            match mode {
-                Mode::Check => self.check.insert(version, times),
-                Mode::CheckIncremental => self.check_incremental.insert(version, times),
-                Mode::Debug => self.debug.insert(version, times),
-                Mode::DebugIncremental => self.debug_incremental.insert(version, times),
-                Mode::Release => self.release.insert(version, times),
-                Mode::ReleaseIncremental => self.release_incremental.insert(version, times),
-                _ => None, // TODO handle println
-            };
+    pub(crate) fn add_bench(
+        self: &mut Self,
+        version: Version,
+        bench: HashMap<CompilerMode, HashMap<ProfileMode, Vec<u64>>>,
+        debug_size: u64,
+        release_size: u64,
+    ) {
+        for (compiler_mode, x) in bench {
+            for (profile_mode, y) in x {
+                self.cpu_profiles
+                    .entry(compiler_mode)
+                    .or_insert(HashMap::with_capacity(3))
+                    .entry(profile_mode)
+                    .or_insert(HashMap::with_capacity(20))
+                    .insert(version, y);
+            }
         }
-        self.debug_size.insert(version, debug_size);
-        self.release_size.insert(version, release_size);
+        self.binary_sizes
+            .entry(CompilerMode::Debug)
+            .or_insert(HashMap::with_capacity(20))
+            .insert(version, debug_size);
+        self.binary_sizes
+            .entry(CompilerMode::Release)
+            .or_insert(HashMap::with_capacity(20))
+            .insert(version, release_size);
     }
 
     pub(crate) fn versions_to_profile(self: &Perf) -> Vec<Version> {
@@ -76,16 +79,26 @@ impl Perf {
             .collect()
     }
 
-    fn version_profiled(self: &Perf, version: &Version) -> bool {
-        self.check.contains_key(version)
-            && self.check_incremental.contains_key(version)
-            && self.debug.contains_key(version)
-            && self.debug_incremental.contains_key(version)
-            && self.release.contains_key(version)
-            && self.release_incremental.contains_key(version)
+    fn version_profiled(self: &Self, version: &Version) -> bool {
+        for compiler_mode in CompilerMode::into_enum_iter() {
+            for profile_mode in ProfileMode::into_enum_iter() {
+                if !self.cpu_profiles.contains_key(&compiler_mode) {
+                    return false;
+                }
+                let inner = self.cpu_profiles.get(&compiler_mode).unwrap();
+                if !inner.contains_key(&profile_mode) {
+                    return false;
+                }
+                let inner = inner.get(&profile_mode).unwrap();
+                if !inner.contains_key(&version) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    pub(crate) fn set_repo(self: &mut Perf, repo: Repo) {
+    pub(crate) fn set_repo(self: &mut Self, repo: Repo) {
         self.repo = repo;
     }
 }
@@ -115,7 +128,8 @@ impl Repo {
             println!("Directory {:?} doesn't exist. Skipping delete", &target_dir);
             return Ok(());
         }
-        std::fs::remove_dir_all(target_dir).with_context(|| "failed to remove target directory")
+        std::fs::remove_dir_all(&target_dir)
+            .with_context(|| anyhow!("failed to remove target directory - {:?}", target_dir))
     }
 
     pub(crate) fn touch_src(self: &Repo) -> Result<()> {
@@ -149,10 +163,12 @@ impl Repo {
         if !touch_file.exists() {
             return Err(anyhow!("Touch file does not exist"));
         }
-        let contents = std::fs::read_to_string(&touch_file)?;
+        let contents = std::fs::read_to_string(&touch_file)
+            .with_context(|| anyhow!("Failed to read touch file - {:?}"))?;
         let re = regex::Regex::new("((fn main.*)|(pub fn.*))").unwrap();
         let contents = re.replace(&contents, r#"$1 println!("hello");"#);
-        std::fs::write(&touch_file, contents.as_ref())?;
+        std::fs::write(&touch_file, contents.as_ref())
+            .with_context(|| anyhow!("Failed to modify touch file - {:?}", touch_file))?;
         Ok(())
     }
 
@@ -203,7 +219,8 @@ pub(crate) fn create_working_directory(mut working_dir: PathBuf) -> Result<()> {
     }
     if !working_dir.exists() {
         println!("Creating {:?}", &working_dir);
-        std::fs::create_dir_all(&working_dir).with_context(|| "Failed to create working directory")?;
+        std::fs::create_dir_all(&working_dir)
+            .with_context(|| "Failed to create working directory")?;
     }
     println!("Created working directory - {:?}", working_dir);
     WORKING_DIRECTORY
