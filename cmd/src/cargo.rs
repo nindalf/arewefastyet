@@ -23,32 +23,40 @@ pub(crate) enum ProfileMode {
     PrintIncremental,
 }
 
-pub(crate) fn benchmark(
+#[derive(Debug, Serialize, Deserialize)]
+pub(crate) struct Bytes(u64);
+
+#[derive(Debug, Serialize, Deserialize)]
+pub(crate) struct Milliseconds(u64);
+
+pub(crate) fn compile_time_profile(
     repo: &Repo,
     times: u32,
-) -> Result<(
-    HashMap<CompilerMode, HashMap<ProfileMode, Vec<u64>>>,
-    u64,
-    u64,
-)> {
+) -> Result<HashMap<CompilerMode, HashMap<ProfileMode, Vec<Milliseconds>>>> {
     cargo_check(repo)?; // download dependencies
 
     let mut results = HashMap::new();
+
     results.insert(CompilerMode::Check, repeat(cargo_check, repo, times)?);
     results.insert(CompilerMode::Debug, repeat(cargo_debug, repo, times)?);
     results.insert(CompilerMode::Release, repeat(cargo_release, repo, times)?);
 
+    Ok(results)
+}
+
+pub(crate) fn size_profile(
+    repo: &Repo,
+) -> Result<(Bytes, Bytes)> {
     let debug_size = get_file_size(repo, CompilerMode::Debug)?;
     let release_size = get_file_size(repo, CompilerMode::Release)?;
-
-    Ok((results, debug_size, release_size))
+    Ok((debug_size, release_size))
 }
 
 fn repeat(
-    f: fn(&Repo) -> Result<u64>,
+    f: fn(&Repo) -> Result<Milliseconds>,
     repo: &Repo,
     times: u32,
-) -> Result<HashMap<ProfileMode, Vec<u64>>> {
+) -> Result<HashMap<ProfileMode, Vec<Milliseconds>>> {
     let mut result = HashMap::with_capacity(3);
     for _ in 0..times {
         repo.remove_target_dir()?;
@@ -73,7 +81,7 @@ fn repeat(
     Ok(result)
 }
 
-fn cargo(dir: &PathBuf, args: &[&str]) -> Result<u64> {
+fn cargo(dir: &PathBuf, args: &[&str]) -> Result<Milliseconds> {
     let output = Command::new("cargo")
         .current_dir(dir)
         .args(args)
@@ -89,7 +97,7 @@ fn cargo(dir: &PathBuf, args: &[&str]) -> Result<u64> {
     parse_run_time(stderr).ok_or_else(|| anyhow!("Failed to parse cargo output"))
 }
 
-fn cargo_check(repo: &Repo) -> Result<u64> {
+fn cargo_check(repo: &Repo) -> Result<Milliseconds> {
     println!("{} - Running cargo check", &repo.name);
     let dir = repo
         .get_base_directory()
@@ -97,7 +105,7 @@ fn cargo_check(repo: &Repo) -> Result<u64> {
     cargo(&dir, &["check"])
 }
 
-fn cargo_debug(repo: &Repo) -> Result<u64> {
+fn cargo_debug(repo: &Repo) -> Result<Milliseconds> {
     println!("{} - Running cargo build", &repo.name);
     let dir = repo
         .get_base_directory()
@@ -105,7 +113,7 @@ fn cargo_debug(repo: &Repo) -> Result<u64> {
     cargo(&dir, &["build"])
 }
 
-fn cargo_release(repo: &Repo) -> Result<u64> {
+fn cargo_release(repo: &Repo) -> Result<Milliseconds> {
     println!("{} - Running cargo release", &repo.name);
     let dir = repo
         .get_base_directory()
@@ -113,15 +121,15 @@ fn cargo_release(repo: &Repo) -> Result<u64> {
     cargo(&dir, &["build", "--release"])
 }
 
-fn parse_run_time(stderr: &str) -> Option<u64> {
+fn parse_run_time(stderr: &str) -> Option<Milliseconds> {
     let line = stderr.lines().last()?;
     let end = line.split("in ").last()?;
     let duration = parse(end).ok()?;
 
-    Some(duration.as_millis() as u64)
+    Some(Milliseconds(duration.as_millis() as u64))
 }
 
-fn get_file_size(repo: &Repo, compiler_mode: CompilerMode) -> Result<u64> {
+fn get_file_size(repo: &Repo, compiler_mode: CompilerMode) -> Result<Bytes> {
     let binary_path = match compiler_mode {
         CompilerMode::Debug => {
             cargo_debug(repo)?;
@@ -137,7 +145,7 @@ fn get_file_size(repo: &Repo, compiler_mode: CompilerMode) -> Result<u64> {
     let file = std::fs::File::open(&binary_path)
         .with_context(|| anyhow!("failed to find binary - {:?}", binary_path))?;
     let metadata = file.metadata()?;
-    Ok(metadata.len())
+    Ok(Bytes(metadata.len()))
 }
 
 #[cfg(test)]
@@ -145,7 +153,7 @@ mod test {
     use super::*;
     use anyhow::Result;
     #[test]
-    fn benchmark_hello_world() -> Result<()> {
+    fn cpu_profile_hello_world() -> Result<()> {
         crate::rustup::set_profile_minimal()?;
         crate::repo::create_working_directory(std::path::PathBuf::from("/tmp/prof/"))?;
 
@@ -156,13 +164,13 @@ mod test {
                 "sub_directory": "",
                 "url": "https://github.com/nindalf/helloworld",
                 "touch_file": "src/main.rs",
+                "output": "helloworld",
                 "commit_hash": "0ee163a",
                 "min_version": "V1_45"
             }"#,
         )?;
         repo.clone_repo()?;
-        let bench = benchmark(&repo, 2)?;
-        println!("{:?}", bench);
+        let bench = compile_time_profile(&repo, 2)?;
         // TODO - add assertions
         Ok(())
     }

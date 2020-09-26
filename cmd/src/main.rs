@@ -1,4 +1,5 @@
 mod cargo;
+mod profile;
 mod repo;
 mod rustup;
 mod store;
@@ -36,9 +37,15 @@ fn main() -> Result<()> {
         profile.repo.clone_repo()?;
         for version in profile.versions_to_profile() {
             rustup::set_version(version)?;
-            match cargo::benchmark(&profile.repo, opt.times) {
-                Ok((bench, debug_size, release_size)) => {
-                    profile.add_bench(version, bench, debug_size, release_size)
+            match cargo::compile_time_profile(&profile.repo, opt.times) {
+                Ok(compile_time_profile) => {
+                    profile.add_compile_times(version, compile_time_profile)
+                }
+                Err(_) => {}
+            };
+            match cargo::size_profile(&profile.repo) {
+                Ok((debug_size, release_size)) => {
+                    profile.add_output_sizes(version, debug_size, release_size)
                 }
                 Err(_) => {}
             };

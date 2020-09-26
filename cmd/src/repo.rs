@@ -1,13 +1,10 @@
-use std::collections::HashMap;
 use std::path::PathBuf;
 use std::process::Command;
 
 use anyhow::{anyhow, Context, Result};
-use enum_iterator::IntoEnumIterator;
 use once_cell::sync::OnceCell;
 use serde::{Deserialize, Serialize};
 
-use crate::cargo::{CompilerMode, ProfileMode};
 use crate::rustup::Version;
 
 static ARE_WE_FAST_YET: &'static str = "arewefastyet-dir";
@@ -21,86 +18,7 @@ pub(crate) struct Repo {
     touch_file: String,
     output: String,
     commit_hash: String,
-    min_version: Version,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub(crate) struct Profile {
-    pub repo: Repo,
-    cpu_profiles: HashMap<CompilerMode, HashMap<ProfileMode, CpuProfile>>,
-    binary_sizes: HashMap<CompilerMode, SizeProfile>,
-}
-
-type CpuProfile = HashMap<Version, Vec<u64>>;
-
-type SizeProfile = HashMap<Version, u64>;
-
-impl Profile {
-    pub(crate) fn new(repo: Repo) -> Profile {
-        Profile {
-            repo,
-            cpu_profiles: HashMap::with_capacity(3),
-            binary_sizes: HashMap::with_capacity(2),
-        }
-    }
-
-    pub(crate) fn add_bench(
-        self: &mut Self,
-        version: Version,
-        bench: HashMap<CompilerMode, HashMap<ProfileMode, Vec<u64>>>,
-        debug_size: u64,
-        release_size: u64,
-    ) {
-        for (compiler_mode, profile_mode_benches) in bench {
-            for (profile_mode, benches) in profile_mode_benches {
-                self.cpu_profiles
-                    .entry(compiler_mode)
-                    .or_insert(HashMap::with_capacity(3))
-                    .entry(profile_mode)
-                    .or_insert(HashMap::with_capacity(20))
-                    .insert(version, benches);
-            }
-        }
-        self.binary_sizes
-            .entry(CompilerMode::Debug)
-            .or_insert(HashMap::with_capacity(20))
-            .insert(version, debug_size);
-        self.binary_sizes
-            .entry(CompilerMode::Release)
-            .or_insert(HashMap::with_capacity(20))
-            .insert(version, release_size);
-    }
-
-    pub(crate) fn versions_to_profile(self: &Profile) -> Vec<Version> {
-        let min = self.repo.min_version as u8;
-        Version::into_enum_iter()
-            .filter(|v| *v as u8 >= min)
-            .filter(|v| !self.version_profiled(v))
-            .collect()
-    }
-
-    fn version_profiled(self: &Self, version: &Version) -> bool {
-        for compiler_mode in CompilerMode::into_enum_iter() {
-            for profile_mode in ProfileMode::into_enum_iter() {
-                if !self.cpu_profiles.contains_key(&compiler_mode) {
-                    return false;
-                }
-                let inner = self.cpu_profiles.get(&compiler_mode).unwrap();
-                if !inner.contains_key(&profile_mode) {
-                    return false;
-                }
-                let inner = inner.get(&profile_mode).unwrap();
-                if !inner.contains_key(&version) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    pub(crate) fn set_repo(self: &mut Self, repo: Repo) {
-        self.repo = repo;
-    }
+    pub min_version: Version,
 }
 
 impl Repo {

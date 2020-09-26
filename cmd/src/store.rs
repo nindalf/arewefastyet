@@ -4,7 +4,8 @@ use std::path::PathBuf;
 
 use anyhow::Result;
 
-use crate::repo::{Profile, Repo};
+use crate::profile::Profile;
+use crate::repo::Repo;
 
 pub(crate) fn get_results(
     results_file: &PathBuf,
