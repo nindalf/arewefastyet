@@ -37,8 +37,10 @@ fn main() -> Result<()> {
         for version in profile.versions_to_profile() {
             rustup::set_version(version)?;
             match cargo::benchmark(&profile.repo, opt.times) {
-                Ok((bench, debug_size, release_size)) => profile.add_bench(version, bench, debug_size, release_size),
-                Err(_) => {},
+                Ok((bench, debug_size, release_size)) => {
+                    profile.add_bench(version, bench, debug_size, release_size)
+                }
+                Err(_) => {}
             };
         }
         store::overwrite_results(&opt.results, &results)?;

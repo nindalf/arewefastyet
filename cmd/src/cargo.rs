@@ -23,17 +23,23 @@ pub(crate) enum ProfileMode {
     PrintIncremental,
 }
 
-
-pub(crate) fn benchmark(repo: &Repo, times: u32) -> Result<(HashMap<CompilerMode, HashMap<ProfileMode,Vec<u64>>>, u64, u64)> {
+pub(crate) fn benchmark(
+    repo: &Repo,
+    times: u32,
+) -> Result<(
+    HashMap<CompilerMode, HashMap<ProfileMode, Vec<u64>>>,
+    u64,
+    u64,
+)> {
     cargo_check(repo)?; // download dependencies
-    
+
     let mut results = HashMap::new();
     results.insert(CompilerMode::Check, repeat(cargo_check, repo, times)?);
     results.insert(CompilerMode::Debug, repeat(cargo_debug, repo, times)?);
     results.insert(CompilerMode::Release, repeat(cargo_release, repo, times)?);
 
-    let debug_size = get_file_size( repo, CompilerMode::Debug)?;
-    let release_size = get_file_size( repo, CompilerMode::Release)?;
+    let debug_size = get_file_size(repo, CompilerMode::Debug)?;
+    let release_size = get_file_size(repo, CompilerMode::Release)?;
 
     Ok((results, debug_size, release_size))
 }
@@ -46,17 +52,20 @@ fn repeat(
     let mut result = HashMap::with_capacity(3);
     for _ in 0..times {
         repo.remove_target_dir()?;
-        result.entry(ProfileMode::Clean)
+        result
+            .entry(ProfileMode::Clean)
             .or_insert(Vec::with_capacity(times as usize))
             .push(f(repo)?);
 
         repo.touch_src()?;
-        result.entry(ProfileMode::Incremental)
+        result
+            .entry(ProfileMode::Incremental)
             .or_insert(Vec::with_capacity(times as usize))
             .push(f(repo)?);
 
         repo.add_println()?;
-        result.entry(ProfileMode::PrintIncremental)
+        result
+            .entry(ProfileMode::PrintIncremental)
             .or_insert(Vec::with_capacity(times as usize))
             .push(f(repo)?);
         repo.git_reset()?;
@@ -112,21 +121,19 @@ fn parse_run_time(stderr: &str) -> Option<u64> {
     Some(duration.as_millis() as u64)
 }
 
-fn get_file_size(
-    repo: &Repo,
-    compiler_mode: CompilerMode
-) -> Result<u64> {
+fn get_file_size(repo: &Repo, compiler_mode: CompilerMode) -> Result<u64> {
     let binary_path = match compiler_mode {
         CompilerMode::Debug => {
             cargo_debug(repo)?;
             repo.get_debug_binary_path()
-        },
+        }
         CompilerMode::Release => {
             cargo_release(repo)?;
             repo.get_release_binary_path()
-        },
+        }
         _ => None,
-    }.ok_or(anyhow!("No associated binary"))?;
+    }
+    .ok_or(anyhow!("No associated binary"))?;
     let file = std::fs::File::open(&binary_path)
         .with_context(|| anyhow!("failed to find binary - {:?}", binary_path))?;
     let metadata = file.metadata()?;
@@ -138,11 +145,12 @@ mod test {
     use super::*;
     use anyhow::Result;
     #[test]
-    fn benchmark_hello_world() -> Result<()>{
+    fn benchmark_hello_world() -> Result<()> {
         crate::rustup::set_profile_minimal()?;
         crate::repo::create_working_directory(std::path::PathBuf::from("/tmp/prof/"))?;
 
-        let repo: crate::repo::Repo = serde_json::from_str(r#"
+        let repo: crate::repo::Repo = serde_json::from_str(
+            r#"
             {
                 "name": "helloworld",
                 "sub_directory": "",
@@ -150,7 +158,8 @@ mod test {
                 "touch_file": "src/main.rs",
                 "commit_hash": "0ee163a",
                 "min_version": "V1_45"
-            }"#)?;
+            }"#,
+        )?;
         repo.clone_repo()?;
         let bench = benchmark(&repo, 2)?;
         println!("{:?}", bench);

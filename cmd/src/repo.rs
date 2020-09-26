@@ -51,14 +51,14 @@ impl Profile {
         debug_size: u64,
         release_size: u64,
     ) {
-        for (compiler_mode, x) in bench {
-            for (profile_mode, y) in x {
+        for (compiler_mode, profile_mode_benches) in bench {
+            for (profile_mode, benches) in profile_mode_benches {
                 self.cpu_profiles
                     .entry(compiler_mode)
                     .or_insert(HashMap::with_capacity(3))
                     .entry(profile_mode)
                     .or_insert(HashMap::with_capacity(20))
-                    .insert(version, y);
+                    .insert(version, benches);
             }
         }
         self.binary_sizes

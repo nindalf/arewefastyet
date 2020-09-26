@@ -1,5 +1,5 @@
-use enum_iterator::IntoEnumIterator;
 use anyhow::{anyhow, Context, Result};
+use enum_iterator::IntoEnumIterator;
 
 use serde::{Deserialize, Serialize};
 
@@ -61,11 +61,9 @@ fn rustup(args: &[&str]) -> Result<()> {
         .output()
         .with_context(|| "failed to execute rustup")?;
     if !output.status.success() {
-        let stderr = std::str::from_utf8(&output.stderr).with_context(|| "failed to decode output")?;
-        return Err(anyhow!(
-            "Failed to execute rustup. Stderr - {:?}",
-            stderr
-        ));
+        let stderr =
+            std::str::from_utf8(&output.stderr).with_context(|| "failed to decode output")?;
+        return Err(anyhow!("Failed to execute rustup. Stderr - {:?}", stderr));
     }
     Ok(())
 }
