@@ -4,6 +4,7 @@
         "sub_directory": "",
         "url": "https://github.com/burntsushi/ripgrep",
         "touch_file": "crates/core/main.rs",
+        "output": "rg",
         "commit_hash": "11c7b2a",
         "min_version": "V1_34"
     },
@@ -12,6 +13,7 @@
         "sub_directory": "",
         "url": "https://github.com/dtolnay/syn",
         "touch_file": "src/lib.rs",
+        "output": "libsyn.rlib",
         "commit_hash": "f88e703",
         "min_version": "V1_34"
     },
@@ -20,6 +22,7 @@
         "sub_directory": "",
         "url": "https://github.com/nindalf/helloworld",
         "touch_file": "src/main.rs",
+        "output": "helloworld",
         "commit_hash": "0ee163a",
         "min_version": "V1_34"
     },
@@ -28,6 +31,7 @@
         "sub_directory": "html5ever",
         "url": "https://github.com/servo/html5ever",
         "touch_file": "src/lib.rs",
+        "output": "libhtml5ever.rlib",
         "commit_hash": "36ee935",
         "min_version": "V1_36"
     },
@@ -36,6 +40,7 @@
         "sub_directory": "",
         "url": "https://github.com/clap-rs/clap",
         "touch_file": "src/lib.rs",
+        "output": "libclap.rlib",
         "commit_hash": "3e9ee86",
         "min_version": "V1_40"
     },
@@ -44,6 +49,7 @@
         "sub_directory": "serde",
         "url": "https://github.com/serde-rs/serde",
         "touch_file": "src/lib.rs",
+        "output": "libserde.rlib",
         "commit_hash": "b539cb4",
         "min_version": "V1_34"
     },
@@ -52,6 +58,7 @@
         "sub_directory": "",
         "url": "https://github.com/image-rs/image",
         "touch_file": "src/lib.rs",
+        "output": "libimage.rlib",
         "commit_hash": "5ba026e",
         "min_version": "V1_34"
     },
@@ -60,6 +67,7 @@
         "sub_directory": "",
         "url": "https://github.com/image-rs/inflate",
         "touch_file": "src/lib.rs",
+        "output": "libinflate.rlib",
         "commit_hash": "5a8c979",
         "min_version": "V1_34"
     },
@@ -68,6 +76,7 @@
         "sub_directory": "",
         "url": "https://github.com/rust-lang/packed_simd",
         "touch_file": "src/lib.rs",
+        "output": "libpacked_simd.rlib",
         "commit_hash": "93af7ef",
         "min_version": "V1_34"
     },
@@ -85,6 +94,7 @@
         "sub_directory": "futures",
         "url": "https://github.com/rust-lang/futures-rs/",
         "touch_file": "src/lib.rs",
+        "output": "libfutures.rlib",
         "commit_hash": "32d970e",
         "min_version": "V1_39"
     },
@@ -93,6 +103,7 @@
         "sub_directory": "",
         "url": "https://github.com/async-rs/async-std",
         "touch_file": "src/lib.rs",
+        "output": "libasync_std.rlib",
         "commit_hash": "1aa148d",
         "min_version": "V1_39"
     },
@@ -101,6 +112,7 @@
         "sub_directory": "tokio",
         "url": "https://github.com/tokio-rs/tokio",
         "touch_file": "src/lib.rs",
+        "output": "libtokio.rlib",
         "commit_hash": "20ef286",
         "min_version": "V1_39"
     },
@@ -109,6 +121,7 @@
         "sub_directory": "",
         "url": "https://github.com/xiph/rav1e",
         "touch_file": "src/lib.rs",
+        "output": "rav1e",
         "commit_hash": "92074b3",
         "min_version": "V1_34"
     },
@@ -117,6 +130,7 @@
         "sub_directory": "alacritty",
         "url": "https://github.com/alacritty/alacritty",
         "touch_file": "src/main.rs",
+        "output": "alacritty",
         "commit_hash": "56d25d1",
         "min_version": "V1_34"
     }

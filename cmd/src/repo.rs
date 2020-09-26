@@ -19,6 +19,7 @@ pub(crate) struct Repo {
     sub_directory: String,
     url: String,
     touch_file: String,
+    output: String,
     commit_hash: String,
     min_version: Version,
 }
@@ -183,7 +184,7 @@ impl Repo {
 
     fn get_binary_path(self: &Repo, folder: &str) -> Option<PathBuf> {
         let target_directory = self.get_target_directory()?;
-        Some(target_directory.join(folder).join(&self.name)) // TODO change to binary name
+        Some(target_directory.join(folder).join(&self.output))
     }
 
     fn get_touch_file(self: &Repo) -> Option<PathBuf> {
