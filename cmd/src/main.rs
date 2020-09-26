@@ -32,12 +32,12 @@ fn main() -> Result<()> {
     // hack to allow writing of results after every iteration
     let repo_names: Vec<String> = results.keys().map(|s| s.to_owned()).collect();
     for repo in repo_names {
-        let perf = results.get_mut(&repo).ok_or(anyhow!("impossible"))?;
-        perf.repo.clone_repo()?;
-        for version in perf.versions_to_profile() {
+        let profile = results.get_mut(&repo).ok_or(anyhow!("impossible"))?;
+        profile.repo.clone_repo()?;
+        for version in profile.versions_to_profile() {
             rustup::set_version(version)?;
-            match cargo::benchmark(&perf.repo, opt.times) {
-                Ok((bench, debug_size, release_size)) => perf.add_bench(version, bench, debug_size, release_size),
+            match cargo::benchmark(&profile.repo, opt.times) {
+                Ok((bench, debug_size, release_size)) => profile.add_bench(version, bench, debug_size, release_size),
                 Err(_) => {},
             };
         }

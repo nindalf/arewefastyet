@@ -25,7 +25,7 @@ pub(crate) struct Repo {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub(crate) struct Perf {
+pub(crate) struct Profile {
     pub repo: Repo,
     cpu_profiles: HashMap<CompilerMode, HashMap<ProfileMode, CpuProfile>>,
     binary_sizes: HashMap<CompilerMode, SizeProfile>,
@@ -35,9 +35,9 @@ type CpuProfile = HashMap<Version, Vec<u64>>;
 
 type SizeProfile = HashMap<Version, u64>;
 
-impl Perf {
-    pub(crate) fn new(repo: Repo) -> Perf {
-        Perf {
+impl Profile {
+    pub(crate) fn new(repo: Repo) -> Profile {
+        Profile {
             repo,
             cpu_profiles: HashMap::with_capacity(3),
             binary_sizes: HashMap::with_capacity(2),
@@ -71,7 +71,7 @@ impl Perf {
             .insert(version, release_size);
     }
 
-    pub(crate) fn versions_to_profile(self: &Perf) -> Vec<Version> {
+    pub(crate) fn versions_to_profile(self: &Profile) -> Vec<Version> {
         let min = self.repo.min_version as u8;
         Version::into_enum_iter()
             .filter(|v| *v as u8 >= min)
