@@ -11,7 +11,7 @@ sudo apt-get install -y nasm
 # required for alacritty
 sudo apt-get install -y cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev python3
 #required for tokio
-sudo apt-get install -y libssl-dev
+sudo apt-get install -y libssl-dev pkg-config
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source $HOME/.cargo/env
