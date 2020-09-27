@@ -167,3 +167,49 @@ fn git(args: &[&str], dir: &PathBuf) -> Result<()> {
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use anyhow::Result;
+
+    #[test]
+    fn test_println_git_reset() -> Result<()> {
+        crate::rustup::set_profile_minimal()?;
+        create_working_directory(std::path::PathBuf::from("/tmp/prof/"))?;
+
+        let repo: crate::repo::Repo = serde_json::from_str(
+            r#"
+            {
+                "name": "helloworld",
+                "sub_directory": "",
+                "url": "https://github.com/nindalf/helloworld",
+                "touch_file": "src/main.rs",
+                "output": "helloworld",
+                "commit_hash": "0ee163a",
+                "min_version": "V1_45"
+            }"#,
+        )?;
+        repo.clone_repo()?;
+        let touch_file = repo.get_touch_file().unwrap();
+        let initial_size = file_size(&touch_file)?;
+
+        repo.add_println()?;
+        let modified_size = file_size(&touch_file)?;
+
+        repo.git_reset()?;
+        let final_size = file_size(&touch_file)?;
+
+        assert_eq!(initial_size + 19, modified_size);
+        assert_eq!(initial_size, final_size);
+        
+        Ok(())
+    }
+
+    fn file_size(path: &PathBuf) -> Result<u64> {
+        let file = std::fs::File::open(&path)
+            .with_context(|| anyhow!("failed to find file - {:?}", path))?;
+        let metadata = file.metadata()?;
+        Ok(metadata.len())
+    }
+}
