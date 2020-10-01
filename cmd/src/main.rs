@@ -18,9 +18,9 @@ struct Opt {
     #[structopt(short, long, default_value = "/tmp/prof", parse(from_os_str))]
     working_directory: PathBuf,
     #[structopt(long, default_value = "../data/repos.json", parse(from_os_str))]
-    repos: PathBuf,
-    #[structopt(long, default_value = "../data/results.json", parse(from_os_str))]
-    results: PathBuf,
+    repos_file: PathBuf,
+    #[structopt(long, default_value = "../data/", parse(from_os_str))]
+    results_dir: PathBuf,
 }
 
 fn main() -> Result<()> {
@@ -29,12 +29,12 @@ fn main() -> Result<()> {
     let opt = Opt::from_args();
     repo::create_working_directory(opt.working_directory)?;
 
-    let mut results = store::get_results(&opt.results, &opt.repos)?;
+    let mut profiles = store::get_profiles(&opt.results_dir, &opt.repos_file)?;
 
     // hack to allow writing of results after every iteration
-    let repo_names: Vec<String> = results.keys().map(|s| s.to_owned()).collect();
+    let repo_names: Vec<String> = profiles.keys().map(|s| s.to_owned()).collect();
     for repo in repo_names {
-        let profile = results.get_mut(&repo).ok_or(anyhow!("impossible"))?;
+        let profile = profiles.get_mut(&repo).ok_or(anyhow!("impossible"))?;
         profile.repo.clone_repo()?;
 
         for version in profile.versions_to_profile() {
@@ -54,8 +54,8 @@ fn main() -> Result<()> {
                 Err(_) => {}
             };
         }
-        
-        store::overwrite_results(&opt.results, &results)?;
+
+        store::overwrite_profiles(&opt.results_dir, &profiles)?;
     }
     Ok(())
 }

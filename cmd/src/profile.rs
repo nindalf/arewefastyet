@@ -7,7 +7,7 @@ use crate::cargo::{CompilerMode, ProfileMode, Bytes, Milliseconds};
 use crate::repo::Repo;
 use crate::rustup::Version;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Clone, Deserialize)]
 pub(crate) struct Profile {
     pub repo: Repo,
     compile_times: HashMap<CompilerMode, HashMap<ProfileMode, CompileTimeProfile>>,

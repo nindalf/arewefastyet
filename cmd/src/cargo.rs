@@ -23,10 +23,10 @@ pub(crate) enum ProfileMode {
     PrintIncremental,
 }
 
-#[derive(Debug, Serialize, PartialOrd, PartialEq, Deserialize)]
+#[derive(Debug, Copy, Clone, Serialize, PartialOrd, PartialEq, Deserialize)]
 pub(crate) struct Bytes(u64);
 
-#[derive(Debug, Serialize, PartialOrd, PartialEq, Deserialize)]
+#[derive(Debug, Copy, Clone, Serialize, PartialOrd, PartialEq, Deserialize)]
 pub(crate) struct Milliseconds(u64);
 
 pub(crate) fn compile_time_profile(

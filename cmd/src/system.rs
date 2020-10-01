@@ -2,20 +2,20 @@ use anyhow::{anyhow, Context, Result};
 use once_cell::unsync::Lazy;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Hash, Serialize, Deserialize)]
 pub(crate) struct SystemInfo {
-    num_cpus: usize,
+    pub(crate) num_cores: usize,
     num_physical_cores: usize,
     cpu_model: String,
     total_memory: String,
 }
 
 impl SystemInfo {
-    fn new() -> Result<SystemInfo> {
+    pub(crate) fn new() -> Result<SystemInfo> {
         let cpu_model = SystemInfo::cpu_model()?;
         let total_memory = SystemInfo::total_memory()?;
         Ok(SystemInfo {
-            num_cpus: num_cpus::get(),
+            num_cores: num_cpus::get(),
             num_physical_cores: num_cpus::get_physical(),
             cpu_model,
             total_memory,
