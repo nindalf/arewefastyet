@@ -23,10 +23,10 @@ pub(crate) enum ProfileMode {
     PrintIncremental,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, PartialOrd, PartialEq, Deserialize)]
 pub(crate) struct Bytes(u64);
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, PartialOrd, PartialEq, Deserialize)]
 pub(crate) struct Milliseconds(u64);
 
 pub(crate) fn compile_time_profile(
@@ -152,11 +152,39 @@ fn get_file_size(repo: &Repo, compiler_mode: CompilerMode) -> Result<Bytes> {
 mod test {
     use super::*;
     use anyhow::Result;
-    #[test]
-    fn compile_hello_world() -> Result<()> {
-        crate::rustup::set_profile_minimal()?;
-        crate::repo::create_working_directory(std::path::PathBuf::from("/tmp/prof/"))?;
 
+    #[test]
+    fn compile_time_hello_world() -> Result<()> {
+        let repo = init_repo()?;
+        let times: usize = 2;
+        let compile_times = compile_time_profile(&repo, times as u32)?; // run once on any version
+
+        for compiler_mode in CompilerMode::into_enum_iter() {
+            for profile_mode in ProfileMode::into_enum_iter() {
+                let result_times = compile_times.get(&compiler_mode).unwrap().get(&profile_mode).unwrap();
+                assert_eq!(result_times.len(), times);
+                assert!(result_times[0] > Milliseconds(0));
+            }
+        }
+
+        Ok(())
+    }
+
+    #[test]
+    fn output_size_hello_world() -> Result<()> {
+        let repo = init_repo()?;
+
+        let (debug_size, release_size) = size_profile(&repo)?;
+
+        assert!(release_size > Bytes(0));
+        assert!(debug_size > release_size);
+
+        Ok(())
+    }
+
+    use std::sync::Once;
+    static INIT: Once = Once::new();
+    fn init_repo() -> Result<Repo> {
         let repo: crate::repo::Repo = serde_json::from_str(
             r#"
             {
@@ -169,17 +197,11 @@ mod test {
                 "min_version": "V1_45"
             }"#,
         )?;
-        repo.clone_repo()?;
-        let times: usize = 2;
-        let compile_times = compile_time_profile(&repo, times as u32)?; // run once on any version
-
-        for compiler_mode in CompilerMode::into_enum_iter() {
-            for profile_mode in ProfileMode::into_enum_iter() {
-                let result_times = compile_times.get(&compiler_mode).unwrap().get(&profile_mode).unwrap();
-                assert_eq!(result_times.len(), times);
-            }
-        }
-
-        Ok(())
+        INIT.call_once(|| {
+            crate::rustup::set_profile_minimal().unwrap();
+            crate::repo::create_working_directory(std::path::PathBuf::from("/tmp/prof/")).unwrap();
+            repo.clone_repo().unwrap();
+        });
+        Ok(repo)
     }
 }

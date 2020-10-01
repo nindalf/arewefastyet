@@ -135,18 +135,18 @@ impl Repo {
 }
 
 pub(crate) fn create_working_directory(mut working_dir: PathBuf) -> Result<()> {
-    if !working_dir.ends_with(ARE_WE_FAST_YET) {
-        working_dir.push(ARE_WE_FAST_YET);
-    }
-    if !working_dir.exists() {
-        println!("Creating {:?}", &working_dir);
-        std::fs::create_dir_all(&working_dir)
-            .with_context(|| "Failed to create working directory")?;
-    }
-    println!("Created working directory - {:?}", working_dir);
-    WORKING_DIRECTORY
-        .set(working_dir)
-        .map_err(|_| anyhow!("Failed to set global variable"))?;
+    WORKING_DIRECTORY.get_or_init(|| {
+        if !working_dir.ends_with(ARE_WE_FAST_YET) {
+            working_dir.push(ARE_WE_FAST_YET);
+        }
+        if !working_dir.exists() {
+            println!("Creating {:?}", &working_dir);
+            std::fs::create_dir_all(&working_dir)
+                .with_context(|| "Failed to create working directory").unwrap();
+        }
+        println!("Created working directory - {:?}", working_dir);
+        working_dir
+    });
     Ok(())
 }
 

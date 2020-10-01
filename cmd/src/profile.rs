@@ -112,7 +112,7 @@ mod test {
                     "commit_hash": "0ee163a",
                     "min_version": "V1_43"
                 },
-                "compile_time_profiles": {},
+                "compile_times": {},
                 "output_sizes": {}
             }"#,
         )?;
