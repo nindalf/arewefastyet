@@ -22,20 +22,23 @@ pub(crate) struct Repo {
     pub min_version: Version,
 }
 
+enum GitCommand {
+    Checkout,
+    CloneRepo,
+    Reset,
+}
+
 impl Repo {
     pub(crate) fn clone_repo(self: &Repo) -> Result<()> {
-        let working_directory = WORKING_DIRECTORY
-            .get()
-            .ok_or_else(|| anyhow!("Working directory not set"))?;
         let repo_dir = self
             .get_base_directory()
             .ok_or_else(|| anyhow!("Could not find repo dir"))?;
         if !repo_dir.exists() {
             println!("Cloning {}", &self.name);
-            git(&["clone", &self.url], working_directory)?;
+            self.git(GitCommand::CloneRepo)?;
             println!("Successfully cloned repo {}", &self.name);
         }
-        git(&["checkout", &self.commit_hash], &repo_dir)?;
+        self.git(GitCommand::Checkout)?;
         Ok(())
     }
 
@@ -94,11 +97,7 @@ impl Repo {
     }
 
     pub(crate) fn git_reset(self: &Repo) -> Result<()> {
-        let repo_dir = self
-            .get_base_directory()
-            .ok_or_else(|| anyhow!("Could not find repo dir"))?;
-        git(&["reset", "--hard"], &repo_dir)?;
-        Ok(())
+        self.git(GitCommand::Reset)
     }
 
     pub(crate) fn get_base_directory(self: &Repo) -> Option<PathBuf> {
@@ -132,6 +131,46 @@ impl Repo {
                 .join(&self.touch_file),
         )
     }
+
+    fn git(self: &Repo, command: GitCommand) -> Result<()> {
+        use GitCommand::*;
+        let directory = match command {
+            Checkout | Reset => 
+                self
+                    .get_base_directory()
+                    .ok_or_else(|| anyhow!("Could not find repo dir"))?,
+            
+            CloneRepo => 
+                WORKING_DIRECTORY
+                    .get()
+                    .ok_or_else(|| anyhow!("Working directory not set"))?
+                    .to_path_buf(),
+            
+        };
+        let args: [&str; 2] = match command {
+            Checkout => ["checkout", &self.commit_hash],
+            CloneRepo => ["clone", &self.url],
+            Reset => ["reset", "--hard"],
+        };
+
+        let output = Command::new("git")
+            .current_dir(&directory)
+            .args(&args)
+            .output()
+            .with_context(|| "failed to execute git")?;
+
+        if !output.status.success() {
+            let stderr = std::str::from_utf8(&output.stderr)
+                .with_context(|| "failed to decode git stderr")?;
+            return Err(anyhow!(
+                "Failed to execute git. Dir - {:?}. Args - {:?}.\n Stderr - {}",
+                &directory,
+                &args,
+                stderr
+            ));
+        }
+        Ok(())
+    }
 }
 
 pub(crate) fn create_working_directory(mut working_dir: PathBuf) -> Result<()> {
@@ -147,24 +186,6 @@ pub(crate) fn create_working_directory(mut working_dir: PathBuf) -> Result<()> {
         println!("Created working directory - {:?}", working_dir);
         working_dir
     });
-    Ok(())
-}
-
-fn git(args: &[&str], dir: &PathBuf) -> Result<()> {
-    let output = Command::new("git")
-        .current_dir(&dir)
-        .args(args)
-        .output()
-        .with_context(|| "failed to execute git")?;
-    if !output.status.success() {
-        let stderr =
-            std::str::from_utf8(&output.stderr).with_context(|| "failed to decode git stderr")?;
-        return Err(anyhow!(
-            "Failed to execute git. Args - {:?}.\n Stderr - {}",
-            &args,
-            stderr
-        ));
-    }
     Ok(())
 }
 
