@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::path::PathBuf;
 use std::process::Command;
 
 use anyhow::{anyhow, Context, Result};
@@ -20,7 +19,7 @@ pub(crate) enum CompilerMode {
 pub(crate) enum ProfileMode {
     Clean,
     Incremental,
-    PrintIncremental,
+    PatchIncremental,
 }
 
 #[derive(Debug, Copy, Clone, Serialize, PartialOrd, PartialEq, Deserialize)]
@@ -73,7 +72,7 @@ fn repeat(
 
         repo.add_println()?;
         result
-            .entry(ProfileMode::PrintIncremental)
+            .entry(ProfileMode::PatchIncremental)
             .or_insert(Vec::with_capacity(times as usize))
             .push(f(repo)?);
         repo.git_reset()?;
@@ -81,7 +80,16 @@ fn repeat(
     Ok(result)
 }
 
-fn cargo(dir: &PathBuf, args: &[&str]) -> Result<Milliseconds> {
+fn cargo(repo: &Repo, mode: CompilerMode) -> Result<Milliseconds> {
+    let dir = repo
+        .get_base_directory()
+        .ok_or_else(|| anyhow!("Could not find repo dir"))?;
+    let args: &[&str] = match mode {
+        CompilerMode::Check => &["check"],
+        CompilerMode::Debug => &["build"],
+        CompilerMode::Release => &["build", "--release"],
+    };
+
     let output = Command::new("cargo")
         .current_dir(dir)
         .args(args)
@@ -99,26 +107,17 @@ fn cargo(dir: &PathBuf, args: &[&str]) -> Result<Milliseconds> {
 
 fn cargo_check(repo: &Repo) -> Result<Milliseconds> {
     println!("{} - Running cargo check", &repo.name);
-    let dir = repo
-        .get_base_directory()
-        .ok_or_else(|| anyhow!("Could not find repo dir"))?;
-    cargo(&dir, &["check"])
+    cargo(repo, CompilerMode::Check)
 }
 
 fn cargo_debug(repo: &Repo) -> Result<Milliseconds> {
     println!("{} - Running cargo build", &repo.name);
-    let dir = repo
-        .get_base_directory()
-        .ok_or_else(|| anyhow!("Could not find repo dir"))?;
-    cargo(&dir, &["build"])
+    cargo(repo, CompilerMode::Debug)
 }
 
 fn cargo_release(repo: &Repo) -> Result<Milliseconds> {
     println!("{} - Running cargo release", &repo.name);
-    let dir = repo
-        .get_base_directory()
-        .ok_or_else(|| anyhow!("Could not find repo dir"))?;
-    cargo(&dir, &["build", "--release"])
+    cargo(repo, CompilerMode::Release)
 }
 
 fn parse_run_time(stderr: &str) -> Option<Milliseconds> {

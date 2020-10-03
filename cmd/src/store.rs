@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 use crate::profile::Profile;
 use crate::repo::Repo;
 use crate::system::SystemInfo;
+
 #[derive(Debug, Serialize, Deserialize)]
 struct FinalResult<'a> {
     system_info: SystemInfo,
