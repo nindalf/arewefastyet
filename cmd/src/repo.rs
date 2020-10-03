@@ -34,9 +34,9 @@ impl Repo {
             .get_base_directory()
             .ok_or_else(|| anyhow!("Could not find repo dir"))?;
         if !repo_dir.exists() {
-            println!("Cloning {}", &self.name);
+            log::info!("Cloning {}", &self.name);
             self.git(GitCommand::CloneRepo)?;
-            println!("Successfully cloned repo {}", &self.name);
+            log::info!("Successfully cloned repo {}", &self.name);
         }
         self.git(GitCommand::Checkout)?;
         Ok(())
@@ -47,7 +47,7 @@ impl Repo {
             .get_target_directory()
             .ok_or_else(|| anyhow!("Could not find target directory"))?;
         if !target_dir.exists() {
-            println!("Directory {:?} doesn't exist. Skipping delete", &target_dir);
+            log::warn!("Directory {:?} doesn't exist. Skipping delete", &target_dir);
             return Ok(());
         }
         std::fs::remove_dir_all(&target_dir)
@@ -90,7 +90,7 @@ impl Repo {
         let re = Lazy::new(|| {
             regex::Regex::new("((fn main.*)|(pub fn.*))").unwrap()
         });
-        let contents = re.replace(&contents, r#"$1 println!("hello");"#);
+        let contents = re.replace(&contents, r#"$1 log::info!("hello");"#);
         std::fs::write(&touch_file, contents.as_ref())
             .with_context(|| anyhow!("Failed to modify touch file - {:?}", touch_file))?;
         Ok(())
@@ -179,11 +179,11 @@ pub(crate) fn create_working_directory(mut working_dir: PathBuf) -> Result<()> {
             working_dir.push(ARE_WE_FAST_YET);
         }
         if !working_dir.exists() {
-            println!("Creating {:?}", &working_dir);
+            log::info!("Creating {:?}", &working_dir);
             std::fs::create_dir_all(&working_dir)
                 .with_context(|| "Failed to create working directory").unwrap();
         }
-        println!("Created working directory - {:?}", working_dir);
+        log::info!("Created working directory - {:?}", working_dir);
         working_dir
     });
     Ok(())

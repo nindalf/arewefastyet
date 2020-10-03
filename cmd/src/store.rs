@@ -65,7 +65,7 @@ pub(crate) fn overwrite_profiles(
         profiles: Cow::Borrowed(&profiles),
     };
     let output = File::create(&results_file)?;
-    println!("Writing to {:?}", &results_file);
+    log::info!("Writing to {:?}", &results_file);
     serde_json::to_writer_pretty(output, &final_result)?;
     Ok(())
 }

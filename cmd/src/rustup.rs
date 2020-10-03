@@ -43,7 +43,7 @@ impl Version {
 
 pub(crate) fn set_profile_minimal() -> Result<()> {
     rustup(&["set", "profile", "minimal"])?;
-    println!("Set profile to minimal");
+    log::info!("Set profile to minimal");
     Ok(())
 }
 
@@ -51,7 +51,7 @@ pub(crate) fn set_version(version: Version) -> Result<()> {
     let version = version.get_string();
     rustup(&["toolchain", "install", version])?;
     rustup(&["default", version])?;
-    println!("Switched to version {}", version);
+    log::info!("Switched to version {}", version);
     Ok(())
 }
 

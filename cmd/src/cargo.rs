@@ -106,17 +106,17 @@ fn cargo(repo: &Repo, mode: CompilerMode) -> Result<Milliseconds> {
 }
 
 fn cargo_check(repo: &Repo) -> Result<Milliseconds> {
-    println!("{} - Running cargo check", &repo.name);
+    log::info!("{} - Running cargo check", &repo.name);
     cargo(repo, CompilerMode::Check)
 }
 
 fn cargo_debug(repo: &Repo) -> Result<Milliseconds> {
-    println!("{} - Running cargo build", &repo.name);
+    log::info!("{} - Running cargo build", &repo.name);
     cargo(repo, CompilerMode::Debug)
 }
 
 fn cargo_release(repo: &Repo) -> Result<Milliseconds> {
-    println!("{} - Running cargo release", &repo.name);
+    log::info!("{} - Running cargo release", &repo.name);
     cargo(repo, CompilerMode::Release)
 }
 

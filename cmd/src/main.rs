@@ -24,6 +24,8 @@ struct Opt {
 }
 
 fn main() -> Result<()> {
+    pretty_env_logger::init();
+    
     rustup::set_profile_minimal()?;
 
     let opt = Opt::from_args();
@@ -44,14 +46,18 @@ fn main() -> Result<()> {
                 Ok(compile_time_profile) => {
                     profile.add_compile_times(version, compile_time_profile)
                 }
-                Err(_) => {}
+                Err(_) => {
+                    log::error!("Failed to compile {} on version {}", &repo, version.get_string());
+                }
             };
 
             match cargo::size_profile(&profile.repo) {
                 Ok((debug_size, release_size)) => {
                     profile.add_output_sizes(version, debug_size, release_size)
                 }
-                Err(_) => {}
+                Err(_) => {
+                    log::error!("Failed to compile {} on version {}", &repo, version.get_string());
+                }
             };
         }
 
