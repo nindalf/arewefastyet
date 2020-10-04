@@ -90,7 +90,7 @@ impl Repo {
         let re = Lazy::new(|| {
             regex::Regex::new("((fn main.*)|(pub fn.*))").unwrap()
         });
-        let contents = re.replace(&contents, r#"$1 log::info!("hello");"#);
+        let contents = re.replace(&contents, r#"$1 println!("hello");"#);
         std::fs::write(&touch_file, contents.as_ref())
             .with_context(|| anyhow!("Failed to modify touch file - {:?}", touch_file))?;
         Ok(())
