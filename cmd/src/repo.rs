@@ -18,7 +18,7 @@ pub(crate) struct Repo {
     url: String,
     touch_file: String,
     output: String,
-    commit_hash: String,
+    commit: String,
     pub min_version: Version,
 }
 
@@ -148,7 +148,7 @@ impl Repo {
             
         };
         let args: [&str; 2] = match command {
-            Checkout => ["checkout", &self.commit_hash],
+            Checkout => ["checkout", &self.commit],
             CloneRepo => ["clone", &self.url],
             Reset => ["reset", "--hard"],
         };
@@ -207,7 +207,7 @@ mod test {
                 "url": "https://github.com/nindalf/helloworld",
                 "touch_file": "src/main.rs",
                 "output": "helloworld",
-                "commit_hash": "0ee163a",
+                "commit": "v1.0",
                 "min_version": "V1_45"
             }"#,
         )?;

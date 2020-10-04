@@ -109,7 +109,7 @@ mod test {
                     "url": "https://github.com/nindalf/helloworld",
                     "touch_file": "src/main.rs",
                     "output": "helloworld",
-                    "commit_hash": "0ee163a",
+                    "commit": "v1.0",
                     "min_version": "V1_43"
                 },
                 "compile_times": {},
@@ -135,7 +135,7 @@ mod test {
                     "url": "https://github.com/nindalf/helloworld",
                     "touch_file": "src/main.rs",
                     "output": "helloworld",
-                    "commit_hash": "0ee163a",
+                    "commit": "v1.0",
                     "min_version": "V1_43"
                 },
                 "compile_times": {
