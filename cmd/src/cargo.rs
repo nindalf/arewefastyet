@@ -3,6 +3,7 @@ use std::process::Command;
 
 use anyhow::{anyhow, Context, Result};
 use enum_iterator::IntoEnumIterator;
+use once_cell::unsync::Lazy;
 use parse_duration::parse;
 use serde::{Deserialize, Serialize};
 
@@ -43,9 +44,7 @@ pub(crate) fn compile_time_profile(
     Ok(results)
 }
 
-pub(crate) fn size_profile(
-    repo: &Repo,
-) -> Result<(Bytes, Bytes)> {
+pub(crate) fn size_profile(repo: &Repo) -> Result<(Bytes, Bytes)> {
     let debug_size = get_file_size(repo, CompilerMode::Debug)?;
     let release_size = get_file_size(repo, CompilerMode::Release)?;
     Ok((debug_size, release_size))
@@ -121,29 +120,14 @@ fn cargo_release(repo: &Repo) -> Result<Milliseconds> {
 }
 
 fn parse_run_time(stderr: &str) -> Option<Milliseconds> {
-    let line = match stderr.lines().last() {
-        Some(s) => s,
-        None => {
-            log::error!("Error reading last line of cargo output");
-            ""
-        },
-    };
-    let end = match line.split("in ").last() {
-        Some(s) => s,
-        None => {
-            log::error!("Error reading splitting last line of cargo output - {:?}", &line);
-            ""
-        },
-    };
-    let duration = match parse(end).ok() {
-        Some(d) => d,
-        None => {
-            log::error!("Error parsing into duration - {:?}", &end);
-            parse("0").unwrap()
-        },
-    };
-
-    Some(Milliseconds(duration.as_millis() as u64))
+    let re = Lazy::new(|| {
+        regex::Regex::new(r#"Finished .* target\(s\) in ([0-9\.ms ]*)"#).unwrap()
+    });
+    re.captures(stderr)
+        .and_then(|capture| capture.get(1))
+        .map(|m| m.as_str())
+        .and_then(|c| parse(c).ok())
+        .map(|d| Milliseconds(d.as_millis() as u64))
 }
 
 fn get_file_size(repo: &Repo, compiler_mode: CompilerMode) -> Result<Bytes> {
@@ -178,7 +162,11 @@ mod test {
 
         for compiler_mode in CompilerMode::into_enum_iter() {
             for profile_mode in ProfileMode::into_enum_iter() {
-                let result_times = compile_times.get(&compiler_mode).unwrap().get(&profile_mode).unwrap();
+                let result_times = compile_times
+                    .get(&compiler_mode)
+                    .unwrap()
+                    .get(&profile_mode)
+                    .unwrap();
                 assert_eq!(result_times.len(), times);
                 assert!(result_times[0] > Milliseconds(0));
             }
@@ -220,5 +208,21 @@ mod test {
             repo.clone_repo().unwrap();
         });
         Ok(repo)
+    }
+
+    #[test]
+    fn parse_compile_times() -> Result<()> {
+        let inputs = [
+            ("Finished dev [unoptimized + debuginfo] target(s) in 4m 26s", Milliseconds(266000)),
+            ("Finished dev [unoptimized + debuginfo] target(s) in 0.86s", Milliseconds(860)),
+            ("Finished release [optimized] target(s) in 1.33s", Milliseconds(1330)),
+        ];
+
+        for (input, expected) in inputs.iter() {
+            let output = super::parse_run_time(input)
+                .ok_or(anyhow!("Failed to parse {}", input))?;
+            assert_eq!(&output, expected);
+        }
+        Ok(())
     }
 }
