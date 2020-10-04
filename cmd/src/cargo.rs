@@ -121,9 +121,27 @@ fn cargo_release(repo: &Repo) -> Result<Milliseconds> {
 }
 
 fn parse_run_time(stderr: &str) -> Option<Milliseconds> {
-    let line = stderr.lines().last()?;
-    let end = line.split("in ").last()?;
-    let duration = parse(end).ok()?;
+    let line = match stderr.lines().last() {
+        Some(s) => s,
+        None => {
+            log::error!("Error reading last line of cargo output");
+            ""
+        },
+    };
+    let end = match line.split("in ").last() {
+        Some(s) => s,
+        None => {
+            log::error!("Error reading splitting last line of cargo output - {:?}", &line);
+            ""
+        },
+    };
+    let duration = match parse(end).ok() {
+        Some(d) => d,
+        None => {
+            log::error!("Error parsing into duration - {:?}", &end);
+            parse("0").unwrap()
+        },
+    };
 
     Some(Milliseconds(duration.as_millis() as u64))
 }
