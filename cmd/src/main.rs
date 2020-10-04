@@ -13,7 +13,7 @@ use structopt::StructOpt;
 #[derive(Debug, StructOpt)]
 #[structopt(name = "arewefastyet", about = "Benchmark the rust compiler")]
 struct Opt {
-    #[structopt(short, long, default_value = "10")]
+    #[structopt(short, long, default_value = "5")]
     times: u32,
     #[structopt(short, long, default_value = "/tmp/prof", parse(from_os_str))]
     working_directory: PathBuf,
