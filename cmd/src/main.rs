@@ -24,6 +24,14 @@ struct Opt {
 }
 
 fn main() -> Result<()> {
+    match exec() {
+        Ok(_) => log::info!("Completed successfully"),
+        Err(e) => log::error!("Error executing process - {}", e),
+    };
+    Ok(())
+}
+
+fn exec() -> Result<()> {
     pretty_env_logger::init();
     
     rustup::set_profile_minimal()?;
@@ -55,7 +63,7 @@ fn main() -> Result<()> {
                 Ok((debug_size, release_size)) => {
                     profile.add_output_sizes(version, debug_size, release_size)
                 }
-                Err(_) => {
+                Err(e) => {
                     log::error!("Failed to profile sizes {} on version {}. Error - {}", &repo, version.get_string(), e);
                 }
             };
