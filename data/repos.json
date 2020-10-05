@@ -76,7 +76,7 @@
         "sub_directory": "",
         "url": "https://github.com/rust-lang/packed_simd",
         "touch_file": "src/lib.rs",
-        "output": "libpacked_simd.rlib",
+        "output": "libpacked_simd_2.rlib",
         "commit": "fc1792d",
         "min_version": "V1_34"
     },
