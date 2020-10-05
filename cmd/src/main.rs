@@ -46,8 +46,8 @@ fn main() -> Result<()> {
                 Ok(compile_time_profile) => {
                     profile.add_compile_times(version, compile_time_profile)
                 }
-                Err(_) => {
-                    log::error!("Failed to compile {} on version {}", &repo, version.get_string());
+                Err(e) => {
+                    log::error!("Failed to profile times {} on version {}. Error - {}", &repo, version.get_string(), e);
                 }
             };
 
@@ -56,7 +56,7 @@ fn main() -> Result<()> {
                     profile.add_output_sizes(version, debug_size, release_size)
                 }
                 Err(_) => {
-                    log::error!("Failed to compile {} on version {}", &repo, version.get_string());
+                    log::error!("Failed to profile sizes {} on version {}. Error - {}", &repo, version.get_string(), e);
                 }
             };
         }
