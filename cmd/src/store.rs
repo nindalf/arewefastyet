@@ -32,7 +32,9 @@ pub(crate) fn get_profiles(
     repos_file: &PathBuf,
 ) -> Result<HashMap<String, Profile>> {
     let system_info = SystemInfo::new()?;
+    log::trace!("{:?}", &system_info);
     let results_file = get_result_file_path(results_dir, &system_info);
+    log::info!("Attempting to read results file - {:?}", &results_file);
     let mut profiles = if results_file.exists() {
         let file = File::open(results_file)?;
         let final_result = serde_json::from_reader(file).unwrap_or(FinalResult::new(system_info));
