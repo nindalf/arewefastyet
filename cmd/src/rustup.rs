@@ -19,6 +19,7 @@ pub(crate) enum Version {
     V1_44 = 44,
     V1_45 = 45,
     V1_46 = 46,
+    V1_47 = 47,
 }
 
 impl Version {
@@ -37,6 +38,7 @@ impl Version {
             Version::V1_44 => "1.44.0",
             Version::V1_45 => "1.45.0",
             Version::V1_46 => "1.46.0",
+            Version::V1_47 => "1.47.0",
         }
     }
 }
