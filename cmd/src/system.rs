@@ -7,18 +7,15 @@ pub(crate) struct SystemInfo {
     pub(crate) num_cores: usize,
     num_physical_cores: usize,
     cpu_model: String,
-    total_memory: String,
 }
 
 impl SystemInfo {
     pub(crate) fn new() -> Result<SystemInfo> {
         let cpu_model = SystemInfo::cpu_model()?;
-        let total_memory = SystemInfo::total_memory()?;
         Ok(SystemInfo {
             num_cores: num_cpus::get(),
             num_physical_cores: num_cpus::get_physical(),
             cpu_model,
-            total_memory,
         })
     }
 
@@ -28,14 +25,6 @@ impl SystemInfo {
             regex::Regex::new("model name.*: (.*)").unwrap()
         });
         SystemInfo::read_file("/proc/cpuinfo", &re)
-    }
-
-    // Only works on Linux
-    fn total_memory() -> Result<String> {
-        let re = Lazy::new(|| {
-            regex::Regex::new("MemTotal.*? ([0-9]* [a-z][A-Z])").unwrap()
-        });
-        SystemInfo::read_file("/proc/meminfo", &re)
     }
 
     fn read_file(file_name: &str, re: &regex::Regex) -> Result<String> {

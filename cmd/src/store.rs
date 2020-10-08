@@ -87,17 +87,16 @@ mod test {
     #[test]
     fn test_file_path() -> Result<()> {
         let system_info = serde_json::from_str(
-            r#"{ 
-            "num_cores": 8, 
-            "num_physical_cores": 4, 
-            "cpu_model": "Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz", 
-            "total_memory": "12963196 kB" 
-        }"#,
+            r#"{
+                "num_cores": 2,
+                "num_physical_cores": 2,
+                "cpu_model": "Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz"
+              }"#,
         )?;
         let file_path = super::get_result_file_path(&PathBuf::from("/tmp/"), &system_info);
         assert_eq!(
             file_path.to_str().ok_or(anyhow!("no path"))?,
-            "/tmp/results-8-11383570585417069832.json"
+            "/tmp/results-2-4397104837942437864.json"
         );
         Ok(())
     }
