@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 use std::collections::hash_map::DefaultHasher;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fs::File;
 use std::hash::{Hash, Hasher};
 use std::path::PathBuf;
@@ -15,14 +15,14 @@ use crate::system::SystemInfo;
 #[derive(Debug, Serialize, Deserialize)]
 struct FinalResult<'a> {
     system_info: SystemInfo,
-    profiles: Cow<'a, HashMap<String, Profile>>,
+    profiles: Cow<'a, BTreeMap<String, Profile>>,
 }
 
 impl<'a> FinalResult<'a> {
     fn new(system_info: SystemInfo) -> Self {
         FinalResult {
             system_info,
-            profiles: Cow::Owned(HashMap::new()),
+            profiles: Cow::Owned(BTreeMap::new()),
         }
     }
 }
@@ -30,7 +30,7 @@ impl<'a> FinalResult<'a> {
 pub(crate) fn get_profiles(
     results_dir: &PathBuf,
     repos_file: &PathBuf,
-) -> Result<HashMap<String, Profile>> {
+) -> Result<BTreeMap<String, Profile>> {
     let system_info = SystemInfo::new()?;
     log::trace!("{:?}", &system_info);
     let results_file = get_result_file_path(results_dir, &system_info);
@@ -40,7 +40,7 @@ pub(crate) fn get_profiles(
         let final_result = serde_json::from_reader(file).unwrap_or(FinalResult::new(system_info));
         final_result.profiles.into_owned()
     } else {
-        HashMap::new()
+        BTreeMap::new()
     };
     let file = File::open(repos_file)?;
     let repos: Vec<Repo> = serde_json::from_reader(file)?;
@@ -57,7 +57,7 @@ pub(crate) fn get_profiles(
 
 pub(crate) fn overwrite_profiles(
     results_dir: &PathBuf,
-    profiles: &HashMap<String, Profile>,
+    profiles: &BTreeMap<String, Profile>,
 ) -> Result<()> {
     let system_info = SystemInfo::new()?;
     let results_file = get_result_file_path(results_dir, &system_info);

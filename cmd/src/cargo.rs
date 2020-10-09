@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::process::Command;
 
 use anyhow::{anyhow, Context, Result};
@@ -9,37 +9,37 @@ use serde::{Deserialize, Serialize};
 
 use crate::repo::Repo;
 
-#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq, Serialize, Deserialize, IntoEnumIterator)]
+#[derive(Debug, Copy, Clone, Hash, Eq, Ord, PartialEq, PartialOrd, Serialize, Deserialize, IntoEnumIterator)]
 pub(crate) enum CompilerMode {
     Check,
     Debug,
     Release,
 }
 
-#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq, Serialize, Deserialize, IntoEnumIterator)]
+#[derive(Debug, Copy, Clone, Hash, Eq, Ord, PartialEq, PartialOrd, Serialize, Deserialize, IntoEnumIterator)]
 pub(crate) enum ProfileMode {
     Clean,
     Incremental,
     PatchIncremental,
 }
 
-#[derive(Debug, Copy, Clone, Serialize, PartialOrd, PartialEq, Deserialize)]
+#[derive(Debug, Copy, Clone, Serialize, PartialOrd, Ord, PartialEq, Eq, Deserialize)]
 pub(crate) struct Bytes(u64);
 
-#[derive(Debug, Copy, Clone, Serialize, PartialOrd, PartialEq, Deserialize)]
+#[derive(Debug, Copy, Clone, Serialize, PartialOrd, Ord, PartialEq, Eq, Deserialize)]
 pub(crate) struct Milliseconds(u64);
 
 pub(crate) fn compile_time_profile(
     repo: &Repo,
     times: u32,
-) -> Result<HashMap<CompilerMode, HashMap<ProfileMode, Vec<Milliseconds>>>> {
+) -> Result<BTreeMap<(CompilerMode, ProfileMode), Vec<Milliseconds>>> {
     cargo_check(repo)?; // download dependencies
 
-    let mut results = HashMap::new();
+    let mut results = BTreeMap::new();
 
-    results.insert(CompilerMode::Check, repeat(cargo_check, repo, times)?);
-    results.insert(CompilerMode::Debug, repeat(cargo_debug, repo, times)?);
-    results.insert(CompilerMode::Release, repeat(cargo_release, repo, times)?);
+    results.extend(repeat(repo, CompilerMode::Check, times)?);
+    results.extend(repeat(repo, CompilerMode::Debug, times)?);
+    results.extend(repeat(repo, CompilerMode::Release, times)?);
 
     Ok(results)
 }
@@ -51,27 +51,33 @@ pub(crate) fn size_profile(repo: &Repo) -> Result<(Bytes, Bytes)> {
 }
 
 fn repeat(
-    f: fn(&Repo) -> Result<Milliseconds>,
     repo: &Repo,
+    compiler_mode: CompilerMode,
     times: u32,
-) -> Result<HashMap<ProfileMode, Vec<Milliseconds>>> {
-    let mut result = HashMap::with_capacity(3);
+) -> Result<BTreeMap<(CompilerMode, ProfileMode), Vec<Milliseconds>>> {
+    let mut result = BTreeMap::new();
+    let f = match compiler_mode {
+        CompilerMode::Check => cargo_check,
+        CompilerMode::Debug => cargo_debug,
+        CompilerMode::Release => cargo_release,
+    };
+
     for _ in 0..times {
         repo.remove_target_dir()?;
         result
-            .entry(ProfileMode::Clean)
+            .entry((compiler_mode, ProfileMode::Clean))
             .or_insert(Vec::with_capacity(times as usize))
             .push(f(repo)?);
 
         repo.touch_src()?;
         result
-            .entry(ProfileMode::Incremental)
+            .entry((compiler_mode, ProfileMode::Incremental))
             .or_insert(Vec::with_capacity(times as usize))
             .push(f(repo)?);
 
         repo.add_println()?;
         result
-            .entry(ProfileMode::PatchIncremental)
+            .entry((compiler_mode, ProfileMode::PatchIncremental))
             .or_insert(Vec::with_capacity(times as usize))
             .push(f(repo)?);
         repo.git_reset()?;
@@ -149,6 +155,33 @@ fn get_file_size(repo: &Repo, compiler_mode: CompilerMode) -> Result<Bytes> {
     Ok(Bytes(metadata.len()))
 }
 
+
+impl std::str::FromStr for CompilerMode {
+    type Err = &'static str;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Check" => Ok(CompilerMode::Check),
+            "Debug" => Ok(CompilerMode::Debug),
+            "Release" => Ok(CompilerMode::Release),
+            _ => Err("unknown mode"),
+        }
+    }
+}
+
+impl std::str::FromStr for ProfileMode {
+    type Err = &'static str;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Clean" => Ok(ProfileMode::Clean),
+            "Incremental" => Ok(ProfileMode::Incremental),
+            "PatchIncremental" => Ok(ProfileMode::PatchIncremental),
+            _ => Err("unknown mode"),
+        }
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -163,9 +196,7 @@ mod test {
         for compiler_mode in CompilerMode::into_enum_iter() {
             for profile_mode in ProfileMode::into_enum_iter() {
                 let result_times = compile_times
-                    .get(&compiler_mode)
-                    .unwrap()
-                    .get(&profile_mode)
+                    .get(&(compiler_mode, profile_mode))
                     .unwrap();
                 assert_eq!(result_times.len(), times);
                 assert!(result_times[0] > Milliseconds(0));
