@@ -4,12 +4,10 @@ use enum_iterator::IntoEnumIterator;
 use serde::{Deserialize, Serialize, de::Visitor, Serializer, Deserializer};
 
 use crate::cargo::{Bytes, CompilerMode, Milliseconds, ProfileMode};
-use crate::repo::Repo;
 use crate::rustup::Version;
 
 #[derive(Debug, Serialize, Clone, Deserialize)]
 pub(crate) struct Profile {
-    pub repo: Repo,
     compile_times: BTreeMap<CompileTimeProfileKey, Vec<Milliseconds>>,
     output_sizes: BTreeMap<SizeProfileKey, Bytes>,
 }
@@ -21,9 +19,8 @@ struct CompileTimeProfileKey(Version, CompilerMode, ProfileMode);
 struct SizeProfileKey(Version, CompilerMode);
 
 impl Profile {
-    pub(crate) fn new(repo: Repo) -> Profile {
+    pub(crate) fn new() -> Profile {
         Profile {
-            repo,
             compile_times: BTreeMap::new(),
             output_sizes: BTreeMap::new(),
         }
@@ -52,10 +49,9 @@ impl Profile {
             .insert(SizeProfileKey(version, CompilerMode::Release), release_size);
     }
 
-    pub(crate) fn versions_to_profile(self: &Profile) -> Vec<Version> {
-        let min = self.repo.min_version as u8;
+    pub(crate) fn versions_to_profile(self: &Profile, min_version: Version) -> Vec<Version> {
         Version::into_enum_iter()
-            .filter(|v| *v as u8 >= min)
+            .filter(|v| *v as u8 >= min_version as u8)
             .filter(|v| !self.version_profiled(v))
             .collect()
     }
@@ -79,10 +75,6 @@ impl Profile {
             return false;
         }
         return true;
-    }
-
-    pub(crate) fn set_repo(self: &mut Self, repo: Repo) {
-        self.repo = repo;
     }
 }
 
@@ -179,21 +171,12 @@ mod test {
         let profile: super::Profile = serde_json::from_str(
             r#"
             {
-                "repo": {
-                    "name": "helloworld",
-                    "sub_directory": "",
-                    "url": "https://github.com/nindalf/helloworld",
-                    "touch_file": "src/main.rs",
-                    "output": "helloworld",
-                    "commit": "v1.0",
-                    "min_version": "V1_43"
-                },
                 "compile_times": {},
                 "output_sizes": {}
             }"#,
         )?;
         assert_eq!(
-            profile.versions_to_profile(),
+            profile.versions_to_profile(Version::V1_43),
             vec![
                 Version::V1_43,
                 Version::V1_44,
@@ -206,15 +189,6 @@ mod test {
         let profile: super::Profile = serde_json::from_str(
             r#"
             {
-                "repo": {
-                    "name": "helloworld",
-                    "sub_directory": "",
-                    "url": "https://github.com/nindalf/helloworld",
-                    "touch_file": "src/main.rs",
-                    "output": "helloworld",
-                    "commit": "v1.0",
-                    "min_version": "V1_43"
-                },
                 "compile_times": {
                     "1.43.0,Check,Clean" : [],
                     "1.43.0,Check,Incremental" : [],
@@ -233,7 +207,7 @@ mod test {
             }"#,
         )?;
         assert_eq!(
-            profile.versions_to_profile(),
+            profile.versions_to_profile(Version::V1_43),
             vec![Version::V1_44, Version::V1_45, Version::V1_46, Version::V1_47]
         );
 

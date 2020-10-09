@@ -27,30 +27,23 @@ impl<'a> FinalResult<'a> {
     }
 }
 
-pub(crate) fn get_profiles(
-    results_dir: &PathBuf,
-    repos_file: &PathBuf,
-) -> Result<BTreeMap<String, Profile>> {
+pub(crate) fn get_repos(repos_file: &PathBuf) -> Result<Vec<Repo>> {
+    let file = File::open(repos_file)?;
+    Ok(serde_json::from_reader(file)?)
+}
+
+pub(crate) fn get_profiles(results_dir: &PathBuf) -> Result<BTreeMap<String, Profile>> {
     let system_info = SystemInfo::new()?;
     log::trace!("{:?}", &system_info);
     let results_file = get_result_file_path(results_dir, &system_info);
     log::info!("Attempting to read results file - {:?}", &results_file);
-    let mut profiles = if results_file.exists() {
+    let profiles = if results_file.exists() {
         let file = File::open(results_file)?;
         let final_result = serde_json::from_reader(file).unwrap_or(FinalResult::new(system_info));
         final_result.profiles.into_owned()
     } else {
         BTreeMap::new()
     };
-    let file = File::open(repos_file)?;
-    let repos: Vec<Repo> = serde_json::from_reader(file)?;
-
-    for repo in repos {
-        profiles
-            .entry(repo.name.to_owned())
-            .and_modify(|profile: &mut Profile| profile.set_repo(repo.clone()))
-            .or_insert_with(|| Profile::new(repo));
-    }
 
     Ok(profiles)
 }

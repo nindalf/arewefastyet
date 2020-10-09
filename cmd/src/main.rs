@@ -7,7 +7,7 @@ mod system;
 
 use std::path::PathBuf;
 
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
@@ -24,47 +24,60 @@ struct Opt {
 }
 
 fn main() -> Result<()> {
+    pretty_env_logger::init();
+
     match exec() {
         Ok(_) => log::info!("Completed successfully"),
         Err(e) => log::error!("Error executing process - {}", e),
     };
+
     Ok(())
 }
 
 fn exec() -> Result<()> {
-    pretty_env_logger::init();
-    
     rustup::set_profile_minimal()?;
 
     let opt = Opt::from_args();
     repo::create_working_directory(opt.working_directory)?;
 
-    let mut profiles = store::get_profiles(&opt.results_dir, &opt.repos_file)?;
+    let repos = store::get_repos(&opt.repos_file)?;
+    let mut profiles = store::get_profiles(&opt.results_dir)?;
 
-    // hack to allow writing of results after every iteration
-    let repo_names: Vec<String> = profiles.keys().map(|s| s.to_owned()).collect();
-    for repo in repo_names {
-        let profile = profiles.get_mut(&repo).ok_or(anyhow!("impossible"))?;
-        profile.repo.clone_repo()?;
+    for repo in repos {
+        repo.clone_repo()?;
+        
+        let profile = profiles
+            .entry(repo.name.clone())
+            .or_insert(profile::Profile::new());
 
-        for version in profile.versions_to_profile() {
+        for version in profile.versions_to_profile(repo.min_version) {
             rustup::set_version(version)?;
 
-            match cargo::compile_time_profile(&profile.repo, opt.times) {
+            match cargo::compile_time_profile(&repo, opt.times) {
                 Ok(compile_time_profile) => {
                     profile.add_compile_times(version, compile_time_profile)
                 }
                 Err(e) => {
-                    log::error!("Failed to profile times {} on version {}. Error - {}", &repo, version.get_string(), e);
+                    log::error!(
+                        "Failed to profile times {} on version {}. Error - {}",
+                        &repo.name,
+                        version.get_string(),
+                        e
+                    );
                 }
             };
 
-            match cargo::size_profile(&profile.repo) {
+            match cargo::size_profile(&repo) {
                 Ok((debug_size, release_size)) => {
                     profile.add_output_sizes(version, debug_size, release_size)
                 }
                 Err(e) => {
-                    log::error!("Failed to profile sizes {} on version {}. Error - {}", &repo, version.get_string(), e);
+                    log::error!(
+                        "Failed to profile sizes {} on version {}. Error - {}",
+                        &repo.name,
+                        version.get_string(),
+                        e
+                    );
                 }
             };
         }
