@@ -183,6 +183,7 @@ mod test {
                 Version::V1_45,
                 Version::V1_46,
                 Version::V1_47,
+                Version::V1_48,
             ]
         );
 
@@ -208,7 +209,14 @@ mod test {
         )?;
         assert_eq!(
             profile.versions_to_profile(Version::V1_43),
-            vec![Version::V1_44, Version::V1_45, Version::V1_46, Version::V1_47]
+            vec![
+                Version::V1_43,
+                Version::V1_44,
+                Version::V1_45,
+                Version::V1_46,
+                Version::V1_47,
+                Version::V1_48,
+            ]
         );
 
         Ok(())

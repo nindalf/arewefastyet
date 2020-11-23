@@ -20,6 +20,7 @@ pub(crate) enum Version {
     V1_45 = 45,
     V1_46 = 46,
     V1_47 = 47,
+    V1_48 = 48,
 }
 
 pub(crate) fn set_profile_minimal() -> Result<()> {
@@ -66,6 +67,7 @@ impl Version {
             Version::V1_45 => "1.45.0",
             Version::V1_46 => "1.46.0",
             Version::V1_47 => "1.47.0",
+            Version::V1_48 => "1.48.0",
         }
     }
 }
