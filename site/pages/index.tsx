@@ -1,9 +1,11 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import {getAllPerfData} from '../data/profiling'
-import LineChart from '../components/linechart'
+import {getChartData, CompilerMode, ProfileMode, System} from '../data/chartData'
+import { LineChartX, LineChartXProps} from '../components/linechart'
 
-export default function Home({allPerfData}) {
+export default function Home({chartData}) {
+  console.log("If I uncomment the following line, node breaks");
+  // console.log("xxx", ProfileMode.Clean);
   return (
     <div className={styles.container}>
       <Head>
@@ -13,12 +15,19 @@ export default function Home({allPerfData}) {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to Are We Fast Yet!
+          Benchmarking the Rust compiler
         </h1>
 
         <div className={styles.grid}>
-          {Object.keys(allPerfData).map(repo => {
-            return <LineChart {...allPerfData[repo]}/>
+          {Object.keys(chartData).map(repo => {
+            // const props = {
+            //   chartData: chartData[repo],
+            //   profile_modes: [ProfileMode.Clean],
+            //   compiler_modes: [CompilerMode.Debug],
+            //   systems: [System.EightCores]
+            // };
+            return <LineChartX chartData={chartData[repo]}/>
+            // return <LineChartX {...props}/>
           })
           }
         </div>
@@ -39,10 +48,10 @@ export default function Home({allPerfData}) {
 }
 
 export async function getStaticProps() {
-  const allPerfData = getAllPerfData()['0']
+  const chartData = getChartData()
   return {
     props: {
-      allPerfData
+      chartData
     }
   }
 }

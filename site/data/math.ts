@@ -1,23 +1,4 @@
-
-export interface SeriesPoint {
-    low: number,
-    mid: number,
-    high: number,
-    version: string,
-}
-
-export function reduce(times: Array<number>, version: string): SeriesPoint {
-    const intervals = confidenceIntervals(times);
-    const avg = average(times);
-    return {
-        "low": intervals[0],
-        "mid": avg,
-        "high": intervals[1],
-        "version": version,
-    }
-}
-
-function average(a: Array<number>): number {
+export function average(a: Array<number>): number {
     const sum = a.reduce((a, b) => a+b,0)
     return sum/a.length
 }
