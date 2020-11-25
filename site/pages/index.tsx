@@ -1,8 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { getChartData } from '../data/chartData'
-import { CompilerMode, ProfileMode, System } from '../data/types'
-import { LineChartX, LineChartXProps } from '../components/linechart'
+import { AppContainer } from '../components/appcontainer'
 
 export default function Home({ chartData }) {
   return (
@@ -19,18 +18,7 @@ export default function Home({ chartData }) {
 
         <h3>Check out the <a href="/faq">FAQ</a></h3>
 
-        <div className={styles.grid}>
-          {Object.keys(chartData).map(repo => {
-            const props: LineChartXProps = {
-              chartData: chartData[repo],
-              profile_modes: [ProfileMode.Clean],
-              compiler_modes: [CompilerMode.Debug, CompilerMode.Release],
-              systems: [System.TwoCores, System.FourCores, System.EightCores, System.SixteenCores],
-            };
-            return <LineChartX {...props} key={chartData[repo].repo.name}/>
-          })
-          }
-        </div>
+        <AppContainer {...chartData}/>
       </main>
 
       <footer className={styles.footer}>

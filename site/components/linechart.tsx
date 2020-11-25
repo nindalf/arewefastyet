@@ -13,13 +13,30 @@ export interface LineChartXProps {
     systems: Array<System>,
 }
 
+const lineColours: Record<string, string> = {
+    'Check,2 cores': '#ff94a8',
+    'Check,4 cores': '#fa738c',
+    'Check,8 cores': '#fc3d60',
+    'Check,16 cores': '#f71640',
+
+    'Debug,2 cores': '#9f95fc',
+    'Debug,4 cores': '#8377f7',
+    'Debug,8 cores': '#6556f5',
+    'Debug,16 cores': '#4a38fc',
+
+    'Release,2 cores': '#6cb871',
+    'Release,4 cores': '#4db353',
+    'Release,8 cores': '#2bb534',
+    'Release,16 cores': '#05b511',
+
+};
 export class LineChartX extends Component<LineChartXProps> {
     constructor(props) {
         super(props);
     }
 
     render() {
-        return <div className={styles.card} key={this.props.chartData.repo.name}>
+        return <div className={styles.card}>
             <h3 className={styles.title}>
                 <a href={this.props.chartData.repo.url}>{this.props.chartData.repo.name}</a>
             </h3>
@@ -32,7 +49,7 @@ export class LineChartX extends Component<LineChartXProps> {
         return this.props.compiler_modes.map(compile_mode => {
             return this.props.profile_modes.map(profile_mode => {
                 return this.props.systems.map(system => {
-                    return compile_mode + "," + profile_mode + "," + system
+                    return [compile_mode, profile_mode, system]
                 })
             })
         }).flatMap(x => x).flatMap(x => x);
@@ -40,7 +57,7 @@ export class LineChartX extends Component<LineChartXProps> {
 
     compileTimeCharts() {
         return <LineChart
-            width={800}
+            width={900}
             height={300}
             data={this.props.chartData.compile_times}
             margin={{
@@ -48,27 +65,30 @@ export class LineChartX extends Component<LineChartXProps> {
             }}
         >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="version" ><Label value="Rust version" position='bottom' /></XAxis>
-            <YAxis><Label value="Time (seconds)" angle="-90" position='insideLeft' /> </YAxis>
+            <XAxis dataKey="version"></XAxis>
+            <YAxis><Label value="Time (seconds)" position='insideLeft' /> </YAxis>
             <Tooltip />
             <Legend align='right' />
-            {this.compileTimeDataKeys().map(key => <Line type="monotone" dataKey={key} stroke="#8884d8" />)}
+            {this.compileTimeDataKeys().map(([cm, pm, system]) => {
+                return <Line type="monotone" dataKey={cm + ',' + pm + ',' + system} stroke={lineColours[cm + ',' + system]} />;
+            })
+            }
 
         </LineChart>
     }
 
     sizeChart() {
         return <LineChart
-            width={800}
+            width={900}
             height={300}
             data={this.props.chartData.sizes}
             margin={{
-                top: 5, right: 30, left: 20, bottom: 5,
+                top: 30, right: 30, left: 20, bottom: 5,
             }}
         >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="version" ><Label value="Rust version" position='bottom' /></XAxis>
-            <YAxis><Label value="Size (MB)" angle="-90" position='insideLeft' /> </YAxis>
+            <XAxis dataKey="version" ></XAxis>
+            <YAxis><Label value="Size (MB)" position='insideLeft' /> </YAxis>
             <Tooltip />
             <Legend align='right' />
             <Line type="monotone" dataKey="Debug" stroke="#8884d8" />

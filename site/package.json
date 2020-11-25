@@ -5,10 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "export": "next export"
   },
   "dependencies": {
+    "bootstrap": "^4.5.3",
     "next": "^9.5.4",
+    "react-bootstrap": "^1.4.0",
     "recharts": "^2.0.0-beta.8",
     "showdown": "^1.9.1"
   },

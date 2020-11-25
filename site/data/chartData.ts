@@ -66,12 +66,12 @@ function outputSizes(repo_names: Array<string>, profiles: Array<[number, Record<
                 output[version] = {};
                 output[version]['version'] = version;
             }
-
+            const sizeMB = (size / (1024 * 1024)).toFixed(3);
             if (compiler_mode == 'Debug') {
-                output[version]['Debug'] = size / (1024 * 1024);
+                output[version]['Debug'] = sizeMB;
             }
             if (compiler_mode == 'Release') {
-                output[version]['Release'] = size / (1024 * 1024);
+                output[version]['Release'] = sizeMB;
             }
         })
         const values: ChartPoint[] = Object.entries(output).map(([_, value]) => value);

@@ -19,15 +19,16 @@ const faq_md = `
     - CPU model - Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz
     - Number of cores - 2, 4, 8, 16
     - Memory - 4GB, 8GB, 16GB, 32GB. (none of the builds used more than 1 GB of memory, so memory wasn't a bottleneck).
-	- OS - Ubuntu 20.04 LTS. No changes made apart from the packages installed by ./collect_samples.sh
+    - OS - Ubuntu 20.04 LTS. No changes made apart from the packages installed by [./collect_samples.sh](https://github.com/nindalf/arewefastyet/blob/master/collect_samples.sh)
+- Can I see the raw data?
+    - Sure, it's in [./data](https://github.com/nindalf/arewefastyet/tree/master/data).
 - Will the hardware change? Will alternate configurations be supported?
     - Adding support for more hardware is something I'm not considering right now. I did consider adding benchmarks from a typical laptop or from a workstation but I decided against it because of concerns around reproducibility (laptops throttle aggressively) and future access to the same hardware. A VM with a dedicated CPU has neither of those issues. 
-
 - How to contribute to rust development?
 	- If you're looking for Rust projects to contribute to, keep an eye on the "calls for participation" section in [This week in Rust](https://this-week-in-rust.org/), a newsletter. To contribute to Rust itself, check out 
 - How to contribute to arewefastyet?
     - Contributions welcome to profiling code or frontend.
-    - If there is a important rust repo that is different enough from the existing ones, open [an issue](todo). Importance is correlated with how widely used the tool (ripgrep, alacritty, rav1e) or library (hyper, serde, clap) is. If you'd like to add one, please follow the format in ./data/repos.json
+    - If there is a important rust repo that is different enough from the existing ones, open [an issue](todo). Importance is correlated with how widely used the tool (ripgrep, alacritty, rav1e) or library (hyper, serde, clap) is. If you'd like to add one, please follow the format in [./data/repos.json](https://github.com/nindalf/arewefastyet/blob/master/data/repos.json)
 `;
 
 export default function Home({ faqHtml }) {
