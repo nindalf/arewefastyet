@@ -2,9 +2,9 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { getChartData } from '../data/chartData'
 import { CompilerMode, ProfileMode, System } from '../data/types'
-import { LineChartX, LineChartXProps} from '../components/linechart'
+import { LineChartX, LineChartXProps } from '../components/linechart'
 
-export default function Home({chartData}) {
+export default function Home({ chartData }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -19,13 +19,13 @@ export default function Home({chartData}) {
 
         <div className={styles.grid}>
           {Object.keys(chartData).map(repo => {
-            const props = {
+            const props: LineChartXProps = {
               chartData: chartData[repo],
               profile_modes: [ProfileMode.Clean],
               compiler_modes: [CompilerMode.Debug, CompilerMode.Release],
               systems: [System.TwoCores, System.FourCores, System.EightCores, System.SixteenCores],
             };
-            return <LineChartX {...props}/>
+            return <LineChartX {...props} />
           })
           }
         </div>
@@ -33,12 +33,11 @@ export default function Home({chartData}) {
 
       <footer className={styles.footer}>
         <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          href="https://github.com/nindalf/arewefastyet"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
+          Link to arewefastyet repo
         </a>
       </footer>
     </div>
