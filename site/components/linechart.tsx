@@ -1,7 +1,7 @@
 import styles from '../styles/Home.module.css'
 import React, { Component } from "react"
-import { ChartData, CompilerMode, ProfileMode, System } from '../data/chartData'
-// import { ChartData } from '../data/chartData'
+import { ChartData } from '../data/chartData'
+import { CompilerMode, ProfileMode, System } from '../data/types'
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Label, Text
 } from 'recharts';
@@ -33,11 +33,10 @@ export class LineChartX extends Component<LineChartXProps> {
                     return compile_mode + "," + profile_mode + "," + system
                 })
             })
-        })
+        }).flatMap(x => x).flatMap(x => x);
     }
 
     compileTimeCharts() {
-
         return <LineChart
             width={800}
             height={300}
@@ -51,9 +50,7 @@ export class LineChartX extends Component<LineChartXProps> {
             <YAxis><Label value="Time (seconds)" angle="-90" position='insideLeft' /> </YAxis>
             <Tooltip />
             <Legend align='right' />
-            {/* {this.compileTimeDataKeys().map(key => <Line type="monotone" dataKey={key} stroke="#8884d8" />)} */}
-            <Line type="monotone" dataKey="Debug,Clean,2 cores" stroke="#8884d8" />
-            <Line type="monotone" dataKey="Debug,Clean,4 cores" stroke="#82ca9d" />
+            {this.compileTimeDataKeys().map(key => <Line type="monotone" dataKey={key} stroke="#8884d8" />)}
 
         </LineChart>
     }

@@ -1,11 +1,10 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import {getChartData, CompilerMode, ProfileMode, System} from '../data/chartData'
+import { getChartData } from '../data/chartData'
+import { CompilerMode, ProfileMode, System } from '../data/types'
 import { LineChartX, LineChartXProps} from '../components/linechart'
 
 export default function Home({chartData}) {
-  console.log("If I uncomment the following line, node breaks");
-  // console.log("xxx", ProfileMode.Clean);
   return (
     <div className={styles.container}>
       <Head>
@@ -20,14 +19,13 @@ export default function Home({chartData}) {
 
         <div className={styles.grid}>
           {Object.keys(chartData).map(repo => {
-            // const props = {
-            //   chartData: chartData[repo],
-            //   profile_modes: [ProfileMode.Clean],
-            //   compiler_modes: [CompilerMode.Debug],
-            //   systems: [System.EightCores]
-            // };
-            return <LineChartX chartData={chartData[repo]}/>
-            // return <LineChartX {...props}/>
+            const props = {
+              chartData: chartData[repo],
+              profile_modes: [ProfileMode.Clean],
+              compiler_modes: [CompilerMode.Debug, CompilerMode.Release],
+              systems: [System.TwoCores, System.FourCores, System.EightCores, System.SixteenCores],
+            };
+            return <LineChartX {...props}/>
           })
           }
         </div>

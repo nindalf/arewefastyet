@@ -2,23 +2,6 @@ import { average } from './math'
 import { Profile, Repo, getResults, getRepos } from './results'
 
 
-export enum CompilerMode {
-    Check = 'Check',
-    Debug = 'Debug',
-    Release = 'Release',
-}
-
-export enum ProfileMode {
-    Clean = 'Clean',
-    Incremental = 'Incremental',
-}
-export enum System {
-    TwoCores = '2 cores',
-    FourCores = '4 cores',
-    EightCores = '8 cores',
-    SixteenCores = '16 cores',
-}
-
 export interface ChartData {
     repo: Repo,
     compile_times: ChartPoint[],
@@ -97,5 +80,3 @@ function outputSizes(repo_names: Array<string>, profiles: Array<[number, Record<
         return map;
     }, {});
 }
-console.log("hi");
-console.log("xxx", ProfileMode.Clean);
