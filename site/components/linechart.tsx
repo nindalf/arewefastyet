@@ -28,8 +28,8 @@ const lineColours: Record<string, string> = {
     'Release,4 cores': '#4db353',
     'Release,8 cores': '#2bb534',
     'Release,16 cores': '#05b511',
-
 };
+
 export class LineChartX extends Component<LineChartXProps> {
     constructor(props) {
         super(props);

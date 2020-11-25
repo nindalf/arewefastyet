@@ -18,7 +18,7 @@ export class AppContainer extends Component<Array<ChartData>, AppConfig> {
         this.state = {
             profile_modes: [ProfileMode.Clean],
             compiler_modes: [CompilerMode.Debug, CompilerMode.Release],
-            systems: [System.FourCores, System.EightCores, System.SixteenCores],
+            systems: [System.FourCores, System.EightCores],
         };
         this.onCMChanged = this.onCMChanged.bind(this);
         this.onPMChanged = this.onPMChanged.bind(this);
