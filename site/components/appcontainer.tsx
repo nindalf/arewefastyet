@@ -74,8 +74,8 @@ export class AppContainer extends Component<Array<ChartData>, AppConfig> {
                     <ToggleButton value={System.SixteenCores}>16 cores</ToggleButton>
                 </ToggleButtonGroup>
                 
-                <ToggleButtonGroup name='Number of Cores' type="checkbox" defaultValue={[false]} className="mb-2" onChange={this.onSizeChartClicked}>
-                    <ToggleButton value={false}>Show binary size chart</ToggleButton>
+                <ToggleButtonGroup name='Number of Cores' type="checkbox" defaultValue={[]} className="mb-2" onChange={this.onSizeChartClicked}>
+                    <ToggleButton value={1}>Show binary size chart</ToggleButton>
                 </ToggleButtonGroup>
             </div>
             {
