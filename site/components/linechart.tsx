@@ -11,6 +11,7 @@ export interface LineChartXProps {
     compiler_modes: Array<CompilerMode>,
     profile_modes: Array<ProfileMode>,
     systems: Array<System>,
+    show_size_chart: boolean,
 }
 
 const lineColours: Record<string, string> = {
@@ -78,6 +79,10 @@ export class LineChartX extends Component<LineChartXProps> {
     }
 
     sizeChart() {
+        if (!this.props.show_size_chart) {
+            return <div/>;
+        }
+        
         return <LineChart
             width={900}
             height={300}

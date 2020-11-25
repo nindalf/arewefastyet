@@ -10,6 +10,7 @@ interface AppConfig {
     compiler_modes: Array<CompilerMode>,
     profile_modes: Array<ProfileMode>,
     systems: Array<System>,
+    show_size_chart: boolean,
 }
 
 export class AppContainer extends Component<Array<ChartData>, AppConfig> {
@@ -19,10 +20,12 @@ export class AppContainer extends Component<Array<ChartData>, AppConfig> {
             profile_modes: [ProfileMode.Clean],
             compiler_modes: [CompilerMode.Debug, CompilerMode.Release],
             systems: [System.FourCores, System.EightCores],
+            show_size_chart: false,
         };
         this.onCMChanged = this.onCMChanged.bind(this);
         this.onPMChanged = this.onPMChanged.bind(this);
         this.onSystemChanged = this.onSystemChanged.bind(this);
+        this.onSizeChartClicked = this.onSizeChartClicked.bind(this);
     }
 
     onCMChanged(x) {
@@ -42,6 +45,12 @@ export class AppContainer extends Component<Array<ChartData>, AppConfig> {
             systems: x
         })
 
+    }
+
+    onSizeChartClicked(x) {
+        this.setState({
+            show_size_chart: !this.state.show_size_chart,
+        })
     }
 
     render() {
@@ -64,6 +73,10 @@ export class AppContainer extends Component<Array<ChartData>, AppConfig> {
                     <ToggleButton value={System.EightCores}>8 cores</ToggleButton>
                     <ToggleButton value={System.SixteenCores}>16 cores</ToggleButton>
                 </ToggleButtonGroup>
+                
+                <ToggleButtonGroup name='Number of Cores' type="checkbox" defaultValue={[false]} className="mb-2" onChange={this.onSizeChartClicked}>
+                    <ToggleButton value={false}>Show binary size chart</ToggleButton>
+                </ToggleButtonGroup>
             </div>
             {
                 Object.keys(this.props).map(repo => {
@@ -72,6 +85,7 @@ export class AppContainer extends Component<Array<ChartData>, AppConfig> {
                         profile_modes: this.state.profile_modes,
                         compiler_modes: this.state.compiler_modes,
                         systems: this.state.systems,
+                        show_size_chart: this.state.show_size_chart,
                     };
                     return <LineChartX {...props} key={repo} />
                 })
