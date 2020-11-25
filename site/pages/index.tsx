@@ -13,9 +13,11 @@ export default function Home({ chartData }) {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
+        <h2 className={styles.title}>
           Benchmarking the Rust compiler
-        </h1>
+        </h2>
+
+        <h3>Check out the <a href="/faq">FAQ</a></h3>
 
         <div className={styles.grid}>
           {Object.keys(chartData).map(repo => {
@@ -25,7 +27,7 @@ export default function Home({ chartData }) {
               compiler_modes: [CompilerMode.Debug, CompilerMode.Release],
               systems: [System.TwoCores, System.FourCores, System.EightCores, System.SixteenCores],
             };
-            return <LineChartX {...props} />
+            return <LineChartX {...props} key={chartData[repo].repo.name}/>
           })
           }
         </div>

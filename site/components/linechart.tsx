@@ -20,7 +20,9 @@ export class LineChartX extends Component<LineChartXProps> {
 
     render() {
         return <div className={styles.card} key={this.props.chartData.repo.name}>
-            <h3><a href={this.props.chartData.repo.url}>{this.props.chartData.repo.name}</a></h3>
+            <h3 className={styles.title}>
+                <a href={this.props.chartData.repo.url}>{this.props.chartData.repo.name}</a>
+            </h3>
             {this.compileTimeCharts()}
             {this.sizeChart()}
         </div>
