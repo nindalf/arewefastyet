@@ -5,7 +5,8 @@ import utilStyles from '../../styles/utils.module.css'
 
 const faq_md = `
 - What is being measured here?
-	- Arewefastyet measures how long the Rust compiler takes to compile common Rust programs, not how fast compiled rust programs in general are. Over the last few years, [significant](https://pingcap.com/blog/rust-compilation-model-calamity#recent-work-on-rust-compile-times) [effort](https://blog.mozilla.org/nnethercote/2020/09/08/how-to-speed-up-the-rust-compiler-one-last-time/) has been put into optimization. Recent releases of the Rust compiler are significantly faster than releases from a year ago. There is more exciting work planned, like a new [debug backend](https://bjorn3.github.io/2020/09/28/progress-report-sep-2020.htm) and Profile Guided Optimization.
+    - Arewefastyet measures how long the Rust compiler takes to compile common Rust programs, not how fast compiled rust programs in general are.
+    - Over the last few years, [significant](https://pingcap.com/blog/rust-compilation-model-calamity#recent-work-on-rust-compile-times) [effort](https://blog.mozilla.org/nnethercote/2020/09/08/how-to-speed-up-the-rust-compiler-one-last-time/) has been put into optimization. Recent releases of the Rust compiler are significantly faster than releases from a year ago. There is more exciting work planned, like a new [debug backend](https://bjorn3.github.io/2020/09/28/progress-report-sep-2020.htm) and [profile guided optimization](https://blog.rust-lang.org/inside-rust/2020/11/11/exploring-pgo-for-the-rust-compiler.html).
 - What is Rust again? 
 	- Rust is a language empowering everyone to build reliable and efficient software. More details [here](https://www.rust-lang.org/)
 - Does Rust compile programs slowly?
