@@ -31,6 +31,13 @@ const lineColours: Record<string, string> = {
     'Release,16 cores': '#05b511',
 };
 
+const strokeWidthMap: Record<string, number> = {
+    '2 cores': 1,
+    '4 cores': 1.33,
+    '8 cores': 1.66,
+    '16 cores': 2,
+};
+
 export class LineChartX extends Component<LineChartXProps> {
     constructor(props) {
         super(props);
@@ -75,7 +82,7 @@ export class LineChartX extends Component<LineChartXProps> {
             <Tooltip />
             <Legend align='right' />
             {this.compileTimeDataKeys().map(([cm, pm, system]) => {
-                return <Line type="monotone" dataKey={cm + ',' + pm + ',' + system} stroke={lineColours[cm + ',' + system]} />;
+                return <Line type="monotone" dataKey={cm + ',' + pm + ',' + system} stroke={lineColours[cm + ',' + system]} strokeWidth={strokeWidthMap[system]} />;
             })
             }
 
