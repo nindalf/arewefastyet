@@ -38,40 +38,39 @@ const faq_md = `
 `;
 
 export default function Home({ faqHtml }) {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Are We Fast Yet</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    return (
+        <div className={styles.container}>
+            <Head>
+                <title>Are We Fast Yet</title>
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
 
-      <main className={styles.main}>
-        <h2 className={styles.title}>
-          FAQ
+            <main className={styles.main}>
+                <h2 className={styles.title}>
+                    FAQ
         </h2>
-        <div className={styles.grid} dangerouslySetInnerHTML={{ __html: faqHtml }}/>
-      </main>
+                <div className={styles.grid} dangerouslySetInnerHTML={{ __html: faqHtml }} />
+            </main>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://github.com/nindalf/arewefastyet"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Link to arewefastyet repo
-        </a>
-      </footer>
-    </div>
-  )
+            <footer className={styles.footer}>
+                <a
+                    href="https://github.com/nindalf/arewefastyet"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img src="/GitHub-Mark-64px.png" />
+                </a>
+            </footer>
+        </div>
+    )
 }
 
 export async function getStaticProps() {
     const converter = new Converter();
     const faqHtml = converter.makeHtml(faq_md);
     return {
-      props: {
-        faqHtml
-      }
+        props: {
+            faqHtml
+        }
     }
-  }
-  
+}

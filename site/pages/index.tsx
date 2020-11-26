@@ -18,7 +18,7 @@ export default function Home({ chartData }) {
 
         <h3>Check out the <a href="/faq">FAQ</a></h3>
 
-        <AppContainer {...chartData}/>
+        <AppContainer {...chartData} />
       </main>
 
       <footer className={styles.footer}>
@@ -27,7 +27,7 @@ export default function Home({ chartData }) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Link to arewefastyet repo
+          <img src="/GitHub-Mark-64px.png" />
         </a>
       </footer>
     </div>
