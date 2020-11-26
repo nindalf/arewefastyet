@@ -12,12 +12,10 @@ export default function Home({ chartData }) {
       </Head>
 
       <main className={styles.main}>
-        <h2 className={styles.title}>
+        <h3 className={styles.title}>
           Benchmarking the Rust compiler
-        </h2>
-
-        <h3>Check out the <a href="/faq">FAQ</a></h3>
-
+        </h3>
+        <div className={styles.card}>Arewefastyet measures how long the Rust compiler takes to compile common Rust programs.<br/>Lower is better. Check out the <a href="/faq">FAQ</a></div>
         <AppContainer {...chartData} />
       </main>
 
