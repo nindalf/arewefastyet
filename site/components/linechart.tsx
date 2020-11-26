@@ -64,7 +64,10 @@ export class LineChartX extends Component<LineChartXProps> {
                     return [compile_mode, profile_mode, system]
                 })
             })
-        }).flatMap(x => x).flatMap(x => x);
+        })
+            .flatMap(x => x)
+            .flatMap(x => x)
+            .sort((a, b) => parseInt(a[2].substr(0, 2)) - parseInt(b[2].substr(0, 2)));
     }
 
     compileTimeCharts() {
@@ -91,9 +94,9 @@ export class LineChartX extends Component<LineChartXProps> {
 
     sizeChart() {
         if (!this.props.show_size_chart) {
-            return <div/>;
+            return <div />;
         }
-        
+
         return <LineChart
             width={700}
             height={300}
