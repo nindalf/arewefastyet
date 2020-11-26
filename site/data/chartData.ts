@@ -43,7 +43,7 @@ function combineCompileTimes(repo_names: Array<string>, profiles: Array<[number,
                 const average_timing = average(timings);
                 if (!output[version]) {
                     output[version] = {}
-                    output[version]['version'] = version;
+                    output[version]['version'] = version.substr(0, 4);
                 }
                 output[version][new_key] = average_timing / 1000;
             });
@@ -64,7 +64,7 @@ function outputSizes(repo_names: Array<string>, profiles: Array<[number, Record<
             const [version, compiler_mode] = key.split(',');
             if (!output[version]) {
                 output[version] = {};
-                output[version]['version'] = version;
+                output[version]['version'] = version.substr(0, 4);
             }
             const sizeMB = (size / (1024 * 1024)).toFixed(3);
             if (compiler_mode == 'Debug') {

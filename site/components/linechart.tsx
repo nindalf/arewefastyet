@@ -62,7 +62,7 @@ export class LineChartX extends Component<LineChartXProps> {
 
     compileTimeCharts() {
         return <LineChart
-            width={900}
+            width={700}
             height={300}
             data={this.props.chartData.compile_times}
             margin={{
@@ -88,7 +88,7 @@ export class LineChartX extends Component<LineChartXProps> {
         }
         
         return <LineChart
-            width={900}
+            width={700}
             height={300}
             data={this.props.chartData.sizes}
             margin={{
