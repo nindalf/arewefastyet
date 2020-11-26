@@ -37,9 +37,13 @@ export class LineChartX extends Component<LineChartXProps> {
     }
 
     render() {
+        const name = this.props.chartData.repo.name;
+        const base_url = this.props.chartData.repo.url;
+        const release = this.props.chartData.repo.commit;
+        const release_url = base_url + '/releases/tag/' + release;
         return <div className={styles.card}>
             <h3 className={styles.title}>
-                <a href={this.props.chartData.repo.url}>{this.props.chartData.repo.name}</a>
+                <a href={base_url}>{name}</a> (<a href={release_url}>{release}</a>)
             </h3>
             {this.compileTimeCharts()}
             {this.sizeChart()}
