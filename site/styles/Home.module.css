@@ -90,6 +90,10 @@
   flex-basis: 45%;
 }
 
+.faq {
+  max-width: 800px;
+}
+
 .card:hover,
 .card:focus,
 .card:active {
