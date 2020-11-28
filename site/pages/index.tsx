@@ -9,13 +9,14 @@ export default function Home({ chartData }) {
       <Head>
         <title>Are We Fast Yet</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
       </Head>
 
       <main className={styles.main}>
         <h3 className={styles.title}>
           Benchmarking the Rust compiler
         </h3>
-        <div className={styles.card}>Arewefastyet measures how long the Rust compiler takes to compile common Rust programs.<br/>Lower is better. Check out the <a href="/faq">FAQ</a></div>
+        <div className={styles.card}>Arewefastyet measures how long the Rust compiler takes to compile common Rust programs.<br />Lower is better. Check out the <a href="/faq">FAQ</a></div>
         <AppContainer {...chartData} />
       </main>
 

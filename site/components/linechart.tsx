@@ -3,7 +3,7 @@ import React, { Component } from "react"
 import { ChartData } from '../data/chartData'
 import { CompilerMode, ProfileMode, System } from '../data/types'
 import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Label, Text
+    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Label, ResponsiveContainer, Text
 } from 'recharts';
 
 export interface LineChartXProps {
@@ -71,25 +71,25 @@ export class LineChartX extends Component<LineChartXProps> {
     }
 
     compileTimeCharts() {
-        return <LineChart
-            width={700}
-            height={300}
-            data={this.props.chartData.compile_times}
-            margin={{
-                top: 5, right: 30, left: 20, bottom: 5,
-            }}
-        >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="version"></XAxis>
-            <YAxis><Label value="Time (seconds)" position='insideLeft' /> </YAxis>
-            <Tooltip />
-            <Legend align='right' />
-            {this.compileTimeDataKeys().map(([cm, pm, system]) => {
-                return <Line type="monotone" dataKey={cm + ',' + pm + ',' + system} stroke={lineColours[cm + ',' + system]} strokeWidth={strokeWidthMap[system]} />;
-            })
-            }
+        return <ResponsiveContainer width="99%" height={300}>
+            <LineChart
+                data={this.props.chartData.compile_times}
+                margin={{
+                    top: 5, right: 30, left: 20, bottom: 5,
+                }}
+            >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="version"></XAxis>
+                <YAxis><Label value="Time (seconds)" position='insideBottomLeft' /> </YAxis>
+                <Tooltip />
+                <Legend align='right' />
+                {this.compileTimeDataKeys().map(([cm, pm, system]) => {
+                    return <Line type="monotone" dataKey={cm + ',' + pm + ',' + system} stroke={lineColours[cm + ',' + system]} strokeWidth={strokeWidthMap[system]} />;
+                })
+                }
 
-        </LineChart>
+            </LineChart>
+        </ResponsiveContainer>
     }
 
     sizeChart() {
@@ -97,22 +97,22 @@ export class LineChartX extends Component<LineChartXProps> {
             return <div />;
         }
 
-        return <LineChart
-            width={700}
-            height={300}
-            data={this.props.chartData.sizes}
-            margin={{
-                top: 30, right: 30, left: 20, bottom: 5,
-            }}
-        >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="version" ></XAxis>
-            <YAxis><Label value="Size (MB)" position='insideLeft' /> </YAxis>
-            <Tooltip />
-            <Legend align='right' />
-            <Line type="monotone" dataKey="Debug" stroke="#8884d8" />
-            <Line type="monotone" dataKey="Release" stroke="#82ca9d" />
+        return <ResponsiveContainer width="99%" height={300}>
+            <LineChart
+                data={this.props.chartData.sizes}
+                margin={{
+                    top: 30, right: 30, left: 20, bottom: 5,
+                }}
+            >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="version" ></XAxis>
+                <YAxis><Label value="Size (MB)" position='insideBottomLeft' /> </YAxis>
+                <Tooltip />
+                <Legend align='right' />
+                <Line type="monotone" dataKey="Debug" stroke="#8884d8" />
+                <Line type="monotone" dataKey="Release" stroke="#82ca9d" />
 
-        </LineChart>
+            </LineChart>
+        </ResponsiveContainer>
     }
 }
