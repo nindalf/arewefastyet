@@ -55,7 +55,7 @@ export class AppContainer extends Component<Array<ChartData>, AppConfig> {
 
     render() {
         return <div className={styles.grid}>
-            <div className={styles.card}>
+            <div className={`${styles.card} ${styles.options}`}>
                 <ToggleButtonGroup name='Compiler Mode' type="checkbox" defaultValue={[CompilerMode.Debug, CompilerMode.Release]} className="mb-2" onChange={this.onCMChanged}>
                     <ToggleButton value={CompilerMode.Check}>Check</ToggleButton>
                     <ToggleButton value={CompilerMode.Debug}>Debug</ToggleButton>
