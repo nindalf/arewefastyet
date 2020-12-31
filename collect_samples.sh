@@ -15,6 +15,7 @@ sudo apt-get install -y libssl-dev
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source $HOME/.cargo/env
+export RUSTUP_DIST_SERVER=https://dev-static.rust-lang.org
 rustup default stable
 
 cd cmd
