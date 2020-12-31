@@ -70,6 +70,26 @@ export class LineChartX extends Component<LineChartXProps> {
             .sort((a, b) => parseInt(a[2].substr(0, 2)) - parseInt(b[2].substr(0, 2)));
     }
 
+
+    perfDelta(key: string, currentVersion: string) {
+        let compile_times = this.props.chartData.compile_times;
+        if (currentVersion === compile_times[0]["version"]) {
+            return " (0%)";
+        }
+        let i = 0;
+        let prev = compile_times[i];
+        let current = compile_times[i+1];
+        while (currentVersion !== current["version"]) {
+            i+=1;
+            prev = compile_times[i];
+            current = compile_times[i+1];
+        }
+        let currentVal = current[key] as number;
+        const previousVal = prev[key] as number;
+        return " (" + (((previousVal-currentVal)/previousVal)*100).toString().substr(0, 4) + "%)";
+    }
+
+
     compileTimeCharts() {
         return <ResponsiveContainer width="99%" height={300}>
             <LineChart
@@ -81,7 +101,11 @@ export class LineChartX extends Component<LineChartXProps> {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="version"></XAxis>
                 <YAxis><Label value="Time (seconds)" position='insideBottomLeft' /> </YAxis>
-                <Tooltip />
+                <Tooltip formatter={(value, name, props) => {
+                    const currentVersion = props.payload.version;
+                    const delta = this.perfDelta(name, currentVersion);
+                    return value + delta;
+                }} />
                 <Legend align='right' />
                 {this.compileTimeDataKeys().map(([cm, pm, system]) => {
                     return <Line type="monotone" dataKey={cm + ',' + pm + ',' + system} stroke={lineColours[cm + ',' + system]} strokeWidth={strokeWidthMap[system]} />;
