@@ -25,6 +25,6 @@ cargo build --release
 # Log at level info to file output.log.
 # Collect 5 samples for each pair of CompilerMode and ProfileMode.
 # Run in the background.
-env RUST_LOG=info ./target/release/arewefastyet --times 5 --results-dir ../data/ 2> output.log &
+env RUST_LOG=info ./target/release/arewefastyet --times 3 --results-dir ../data/ 2> output.log &
 
 tail -f output.log
