@@ -12180,6 +12180,8 @@
       }
     },
     "tokio": {
+      "compile_times": {},
+      "output_sizes": {}
     }
   }
 }

@@ -12179,6 +12179,9 @@
         "1.49.0,Release": 4666098
       }
     },
-    "tokio": {}
+    "tokio": {
+      "compile_times": {},
+      "output_sizes": {}
+    }
   }
 }
