@@ -6,8 +6,433 @@
   },
   "profiles": {
     "alacritty": {
-      "compile_times": {},
-      "output_sizes": {}
+      "compile_times": {
+        "1.43.0,Check,Clean": [
+          59080,
+          59520,
+          58440
+        ],
+        "1.43.0,Check,Incremental": [
+          4970,
+          5040,
+          4980
+        ],
+        "1.43.0,Check,PatchIncremental": [
+          5060,
+          5070,
+          5090
+        ],
+        "1.43.0,Debug,Clean": [
+          82000,
+          83000,
+          83000
+        ],
+        "1.43.0,Debug,Incremental": [
+          12650,
+          12590,
+          12730
+        ],
+        "1.43.0,Debug,PatchIncremental": [
+          16750,
+          16670,
+          16560
+        ],
+        "1.43.0,Release,Clean": [
+          210000,
+          210000,
+          211000
+        ],
+        "1.43.0,Release,Incremental": [
+          94000,
+          94000,
+          94000
+        ],
+        "1.43.0,Release,PatchIncremental": [
+          94000,
+          94000,
+          94000
+        ],
+        "1.44.0,Check,Clean": [
+          59510,
+          59680,
+          59440
+        ],
+        "1.44.0,Check,Incremental": [
+          4880,
+          4870,
+          4880
+        ],
+        "1.44.0,Check,PatchIncremental": [
+          4940,
+          4930,
+          4940
+        ],
+        "1.44.0,Debug,Clean": [
+          82000,
+          82000,
+          82000
+        ],
+        "1.44.0,Debug,Incremental": [
+          12270,
+          12330,
+          12400
+        ],
+        "1.44.0,Debug,PatchIncremental": [
+          15970,
+          15980,
+          15990
+        ],
+        "1.44.0,Release,Clean": [
+          206000,
+          208000,
+          206000
+        ],
+        "1.44.0,Release,Incremental": [
+          91000,
+          91000,
+          91000
+        ],
+        "1.44.0,Release,PatchIncremental": [
+          91000,
+          91000,
+          90000
+        ],
+        "1.45.0,Check,Clean": [
+          55700,
+          55880,
+          56020
+        ],
+        "1.45.0,Check,Incremental": [
+          4610,
+          4540,
+          4560
+        ],
+        "1.45.0,Check,PatchIncremental": [
+          4620,
+          4610,
+          4670
+        ],
+        "1.45.0,Debug,Clean": [
+          78000,
+          77000,
+          77000
+        ],
+        "1.45.0,Debug,Incremental": [
+          10930,
+          10850,
+          10850
+        ],
+        "1.45.0,Debug,PatchIncremental": [
+          14630,
+          14540,
+          14520
+        ],
+        "1.45.0,Release,Clean": [
+          191000,
+          191000,
+          192000
+        ],
+        "1.45.0,Release,Incremental": [
+          101000,
+          102000,
+          102000
+        ],
+        "1.45.0,Release,PatchIncremental": [
+          101000,
+          101000,
+          102000
+        ],
+        "1.46.0,Check,Clean": [
+          54610,
+          53650,
+          53720
+        ],
+        "1.46.0,Check,Incremental": [
+          4510,
+          4510,
+          4480
+        ],
+        "1.46.0,Check,PatchIncremental": [
+          4550,
+          4610,
+          4550
+        ],
+        "1.46.0,Debug,Clean": [
+          77000,
+          75000,
+          75000
+        ],
+        "1.46.0,Debug,Incremental": [
+          10780,
+          10710,
+          10730
+        ],
+        "1.46.0,Debug,PatchIncremental": [
+          14320,
+          14430,
+          14650
+        ],
+        "1.46.0,Release,Clean": [
+          187000,
+          187000,
+          188000
+        ],
+        "1.46.0,Release,Incremental": [
+          99000,
+          100000,
+          100000
+        ],
+        "1.46.0,Release,PatchIncremental": [
+          100000,
+          100000,
+          100000
+        ],
+        "1.47.0,Check,Clean": [
+          59640,
+          60000,
+          60000
+        ],
+        "1.47.0,Check,Incremental": [
+          4530,
+          4480,
+          4530
+        ],
+        "1.47.0,Check,PatchIncremental": [
+          4570,
+          4560,
+          4610
+        ],
+        "1.47.0,Debug,Clean": [
+          82000,
+          83000,
+          82000
+        ],
+        "1.47.0,Debug,Incremental": [
+          10820,
+          10860,
+          11010
+        ],
+        "1.47.0,Debug,PatchIncremental": [
+          14640,
+          14530,
+          14720
+        ],
+        "1.47.0,Release,Clean": [
+          180000,
+          176000,
+          177000
+        ],
+        "1.47.0,Release,Incremental": [
+          107000,
+          107000,
+          106000
+        ],
+        "1.47.0,Release,PatchIncremental": [
+          107000,
+          107000,
+          106000
+        ],
+        "1.48.0,Check,Clean": [
+          61000,
+          61000,
+          60000
+        ],
+        "1.48.0,Check,Incremental": [
+          4590,
+          4630,
+          4590
+        ],
+        "1.48.0,Check,PatchIncremental": [
+          4660,
+          4660,
+          4650
+        ],
+        "1.48.0,Debug,Clean": [
+          83000,
+          83000,
+          85000
+        ],
+        "1.48.0,Debug,Incremental": [
+          11010,
+          11070,
+          11040
+        ],
+        "1.48.0,Debug,PatchIncremental": [
+          14780,
+          15020,
+          15030
+        ],
+        "1.48.0,Release,Clean": [
+          179000,
+          179000,
+          180000
+        ],
+        "1.48.0,Release,Incremental": [
+          107000,
+          108000,
+          108000
+        ],
+        "1.48.0,Release,PatchIncremental": [
+          108000,
+          108000,
+          108000
+        ],
+        "1.49.0,Check,Clean": [
+          63000,
+          63000,
+          61000
+        ],
+        "1.49.0,Check,Incremental": [
+          4760,
+          4700,
+          4750
+        ],
+        "1.49.0,Check,PatchIncremental": [
+          4770,
+          4800,
+          4750
+        ],
+        "1.49.0,Debug,Clean": [
+          85000,
+          87000,
+          86000
+        ],
+        "1.49.0,Debug,Incremental": [
+          10950,
+          11190,
+          11280
+        ],
+        "1.49.0,Debug,PatchIncremental": [
+          14760,
+          15140,
+          14820
+        ],
+        "1.49.0,Release,Clean": [
+          178000,
+          177000,
+          177000
+        ],
+        "1.49.0,Release,Incremental": [
+          105000,
+          104000,
+          104000
+        ],
+        "1.49.0,Release,PatchIncremental": [
+          104000,
+          104000,
+          103000
+        ],
+        "1.50.0,Check,Clean": [
+          61000,
+          61000,
+          61000
+        ],
+        "1.50.0,Check,Incremental": [
+          4480,
+          4450,
+          4460
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          4510,
+          4510,
+          4560
+        ],
+        "1.50.0,Debug,Clean": [
+          84000,
+          82000,
+          82000
+        ],
+        "1.50.0,Debug,Incremental": [
+          10750,
+          10900,
+          10710
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          14620,
+          14390,
+          14380
+        ],
+        "1.50.0,Release,Clean": [
+          173000,
+          174000,
+          175000
+        ],
+        "1.50.0,Release,Incremental": [
+          102000,
+          103000,
+          103000
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          103000,
+          103000,
+          103000
+        ],
+        "1.51.0,Check,Clean": [
+          61000,
+          64000,
+          61000
+        ],
+        "1.51.0,Check,Incremental": [
+          4400,
+          4400,
+          4420
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          4470,
+          4490,
+          4510
+        ],
+        "1.51.0,Debug,Clean": [
+          83000,
+          83000,
+          83000
+        ],
+        "1.51.0,Debug,Incremental": [
+          10760,
+          10720,
+          10680
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          14640,
+          14510,
+          14580
+        ],
+        "1.51.0,Release,Clean": [
+          176000,
+          175000,
+          176000
+        ],
+        "1.51.0,Release,Incremental": [
+          103000,
+          103000,
+          103000
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          103000,
+          103000,
+          104000
+        ]
+      },
+      "output_sizes": {
+        "1.43.0,Debug": 138930696,
+        "1.43.0,Release": 41487656,
+        "1.44.0,Debug": 139518536,
+        "1.44.0,Release": 30760392,
+        "1.45.0,Debug": 134804488,
+        "1.45.0,Release": 30400792,
+        "1.46.0,Debug": 134159584,
+        "1.46.0,Release": 30036336,
+        "1.47.0,Debug": 133773392,
+        "1.47.0,Release": 30547208,
+        "1.48.0,Debug": 134038152,
+        "1.48.0,Release": 30461640,
+        "1.49.0,Debug": 134957208,
+        "1.49.0,Release": 30464416,
+        "1.50.0,Debug": 135281600,
+        "1.50.0,Release": 30884592,
+        "1.51.0,Debug": 137764592,
+        "1.51.0,Release": 31905112
+      }
     },
     "async-std": {
       "compile_times": {
@@ -703,6 +1128,96 @@
           5950,
           5880,
           5920
+        ],
+        "1.50.0,Check,Clean": [
+          15520,
+          15580,
+          15590
+        ],
+        "1.50.0,Check,Incremental": [
+          2250,
+          2270,
+          2210
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          2260,
+          2270,
+          2240
+        ],
+        "1.50.0,Debug,Clean": [
+          17380,
+          17550,
+          17520
+        ],
+        "1.50.0,Debug,Incremental": [
+          2540,
+          2500,
+          2520
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          3350,
+          3310,
+          3370
+        ],
+        "1.50.0,Release,Clean": [
+          17310,
+          17230,
+          17430
+        ],
+        "1.50.0,Release,Incremental": [
+          5630,
+          5620,
+          5590
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          5620,
+          5570,
+          5570
+        ],
+        "1.51.0,Check,Clean": [
+          15710,
+          15700,
+          15800
+        ],
+        "1.51.0,Check,Incremental": [
+          2200,
+          2200,
+          2190
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          2200,
+          2200,
+          2220
+        ],
+        "1.51.0,Debug,Clean": [
+          17630,
+          17640,
+          17740
+        ],
+        "1.51.0,Debug,Incremental": [
+          2490,
+          2520,
+          2530
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          3260,
+          3340,
+          3360
+        ],
+        "1.51.0,Release,Clean": [
+          17530,
+          17590,
+          17450
+        ],
+        "1.51.0,Release,Incremental": [
+          5660,
+          5630,
+          5700
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          5610,
+          5670,
+          5630
         ]
       },
       "output_sizes": {
@@ -727,7 +1242,11 @@
         "1.48.0,Debug": 14725712,
         "1.48.0,Release": 4429674,
         "1.49.0,Debug": 14883106,
-        "1.49.0,Release": 4514848
+        "1.49.0,Release": 4514848,
+        "1.50.0,Debug": 15037236,
+        "1.50.0,Release": 4508998,
+        "1.51.0,Debug": 15498932,
+        "1.51.0,Release": 4763572
       }
     },
     "clap": {
@@ -1361,6 +1880,96 @@
           13550,
           13610,
           13530
+        ],
+        "1.50.0,Check,Clean": [
+          4960,
+          4960,
+          4990
+        ],
+        "1.50.0,Check,Incremental": [
+          730,
+          740,
+          720
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          740,
+          730,
+          740
+        ],
+        "1.50.0,Debug,Clean": [
+          7850,
+          7850,
+          7660
+        ],
+        "1.50.0,Debug,Incremental": [
+          1180,
+          1160,
+          1160
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          3060,
+          3050,
+          3140
+        ],
+        "1.50.0,Release,Clean": [
+          15510,
+          15580,
+          15630
+        ],
+        "1.50.0,Release,Incremental": [
+          13530,
+          13500,
+          13460
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          13580,
+          13640,
+          13590
+        ],
+        "1.51.0,Check,Clean": [
+          5120,
+          5070,
+          5090
+        ],
+        "1.51.0,Check,Incremental": [
+          720,
+          720,
+          710
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          700,
+          700,
+          700
+        ],
+        "1.51.0,Debug,Clean": [
+          8110,
+          8100,
+          8210
+        ],
+        "1.51.0,Debug,Incremental": [
+          1150,
+          1140,
+          1160
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          3200,
+          3170,
+          3250
+        ],
+        "1.51.0,Release,Clean": [
+          15930,
+          15960,
+          15890
+        ],
+        "1.51.0,Release,Incremental": [
+          13770,
+          13650,
+          13780
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          13710,
+          13570,
+          13610
         ]
       },
       "output_sizes": {
@@ -1383,7 +1992,11 @@
         "1.48.0,Debug": 16371604,
         "1.48.0,Release": 3882266,
         "1.49.0,Debug": 16332052,
-        "1.49.0,Release": 3909224
+        "1.49.0,Release": 3909224,
+        "1.50.0,Debug": 16556356,
+        "1.50.0,Release": 4038626,
+        "1.51.0,Debug": 17083180,
+        "1.51.0,Release": 4174484
       }
     },
     "futures-rs": {
@@ -2080,6 +2693,96 @@
           220,
           230,
           220
+        ],
+        "1.50.0,Check,Clean": [
+          16040,
+          16140,
+          16290
+        ],
+        "1.50.0,Check,Incremental": [
+          230,
+          230,
+          230
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          220,
+          230,
+          220
+        ],
+        "1.50.0,Debug,Clean": [
+          17000,
+          16830,
+          17000
+        ],
+        "1.50.0,Debug,Incremental": [
+          220,
+          230,
+          280
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          220,
+          230,
+          230
+        ],
+        "1.50.0,Release,Clean": [
+          15060,
+          15090,
+          15200
+        ],
+        "1.50.0,Release,Incremental": [
+          220,
+          220,
+          230
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          220,
+          220,
+          230
+        ],
+        "1.51.0,Check,Clean": [
+          15980,
+          16050,
+          16000
+        ],
+        "1.51.0,Check,Incremental": [
+          200,
+          200,
+          200
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          200,
+          200,
+          200
+        ],
+        "1.51.0,Debug,Clean": [
+          16740,
+          16770,
+          16930
+        ],
+        "1.51.0,Debug,Incremental": [
+          220,
+          200,
+          190
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          200,
+          200,
+          200
+        ],
+        "1.51.0,Release,Clean": [
+          14840,
+          14970,
+          15110
+        ],
+        "1.51.0,Release,Incremental": [
+          200,
+          200,
+          200
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          200,
+          280,
+          200
         ]
       },
       "output_sizes": {
@@ -2104,7 +2807,11 @@
         "1.48.0,Debug": 63494,
         "1.48.0,Release": 63202,
         "1.49.0,Debug": 63514,
-        "1.49.0,Release": 63230
+        "1.49.0,Release": 63230,
+        "1.50.0,Debug": 63516,
+        "1.50.0,Release": 63224,
+        "1.51.0,Debug": 93468,
+        "1.51.0,Release": 93182
       }
     },
     "helloworld": {
@@ -3116,6 +3823,96 @@
           270,
           260,
           260
+        ],
+        "1.50.0,Check,Clean": [
+          360,
+          360,
+          370
+        ],
+        "1.50.0,Check,Incremental": [
+          130,
+          130,
+          130
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          130,
+          130,
+          130
+        ],
+        "1.50.0,Debug,Clean": [
+          500,
+          500,
+          500
+        ],
+        "1.50.0,Debug,Incremental": [
+          250,
+          250,
+          240
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          260,
+          260,
+          260
+        ],
+        "1.50.0,Release,Clean": [
+          490,
+          490,
+          490
+        ],
+        "1.50.0,Release,Incremental": [
+          260,
+          260,
+          260
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          260,
+          260,
+          260
+        ],
+        "1.51.0,Check,Clean": [
+          590,
+          600,
+          600
+        ],
+        "1.51.0,Check,Incremental": [
+          130,
+          130,
+          130
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          140,
+          130,
+          140
+        ],
+        "1.51.0,Debug,Clean": [
+          720,
+          720,
+          720
+        ],
+        "1.51.0,Debug,Incremental": [
+          250,
+          250,
+          250
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          260,
+          270,
+          260
+        ],
+        "1.51.0,Release,Clean": [
+          720,
+          720,
+          720
+        ],
+        "1.51.0,Release,Incremental": [
+          260,
+          260,
+          260
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          260,
+          260,
+          260
         ]
       },
       "output_sizes": {
@@ -3150,7 +3947,11 @@
         "1.48.0,Debug": 3214232,
         "1.48.0,Release": 3204224,
         "1.49.0,Debug": 3214680,
-        "1.49.0,Release": 3204664
+        "1.49.0,Release": 3204664,
+        "1.50.0,Debug": 3329816,
+        "1.50.0,Release": 3319728,
+        "1.51.0,Debug": 3352848,
+        "1.51.0,Release": 3342712
       }
     },
     "html5ever": {
@@ -4036,6 +4837,96 @@
           1750,
           1760,
           1760
+        ],
+        "1.50.0,Check,Clean": [
+          15690,
+          15740,
+          15670
+        ],
+        "1.50.0,Check,Incremental": [
+          550,
+          550,
+          550
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          540,
+          560,
+          550
+        ],
+        "1.50.0,Debug,Clean": [
+          16250,
+          16220,
+          16310
+        ],
+        "1.50.0,Debug,Incremental": [
+          650,
+          640,
+          640
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          660,
+          640,
+          650
+        ],
+        "1.50.0,Release,Clean": [
+          14270,
+          14650,
+          14560
+        ],
+        "1.50.0,Release,Incremental": [
+          1600,
+          1620,
+          1610
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          1610,
+          1640,
+          1630
+        ],
+        "1.51.0,Check,Clean": [
+          15500,
+          15360,
+          15390
+        ],
+        "1.51.0,Check,Incremental": [
+          540,
+          550,
+          540
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          540,
+          540,
+          530
+        ],
+        "1.51.0,Debug,Clean": [
+          15920,
+          15610,
+          16070
+        ],
+        "1.51.0,Debug,Incremental": [
+          640,
+          640,
+          640
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          640,
+          650,
+          640
+        ],
+        "1.51.0,Release,Clean": [
+          14110,
+          14110,
+          14320
+        ],
+        "1.51.0,Release,Incremental": [
+          1590,
+          1590,
+          1580
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          1600,
+          1610,
+          1620
         ]
       },
       "output_sizes": {
@@ -4066,7 +4957,11 @@
         "1.48.0,Debug": 3107934,
         "1.48.0,Release": 1666062,
         "1.49.0,Debug": 3078136,
-        "1.49.0,Release": 1639972
+        "1.49.0,Release": 1639972,
+        "1.50.0,Debug": 2955668,
+        "1.50.0,Release": 1607346,
+        "1.51.0,Debug": 2995584,
+        "1.51.0,Release": 1631236
       }
     },
     "hyper": {
@@ -4763,6 +5658,96 @@
           11480,
           11470,
           11440
+        ],
+        "1.50.0,Check,Clean": [
+          25390,
+          25330,
+          25270
+        ],
+        "1.50.0,Check,Incremental": [
+          1660,
+          1680,
+          1700
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          1660,
+          1670,
+          1680
+        ],
+        "1.50.0,Debug,Clean": [
+          29010,
+          28900,
+          28910
+        ],
+        "1.50.0,Debug,Incremental": [
+          2030,
+          2030,
+          2050
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          2050,
+          2040,
+          2050
+        ],
+        "1.50.0,Release,Clean": [
+          31790,
+          31810,
+          31930
+        ],
+        "1.50.0,Release,Incremental": [
+          11240,
+          11170,
+          11210
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          11120,
+          11190,
+          11240
+        ],
+        "1.51.0,Check,Clean": [
+          25230,
+          25010,
+          25220
+        ],
+        "1.51.0,Check,Incremental": [
+          1560,
+          1560,
+          1580
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          1610,
+          1540,
+          1590
+        ],
+        "1.51.0,Debug,Clean": [
+          28930,
+          28830,
+          28800
+        ],
+        "1.51.0,Debug,Incremental": [
+          1960,
+          1930,
+          1990
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          1960,
+          1980,
+          1960
+        ],
+        "1.51.0,Release,Clean": [
+          31430,
+          31410,
+          31320
+        ],
+        "1.51.0,Release,Incremental": [
+          11050,
+          11090,
+          11030
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          11020,
+          11130,
+          11090
         ]
       },
       "output_sizes": {
@@ -4787,7 +5772,11 @@
         "1.48.0,Debug": 20214736,
         "1.48.0,Release": 6633214,
         "1.49.0,Debug": 20120588,
-        "1.49.0,Release": 6331022
+        "1.49.0,Release": 6331022,
+        "1.50.0,Debug": 20283410,
+        "1.50.0,Release": 6374990,
+        "1.51.0,Debug": 20909840,
+        "1.51.0,Release": 6747480
       }
     },
     "image": {
@@ -5799,6 +6788,96 @@
           13590,
           13320,
           13220
+        ],
+        "1.50.0,Check,Clean": [
+          12290,
+          12160,
+          12250
+        ],
+        "1.50.0,Check,Incremental": [
+          1090,
+          1070,
+          1100
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          1090,
+          1070,
+          1080
+        ],
+        "1.50.0,Debug,Clean": [
+          17670,
+          17630,
+          17540
+        ],
+        "1.50.0,Debug,Incremental": [
+          1710,
+          1720,
+          1730
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          1750,
+          1740,
+          1720
+        ],
+        "1.50.0,Release,Clean": [
+          24240,
+          24450,
+          24310
+        ],
+        "1.50.0,Release,Incremental": [
+          13070,
+          13120,
+          13270
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          13140,
+          13190,
+          13280
+        ],
+        "1.51.0,Check,Clean": [
+          12440,
+          12250,
+          12280
+        ],
+        "1.51.0,Check,Incremental": [
+          1050,
+          1050,
+          1060
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          1040,
+          1060,
+          1040
+        ],
+        "1.51.0,Debug,Clean": [
+          17600,
+          17640,
+          17690
+        ],
+        "1.51.0,Debug,Incremental": [
+          1700,
+          1680,
+          1670
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          1690,
+          1670,
+          1680
+        ],
+        "1.51.0,Release,Clean": [
+          24270,
+          24370,
+          24110
+        ],
+        "1.51.0,Release,Incremental": [
+          13020,
+          12990,
+          13000
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          12980,
+          13060,
+          13000
         ]
       },
       "output_sizes": {
@@ -5833,7 +6912,11 @@
         "1.48.0,Debug": 30922284,
         "1.48.0,Release": 7925988,
         "1.49.0,Debug": 30802396,
-        "1.49.0,Release": 8047332
+        "1.49.0,Release": 8047332,
+        "1.50.0,Debug": 31496534,
+        "1.50.0,Release": 8090872,
+        "1.51.0,Debug": 32233492,
+        "1.51.0,Release": 8337538
       }
     },
     "inflate": {
@@ -6845,6 +7928,96 @@
           2010,
           1990,
           2030
+        ],
+        "1.50.0,Check,Clean": [
+          860,
+          850,
+          860
+        ],
+        "1.50.0,Check,Incremental": [
+          220,
+          210,
+          210
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          300,
+          290,
+          290
+        ],
+        "1.50.0,Debug,Clean": [
+          1130,
+          1150,
+          1130
+        ],
+        "1.50.0,Debug,Incremental": [
+          250,
+          260,
+          260
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          500,
+          500,
+          510
+        ],
+        "1.50.0,Release,Clean": [
+          2410,
+          2370,
+          2390
+        ],
+        "1.50.0,Release,Incremental": [
+          1990,
+          1980,
+          1980
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          2020,
+          1970,
+          1980
+        ],
+        "1.51.0,Check,Clean": [
+          1080,
+          1080,
+          1070
+        ],
+        "1.51.0,Check,Incremental": [
+          210,
+          220,
+          210
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          290,
+          290,
+          290
+        ],
+        "1.51.0,Debug,Clean": [
+          1360,
+          1380,
+          1350
+        ],
+        "1.51.0,Debug,Incremental": [
+          260,
+          250,
+          250
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          510,
+          510,
+          510
+        ],
+        "1.51.0,Release,Clean": [
+          2600,
+          2600,
+          2580
+        ],
+        "1.51.0,Release,Incremental": [
+          1980,
+          1960,
+          1990
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          1990,
+          1970,
+          1980
         ]
       },
       "output_sizes": {
@@ -6879,7 +8052,11 @@
         "1.48.0,Debug": 1294404,
         "1.48.0,Release": 272582,
         "1.49.0,Debug": 1304314,
-        "1.49.0,Release": 273952
+        "1.49.0,Release": 273952,
+        "1.50.0,Debug": 1244056,
+        "1.50.0,Release": 263716,
+        "1.51.0,Debug": 1258110,
+        "1.51.0,Release": 269650
       }
     },
     "packed_simd": {
@@ -7891,6 +9068,96 @@
           19750,
           19840,
           19840
+        ],
+        "1.50.0,Check,Clean": [
+          20840,
+          20660,
+          20630
+        ],
+        "1.50.0,Check,Incremental": [
+          5510,
+          5460,
+          5530
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          5560,
+          5420,
+          5450
+        ],
+        "1.50.0,Debug,Clean": [
+          23030,
+          23050,
+          22850
+        ],
+        "1.50.0,Debug,Incremental": [
+          6250,
+          6220,
+          6160
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          6200,
+          6210,
+          6200
+        ],
+        "1.50.0,Release,Clean": [
+          21380,
+          21440,
+          21420
+        ],
+        "1.50.0,Release,Incremental": [
+          19940,
+          19860,
+          19780
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          19700,
+          19940,
+          19850
+        ],
+        "1.51.0,Check,Clean": [
+          20720,
+          20920,
+          20610
+        ],
+        "1.51.0,Check,Incremental": [
+          5500,
+          5490,
+          5460
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          5460,
+          5470,
+          5460
+        ],
+        "1.51.0,Debug,Clean": [
+          22950,
+          22960,
+          23170
+        ],
+        "1.51.0,Debug,Incremental": [
+          6290,
+          6210,
+          6200
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          6190,
+          6180,
+          6190
+        ],
+        "1.51.0,Release,Clean": [
+          21400,
+          21560,
+          21330
+        ],
+        "1.51.0,Release,Incremental": [
+          19920,
+          19850,
+          20090
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          20020,
+          19740,
+          19880
         ]
       },
       "output_sizes": {
@@ -7925,7 +9192,11 @@
         "1.48.0,Debug": 17827798,
         "1.48.0,Release": 13879830,
         "1.49.0,Debug": 17878926,
-        "1.49.0,Release": 13914758
+        "1.49.0,Release": 13914758,
+        "1.50.0,Debug": 17878926,
+        "1.50.0,Release": 13914758,
+        "1.51.0,Debug": 17878926,
+        "1.51.0,Release": 13914758
       }
     },
     "rav1e": {
@@ -8559,6 +9830,96 @@
           105000,
           105000,
           105000
+        ],
+        "1.50.0,Check,Clean": [
+          36220,
+          35790,
+          36160
+        ],
+        "1.50.0,Check,Incremental": [
+          2650,
+          2630,
+          2660
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          2670,
+          2640,
+          2670
+        ],
+        "1.50.0,Debug,Clean": [
+          69000,
+          69000,
+          69000
+        ],
+        "1.50.0,Debug,Incremental": [
+          5950,
+          5860,
+          5880
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          17670,
+          17810,
+          17790
+        ],
+        "1.50.0,Release,Clean": [
+          146000,
+          147000,
+          147000
+        ],
+        "1.50.0,Release,Incremental": [
+          105000,
+          106000,
+          106000
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          106000,
+          106000,
+          106000
+        ],
+        "1.51.0,Check,Clean": [
+          35570,
+          35420,
+          35480
+        ],
+        "1.51.0,Check,Incremental": [
+          2520,
+          2490,
+          2500
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          2640,
+          2560,
+          2550
+        ],
+        "1.51.0,Debug,Clean": [
+          68000,
+          68000,
+          68000
+        ],
+        "1.51.0,Debug,Incremental": [
+          5850,
+          5970,
+          6010
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          18180,
+          17930,
+          18150
+        ],
+        "1.51.0,Release,Clean": [
+          147000,
+          147000,
+          147000
+        ],
+        "1.51.0,Release,Incremental": [
+          106000,
+          106000,
+          106000
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          106000,
+          106000,
+          106000
         ]
       },
       "output_sizes": {
@@ -8581,7 +9942,11 @@
         "1.48.0,Debug": 55614336,
         "1.48.0,Release": 31026192,
         "1.49.0,Debug": 56021256,
-        "1.49.0,Release": 31057328
+        "1.49.0,Release": 31057328,
+        "1.50.0,Debug": 57629296,
+        "1.50.0,Release": 31360664,
+        "1.51.0,Debug": 59950400,
+        "1.51.0,Release": 32001536
       }
     },
     "ripgrep": {
@@ -9593,6 +10958,96 @@
           10270,
           10350,
           10280
+        ],
+        "1.50.0,Check,Clean": [
+          17940,
+          18150,
+          17940
+        ],
+        "1.50.0,Check,Incremental": [
+          360,
+          360,
+          360
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          380,
+          380,
+          380
+        ],
+        "1.50.0,Debug,Clean": [
+          25200,
+          24950,
+          25250
+        ],
+        "1.50.0,Debug,Incremental": [
+          2650,
+          2630,
+          2640
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          4270,
+          4430,
+          4310
+        ],
+        "1.50.0,Release,Clean": [
+          43650,
+          43520,
+          44100
+        ],
+        "1.50.0,Release,Incremental": [
+          9850,
+          10000,
+          10070
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          9840,
+          10070,
+          9950
+        ],
+        "1.51.0,Check,Clean": [
+          18180,
+          18240,
+          18080
+        ],
+        "1.51.0,Check,Incremental": [
+          350,
+          350,
+          350
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          360,
+          370,
+          360
+        ],
+        "1.51.0,Debug,Clean": [
+          25370,
+          24830,
+          25690
+        ],
+        "1.51.0,Debug,Incremental": [
+          2680,
+          2690,
+          2670
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          4400,
+          4310,
+          4310
+        ],
+        "1.51.0,Release,Clean": [
+          43350,
+          43150,
+          43530
+        ],
+        "1.51.0,Release,Incremental": [
+          9870,
+          9910,
+          10080
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          9850,
+          9880,
+          9810
         ]
       },
       "output_sizes": {
@@ -9627,7 +11082,11 @@
         "1.48.0,Debug": 53664992,
         "1.48.0,Release": 27787000,
         "1.49.0,Debug": 53900880,
-        "1.49.0,Release": 27980424
+        "1.49.0,Release": 27980424,
+        "1.50.0,Debug": 55232872,
+        "1.50.0,Release": 27880232,
+        "1.51.0,Debug": 56361536,
+        "1.51.0,Release": 28564160
       }
     },
     "serde": {
@@ -10639,6 +12098,96 @@
           5220,
           5250,
           5260
+        ],
+        "1.50.0,Check,Clean": [
+          5320,
+          5350,
+          5210
+        ],
+        "1.50.0,Check,Incremental": [
+          1340,
+          1380,
+          1360
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          1350,
+          1360,
+          1340
+        ],
+        "1.50.0,Debug,Clean": [
+          6020,
+          6090,
+          6020
+        ],
+        "1.50.0,Debug,Incremental": [
+          1610,
+          1570,
+          1570
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          1610,
+          1570,
+          1570
+        ],
+        "1.50.0,Release,Clean": [
+          5240,
+          5320,
+          5210
+        ],
+        "1.50.0,Release,Incremental": [
+          4710,
+          4730,
+          4680
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          4730,
+          4670,
+          4640
+        ],
+        "1.51.0,Check,Clean": [
+          5390,
+          5460,
+          5510
+        ],
+        "1.51.0,Check,Incremental": [
+          1350,
+          1340,
+          1330
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          1340,
+          1360,
+          1350
+        ],
+        "1.51.0,Debug,Clean": [
+          6260,
+          6240,
+          6230
+        ],
+        "1.51.0,Debug,Incremental": [
+          1570,
+          1560,
+          1540
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          1560,
+          1550,
+          1540
+        ],
+        "1.51.0,Release,Clean": [
+          5420,
+          5480,
+          5460
+        ],
+        "1.51.0,Release,Incremental": [
+          4620,
+          4680,
+          4720
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          4630,
+          4690,
+          4670
         ]
       },
       "output_sizes": {
@@ -10673,7 +12222,11 @@
         "1.48.0,Debug": 7015476,
         "1.48.0,Release": 6090986,
         "1.49.0,Debug": 6877824,
-        "1.49.0,Release": 5941318
+        "1.49.0,Release": 5941318,
+        "1.50.0,Debug": 6896768,
+        "1.50.0,Release": 5950420,
+        "1.51.0,Debug": 7072026,
+        "1.51.0,Release": 6118828
       }
     },
     "syn": {
@@ -11685,6 +13238,96 @@
           6910,
           6770,
           6750
+        ],
+        "1.50.0,Check,Clean": [
+          3890,
+          3960,
+          3940
+        ],
+        "1.50.0,Check,Incremental": [
+          950,
+          950,
+          940
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          940,
+          960,
+          950
+        ],
+        "1.50.0,Debug,Clean": [
+          5910,
+          5920,
+          5950
+        ],
+        "1.50.0,Debug,Incremental": [
+          1270,
+          1270,
+          1320
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          2450,
+          2450,
+          2390
+        ],
+        "1.50.0,Release,Clean": [
+          8540,
+          8310,
+          8560
+        ],
+        "1.50.0,Release,Incremental": [
+          6530,
+          6490,
+          6540
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          6540,
+          6610,
+          6610
+        ],
+        "1.51.0,Check,Clean": [
+          4010,
+          4030,
+          4050
+        ],
+        "1.51.0,Check,Incremental": [
+          920,
+          920,
+          910
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          930,
+          930,
+          950
+        ],
+        "1.51.0,Debug,Clean": [
+          6030,
+          5980,
+          6100
+        ],
+        "1.51.0,Debug,Incremental": [
+          1260,
+          1260,
+          1270
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          2340,
+          2370,
+          2570
+        ],
+        "1.51.0,Release,Clean": [
+          8450,
+          8540,
+          8510
+        ],
+        "1.51.0,Release,Incremental": [
+          6500,
+          6390,
+          6460
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          6370,
+          6570,
+          6480
         ]
       },
       "output_sizes": {
@@ -11719,12 +13362,441 @@
         "1.48.0,Debug": 18491428,
         "1.48.0,Release": 4566344,
         "1.49.0,Debug": 19252372,
-        "1.49.0,Release": 4666098
+        "1.49.0,Release": 4666098,
+        "1.50.0,Debug": 19506348,
+        "1.50.0,Release": 4656088,
+        "1.51.0,Debug": 20458012,
+        "1.51.0,Release": 5141406
       }
     },
     "tokio": {
-      "compile_times": {},
-      "output_sizes": {}
+      "compile_times": {
+        "1.43.0,Check,Clean": [
+          3610,
+          3570,
+          3610
+        ],
+        "1.43.0,Check,Incremental": [
+          980,
+          970,
+          960
+        ],
+        "1.43.0,Check,PatchIncremental": [
+          970,
+          980,
+          980
+        ],
+        "1.43.0,Debug,Clean": [
+          4700,
+          4850,
+          4820
+        ],
+        "1.43.0,Debug,Incremental": [
+          1270,
+          1240,
+          1230
+        ],
+        "1.43.0,Debug,PatchIncremental": [
+          2150,
+          1970,
+          2010
+        ],
+        "1.43.0,Release,Clean": [
+          5170,
+          5260,
+          5190
+        ],
+        "1.43.0,Release,Incremental": [
+          3860,
+          3900,
+          3860
+        ],
+        "1.43.0,Release,PatchIncremental": [
+          3890,
+          3890,
+          3850
+        ],
+        "1.44.0,Check,Clean": [
+          3520,
+          3510,
+          3510
+        ],
+        "1.44.0,Check,Incremental": [
+          940,
+          920,
+          910
+        ],
+        "1.44.0,Check,PatchIncremental": [
+          920,
+          930,
+          910
+        ],
+        "1.44.0,Debug,Clean": [
+          4830,
+          4790,
+          4710
+        ],
+        "1.44.0,Debug,Incremental": [
+          1170,
+          1190,
+          1180
+        ],
+        "1.44.0,Debug,PatchIncremental": [
+          1920,
+          1920,
+          1960
+        ],
+        "1.44.0,Release,Clean": [
+          5200,
+          5130,
+          5140
+        ],
+        "1.44.0,Release,Incremental": [
+          3790,
+          3830,
+          3800
+        ],
+        "1.44.0,Release,PatchIncremental": [
+          3800,
+          3830,
+          3850
+        ],
+        "1.45.0,Check,Clean": [
+          3440,
+          3410,
+          3380
+        ],
+        "1.45.0,Check,Incremental": [
+          890,
+          880,
+          890
+        ],
+        "1.45.0,Check,PatchIncremental": [
+          890,
+          880,
+          890
+        ],
+        "1.45.0,Debug,Clean": [
+          4600,
+          4570,
+          4510
+        ],
+        "1.45.0,Debug,Incremental": [
+          1140,
+          1140,
+          1140
+        ],
+        "1.45.0,Debug,PatchIncremental": [
+          1850,
+          1850,
+          1840
+        ],
+        "1.45.0,Release,Clean": [
+          5120,
+          5150,
+          5100
+        ],
+        "1.45.0,Release,Incremental": [
+          3720,
+          3730,
+          3660
+        ],
+        "1.45.0,Release,PatchIncremental": [
+          3710,
+          3750,
+          3750
+        ],
+        "1.46.0,Check,Clean": [
+          3240,
+          3200,
+          3240
+        ],
+        "1.46.0,Check,Incremental": [
+          890,
+          880,
+          870
+        ],
+        "1.46.0,Check,PatchIncremental": [
+          880,
+          900,
+          880
+        ],
+        "1.46.0,Debug,Clean": [
+          4340,
+          4350,
+          4280
+        ],
+        "1.46.0,Debug,Incremental": [
+          1120,
+          1130,
+          1100
+        ],
+        "1.46.0,Debug,PatchIncremental": [
+          1830,
+          1830,
+          1780
+        ],
+        "1.46.0,Release,Clean": [
+          4980,
+          4940,
+          4940
+        ],
+        "1.46.0,Release,Incremental": [
+          3560,
+          3580,
+          3600
+        ],
+        "1.46.0,Release,PatchIncremental": [
+          3580,
+          3580,
+          3600
+        ],
+        "1.47.0,Check,Clean": [
+          3370,
+          3350,
+          3370
+        ],
+        "1.47.0,Check,Incremental": [
+          940,
+          940,
+          930
+        ],
+        "1.47.0,Check,PatchIncremental": [
+          940,
+          930,
+          930
+        ],
+        "1.47.0,Debug,Clean": [
+          4640,
+          4550,
+          4480
+        ],
+        "1.47.0,Debug,Incremental": [
+          1200,
+          1170,
+          1170
+        ],
+        "1.47.0,Debug,PatchIncremental": [
+          1910,
+          1990,
+          1910
+        ],
+        "1.47.0,Release,Clean": [
+          4460,
+          4460,
+          4460
+        ],
+        "1.47.0,Release,Incremental": [
+          3670,
+          3650,
+          3590
+        ],
+        "1.47.0,Release,PatchIncremental": [
+          3630,
+          3610,
+          3630
+        ],
+        "1.48.0,Check,Clean": [
+          3400,
+          3420,
+          3430
+        ],
+        "1.48.0,Check,Incremental": [
+          960,
+          960,
+          960
+        ],
+        "1.48.0,Check,PatchIncremental": [
+          960,
+          960,
+          940
+        ],
+        "1.48.0,Debug,Clean": [
+          4590,
+          4500,
+          4620
+        ],
+        "1.48.0,Debug,Incremental": [
+          1210,
+          1210,
+          1210
+        ],
+        "1.48.0,Debug,PatchIncremental": [
+          1940,
+          2060,
+          1950
+        ],
+        "1.48.0,Release,Clean": [
+          4640,
+          4530,
+          4530
+        ],
+        "1.48.0,Release,Incremental": [
+          3740,
+          3700,
+          3760
+        ],
+        "1.48.0,Release,PatchIncremental": [
+          3680,
+          3670,
+          3690
+        ],
+        "1.49.0,Check,Clean": [
+          3580,
+          3540,
+          3510
+        ],
+        "1.49.0,Check,Incremental": [
+          1020,
+          1020,
+          1020
+        ],
+        "1.49.0,Check,PatchIncremental": [
+          1030,
+          1030,
+          1050
+        ],
+        "1.49.0,Debug,Clean": [
+          4670,
+          4720,
+          4760
+        ],
+        "1.49.0,Debug,Incremental": [
+          1260,
+          1320,
+          1260
+        ],
+        "1.49.0,Debug,PatchIncremental": [
+          2030,
+          2000,
+          1910
+        ],
+        "1.49.0,Release,Clean": [
+          4680,
+          4680,
+          4760
+        ],
+        "1.49.0,Release,Incremental": [
+          3680,
+          3780,
+          3790
+        ],
+        "1.49.0,Release,PatchIncremental": [
+          3750,
+          3730,
+          3690
+        ],
+        "1.50.0,Check,Clean": [
+          3290,
+          3280,
+          3300
+        ],
+        "1.50.0,Check,Incremental": [
+          980,
+          970,
+          980
+        ],
+        "1.50.0,Check,PatchIncremental": [
+          970,
+          970,
+          980
+        ],
+        "1.50.0,Debug,Clean": [
+          4450,
+          4380,
+          4410
+        ],
+        "1.50.0,Debug,Incremental": [
+          1210,
+          1220,
+          1210
+        ],
+        "1.50.0,Debug,PatchIncremental": [
+          1860,
+          1930,
+          1840
+        ],
+        "1.50.0,Release,Clean": [
+          4440,
+          4340,
+          4440
+        ],
+        "1.50.0,Release,Incremental": [
+          3440,
+          3510,
+          3510
+        ],
+        "1.50.0,Release,PatchIncremental": [
+          3470,
+          3470,
+          3450
+        ],
+        "1.51.0,Check,Clean": [
+          3500,
+          3550,
+          3460
+        ],
+        "1.51.0,Check,Incremental": [
+          970,
+          960,
+          960
+        ],
+        "1.51.0,Check,PatchIncremental": [
+          970,
+          950,
+          970
+        ],
+        "1.51.0,Debug,Clean": [
+          4620,
+          4520,
+          4580
+        ],
+        "1.51.0,Debug,Incremental": [
+          1210,
+          1180,
+          1190
+        ],
+        "1.51.0,Debug,PatchIncremental": [
+          1860,
+          1850,
+          1910
+        ],
+        "1.51.0,Release,Clean": [
+          4600,
+          4630,
+          4660
+        ],
+        "1.51.0,Release,Incremental": [
+          3550,
+          3550,
+          3430
+        ],
+        "1.51.0,Release,PatchIncremental": [
+          3460,
+          3450,
+          3550
+        ]
+      },
+      "output_sizes": {
+        "1.43.0,Debug": 16439468,
+        "1.43.0,Release": 3425984,
+        "1.44.0,Debug": 16574764,
+        "1.44.0,Release": 3432530,
+        "1.45.0,Debug": 12454968,
+        "1.45.0,Release": 2880068,
+        "1.46.0,Debug": 12416326,
+        "1.46.0,Release": 2893520,
+        "1.47.0,Debug": 12600298,
+        "1.47.0,Release": 3106470,
+        "1.48.0,Debug": 12645398,
+        "1.48.0,Release": 3109350,
+        "1.49.0,Debug": 12757018,
+        "1.49.0,Release": 3171300,
+        "1.50.0,Debug": 12837004,
+        "1.50.0,Release": 3188986,
+        "1.51.0,Debug": 13093334,
+        "1.51.0,Release": 3330332
+      }
     }
   }
 }
