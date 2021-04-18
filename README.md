@@ -20,7 +20,7 @@ The site doesn't do very well on mobile, so any contribution there are welcome. 
 
 ```
 git clone https://github.com/nindalf/arewefastyet
-cd arewefastyet/
+cd arewefastyet/site
 npm install && npm run dev
 ```
 
