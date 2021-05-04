@@ -8,7 +8,7 @@ This repo is split into 3 parts
 
 If you'd like to reproduce these benchmarks, run this
 
-```
+```bash
 git clone https://github.com/nindalf/arewefastyet
 cd arewefastyet/
 ./collect_samples.sh
@@ -16,12 +16,19 @@ cd arewefastyet/
 
 ## Contributing
 
-The site doesn't do very well on mobile, so any contribution there are welcome. To get started
+Any contribution there are welcome. To get started
 
-```
+```bash
 git clone https://github.com/nindalf/arewefastyet
 cd arewefastyet/site
 npm install && npm run dev
+```
+
+and
+
+```bash
+cd arewefastyet/cmd
+cargo build && cargo test
 ```
 
 For now, contributions of benchmarks on different kinds of hardware is out of scope. 
