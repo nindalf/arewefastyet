@@ -15,20 +15,20 @@ export interface LineChartXProps {
 }
 
 const lineColours: Record<string, string> = {
-    'Check,2 cores': '#ff94a8',
-    'Check,4 cores': '#fa738c',
-    'Check,8 cores': '#fc3d60',
-    'Check,16 cores': '#f71640',
+    'Check, 2 cores': '#ff94a8',
+    'Check, 4 cores': '#fa738c',
+    'Check, 8 cores': '#fc3d60',
+    'Check, 16 cores': '#f71640',
 
-    'Debug,2 cores': '#9f95fc',
-    'Debug,4 cores': '#8377f7',
-    'Debug,8 cores': '#6556f5',
-    'Debug,16 cores': '#4a38fc',
+    'Debug, 2 cores': '#9f95fc',
+    'Debug, 4 cores': '#8377f7',
+    'Debug, 8 cores': '#6556f5',
+    'Debug, 16 cores': '#4a38fc',
 
-    'Release,2 cores': '#6cb871',
-    'Release,4 cores': '#4db353',
-    'Release,8 cores': '#2bb534',
-    'Release,16 cores': '#05b511',
+    'Release, 2 cores': '#6cb871',
+    'Release, 4 cores': '#4db353',
+    'Release, 8 cores': '#2bb534',
+    'Release, 16 cores': '#05b511',
 };
 
 const strokeWidthMap: Record<string, number> = {
@@ -112,8 +112,8 @@ export class LineChartX extends Component<LineChartXProps> {
                 />
                 <Legend align='right' />
                 {this.compileTimeDataKeys().map(([cm, pm, system]) => {
-                    const key = `${cm},${pm},${system}`;
-                    return <Line type="monotone" dataKey={key} stroke={lineColours[cm + ',' + system]} strokeWidth={strokeWidthMap[system]} key={key} />;
+                    const key = `${cm}, ${pm}, ${system}`;
+                    return <Line type="monotone" dataKey={key} stroke={lineColours[cm + ', ' + system]} strokeWidth={strokeWidthMap[system]} key={key} />;
                 })
                 }
 

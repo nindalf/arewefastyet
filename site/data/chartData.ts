@@ -38,7 +38,7 @@ function combineCompileTimes(repo_names: Array<string>, profiles: Array<[number,
             const compile_times = profile[repo_name].compile_times;
             Object.entries(compile_times).forEach(([key, timings]) => {
                 const [version, compiler_mode, profile_mode] = key.split(",");
-                const new_key = compiler_mode + "," + profile_mode + "," + system;
+                const new_key = compiler_mode + ", " + profile_mode + ", " + system;
 
                 const average_timing = average(timings);
                 if (!output[version]) {
