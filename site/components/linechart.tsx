@@ -100,7 +100,7 @@ export class LineChartX extends Component<LineChartXProps> {
             >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="version"></XAxis>
-                <YAxis><Label value="Time (seconds)" position='insideBottomLeft' /> </YAxis>
+                <YAxis><Label value="Time (seconds)" position='left' angle={-90} /></YAxis>
                 <Tooltip formatter={(value, name, props) => {
                     const currentVersion = props.payload.version;
                     const delta = this.perfDelta(name, currentVersion);
@@ -130,7 +130,7 @@ export class LineChartX extends Component<LineChartXProps> {
             >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="version" ></XAxis>
-                <YAxis><Label value="Size (MB)" position='insideBottomLeft' /> </YAxis>
+                <YAxis><Label value="Size (MB)" position='left' angle={-90} /> </YAxis>
                 <Tooltip />
                 <Legend align='right' />
                 <Line type="monotone" dataKey="Debug" stroke="#8884d8" />
