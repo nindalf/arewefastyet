@@ -108,7 +108,8 @@ export class LineChartX extends Component<LineChartXProps> {
                 }} />
                 <Legend align='right' />
                 {this.compileTimeDataKeys().map(([cm, pm, system]) => {
-                    return <Line type="monotone" dataKey={cm + ',' + pm + ',' + system} stroke={lineColours[cm + ',' + system]} strokeWidth={strokeWidthMap[system]} />;
+                    const key = `${cm},${pm},${system}`;
+                    return <Line type="monotone" dataKey={key} stroke={lineColours[cm + ',' + system]} strokeWidth={strokeWidthMap[system]} key={key} />;
                 })
                 }
 
