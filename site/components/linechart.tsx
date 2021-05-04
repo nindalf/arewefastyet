@@ -74,7 +74,7 @@ export class LineChartX extends Component<LineChartXProps> {
     perfDelta(key: string, currentVersion: string) {
         let compile_times = this.props.chartData.compile_times;
         if (currentVersion === compile_times[0]["version"]) {
-            return " (0%)";
+            return 0;
         }
         let i = 0;
         let prev = compile_times[i];
@@ -86,7 +86,7 @@ export class LineChartX extends Component<LineChartXProps> {
         }
         let currentVal = current[key] as number;
         const previousVal = prev[key] as number;
-        return " (" + (((previousVal-currentVal)/previousVal)*100).toString().substr(0, 4) + "%)";
+        return (previousVal - currentVal)/previousVal * 100;
     }
 
 
@@ -101,11 +101,15 @@ export class LineChartX extends Component<LineChartXProps> {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="version"></XAxis>
                 <YAxis><Label value="Time (seconds)" position='left' angle={-90} /></YAxis>
-                <Tooltip formatter={(value, name, props) => {
-                    const currentVersion = props.payload.version;
-                    const delta = this.perfDelta(name, currentVersion);
-                    return value + delta;
-                }} />
+                <Tooltip
+                   labelFormatter={e => `v${e}`}
+                   separator={': '}
+                   formatter={(value, name, props) => {
+                     const currentVersion = props.payload.version;
+                     const delta = this.perfDelta(name, currentVersion);
+                     return `${value.toFixed(2)}s (${delta.toFixed(2)}%)`;
+                   }}
+                />
                 <Legend align='right' />
                 {this.compileTimeDataKeys().map(([cm, pm, system]) => {
                     const key = `${cm},${pm},${system}`;
