@@ -3,7 +3,7 @@ use std::collections::hash_map::DefaultHasher;
 use std::collections::BTreeMap;
 use std::fs::File;
 use std::hash::{Hash, Hasher};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
@@ -27,19 +27,20 @@ impl<'a> FinalResult<'a> {
     }
 }
 
-pub(crate) fn get_repos(repos_file: &PathBuf) -> Result<Vec<Repo>> {
+pub(crate) fn get_repos(repos_file: &Path) -> Result<Vec<Repo>> {
     let file = File::open(repos_file)?;
     Ok(serde_json::from_reader(file)?)
 }
 
-pub(crate) fn get_profiles(results_dir: &PathBuf) -> Result<BTreeMap<String, Profile>> {
+pub(crate) fn get_profiles(results_dir: &Path) -> Result<BTreeMap<String, Profile>> {
     let system_info = SystemInfo::new()?;
     log::trace!("{:?}", &system_info);
     let results_file = get_result_file_path(results_dir, &system_info);
     log::info!("Attempting to read results file - {:?}", &results_file);
     let profiles = if results_file.exists() {
         let file = File::open(results_file)?;
-        let final_result = serde_json::from_reader(file).unwrap_or(FinalResult::new(system_info));
+        let final_result =
+            serde_json::from_reader(file).unwrap_or_else(|_| FinalResult::new(system_info));
         final_result.profiles.into_owned()
     } else {
         BTreeMap::new()
@@ -49,7 +50,7 @@ pub(crate) fn get_profiles(results_dir: &PathBuf) -> Result<BTreeMap<String, Pro
 }
 
 pub(crate) fn overwrite_profiles(
-    results_dir: &PathBuf,
+    results_dir: &Path,
     profiles: &BTreeMap<String, Profile>,
 ) -> Result<()> {
     let system_info = SystemInfo::new()?;
@@ -65,7 +66,7 @@ pub(crate) fn overwrite_profiles(
     Ok(())
 }
 
-fn get_result_file_path(path: &PathBuf, system_info: &SystemInfo) -> PathBuf {
+fn get_result_file_path(path: &Path, system_info: &SystemInfo) -> PathBuf {
     let mut hasher = DefaultHasher::new();
     system_info.hash(&mut hasher);
     let hash = hasher.finish();

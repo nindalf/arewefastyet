@@ -27,7 +27,7 @@ impl Profile {
     }
 
     pub(crate) fn add_compile_times(
-        self: &mut Self,
+        &mut self,
         version: Version,
         compile_times: BTreeMap<(CompilerMode, ProfileMode), Vec<Milliseconds>>,
     ) {
@@ -38,7 +38,7 @@ impl Profile {
     }
 
     pub(crate) fn add_output_sizes(
-        self: &mut Self,
+        &mut self,
         version: Version,
         debug_size: Bytes,
         release_size: Bytes,
@@ -56,7 +56,7 @@ impl Profile {
             .collect()
     }
 
-    fn version_profiled(self: &Self, version: &Version) -> bool {
+    fn version_profiled(&self, version: &Version) -> bool {
         for compiler_mode in CompilerMode::into_enum_iter() {
             for profile_mode in ProfileMode::into_enum_iter() {
                 let key = CompileTimeProfileKey(*version, compiler_mode, profile_mode);
@@ -74,7 +74,7 @@ impl Profile {
         {
             return false;
         }
-        return true;
+        true
     }
 }
 
@@ -91,7 +91,7 @@ impl<'de> Visitor<'de> for CKeyVisitor {
     where
         E: serde::de::Error,
     {
-        let parts: Vec<&str> = value.split(",").collect();
+        let parts: Vec<&str> = value.split(',').collect();
         let version: Version = parts[0].parse().map_err(serde::de::Error::custom)?;
         let compiler_mode: CompilerMode = parts[1].parse().map_err(serde::de::Error::custom)?;
         let profile_mode: ProfileMode = parts[2].parse().map_err(serde::de::Error::custom)?;
@@ -113,7 +113,7 @@ impl<'de> Visitor<'de> for SKeyVisitor {
     where
         E: serde::de::Error,
     {
-        let parts: Vec<&str> = value.split(",").collect();
+        let parts: Vec<&str> = value.split(',').collect();
         let version: Version = parts[0].parse().map_err(serde::de::Error::custom)?;
         let compiler_mode: CompilerMode = parts[1].parse().map_err(serde::de::Error::custom)?;
 

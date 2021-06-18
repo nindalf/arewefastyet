@@ -66,7 +66,7 @@ fn rustup(args: &[&str]) -> Result<()> {
 }
 
 impl Version {
-    pub fn get_string(self: Self) -> &'static str {
+    pub fn get_string(self) -> &'static str {
         match self {
             Version::V1_34 => "1.34.0",
             Version::V1_35 => "1.35.0",

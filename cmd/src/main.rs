@@ -48,7 +48,7 @@ fn exec() -> Result<()> {
 
         let profile = profiles
             .entry(repo.name.clone())
-            .or_insert(profile::Profile::new());
+            .or_insert_with(profile::Profile::new);
 
         for version in profile.versions_to_profile(repo.min_version) {
             rustup::set_version(version)?;

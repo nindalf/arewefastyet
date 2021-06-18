@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::rustup::Version;
 
-static ARE_WE_FAST_YET: &'static str = "arewefastyet-dir";
+static ARE_WE_FAST_YET: &str = "arewefastyet-dir";
 static WORKING_DIRECTORY: OnceCell<PathBuf> = OnceCell::new();
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

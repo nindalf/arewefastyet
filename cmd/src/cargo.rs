@@ -90,19 +90,19 @@ fn repeat(
         repo.remove_target_dir()?;
         result
             .entry((compiler_mode, ProfileMode::Clean))
-            .or_insert(Vec::with_capacity(times as usize))
+            .or_insert_with(|| Vec::with_capacity(times as usize))
             .push(f(repo)?);
 
         repo.touch_src()?;
         result
             .entry((compiler_mode, ProfileMode::Incremental))
-            .or_insert(Vec::with_capacity(times as usize))
+            .or_insert_with(|| Vec::with_capacity(times as usize))
             .push(f(repo)?);
 
         repo.add_println()?;
         result
             .entry((compiler_mode, ProfileMode::PatchIncremental))
-            .or_insert(Vec::with_capacity(times as usize))
+            .or_insert_with(|| Vec::with_capacity(times as usize))
             .push(f(repo)?);
         repo.git_reset()?;
     }
@@ -171,7 +171,7 @@ fn get_file_size(repo: &Repo, compiler_mode: CompilerMode) -> Result<Bytes> {
         }
         _ => None,
     }
-    .ok_or(anyhow!("No associated output"))?;
+    .ok_or_else(|| anyhow!("No associated output"))?;
     let file = std::fs::File::open(&output_path)
         .with_context(|| anyhow!("failed to find output - {:?}", output_path))?;
     let metadata = file.metadata()?;
