@@ -4,7 +4,19 @@ use anyhow::{anyhow, Context, Result};
 use enum_iterator::IntoEnumIterator;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Copy, Clone, Hash, IntoEnumIterator, Serialize, PartialOrd, Ord, Deserialize, Eq, PartialEq)]
+#[derive(
+    Debug,
+    Copy,
+    Clone,
+    Hash,
+    IntoEnumIterator,
+    Serialize,
+    PartialOrd,
+    Ord,
+    Deserialize,
+    Eq,
+    PartialEq,
+)]
 pub(crate) enum Version {
     V1_34 = 34,
     V1_35 = 35,

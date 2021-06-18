@@ -87,9 +87,7 @@ impl Repo {
         }
         let contents = std::fs::read_to_string(&touch_file)
             .with_context(|| anyhow!("Failed to read touch file - {:?}"))?;
-        let re = Lazy::new(|| {
-            regex::Regex::new("((fn main.*)|(pub fn.*))").unwrap()
-        });
+        let re = Lazy::new(|| regex::Regex::new("((fn main.*)|(pub fn.*))").unwrap());
         let contents = re.replace(&contents, r#"$1 println!("hello");"#);
         std::fs::write(&touch_file, contents.as_ref())
             .with_context(|| anyhow!("Failed to modify touch file - {:?}", touch_file))?;
@@ -135,17 +133,14 @@ impl Repo {
     fn git(self: &Repo, command: GitCommand) -> Result<()> {
         use GitCommand::*;
         let directory = match command {
-            Checkout | Reset => 
-                self
-                    .get_base_directory()
-                    .ok_or_else(|| anyhow!("Could not find repo dir"))?,
-            
-            CloneRepo => 
-                WORKING_DIRECTORY
-                    .get()
-                    .ok_or_else(|| anyhow!("Working directory not set"))?
-                    .to_path_buf(),
-            
+            Checkout | Reset => self
+                .get_base_directory()
+                .ok_or_else(|| anyhow!("Could not find repo dir"))?,
+
+            CloneRepo => WORKING_DIRECTORY
+                .get()
+                .ok_or_else(|| anyhow!("Working directory not set"))?
+                .to_path_buf(),
         };
         let args: [&str; 2] = match command {
             Checkout => ["checkout", &self.commit],
@@ -181,7 +176,8 @@ pub(crate) fn create_working_directory(mut working_dir: PathBuf) -> Result<()> {
         if !working_dir.exists() {
             log::info!("Creating {:?}", &working_dir);
             std::fs::create_dir_all(&working_dir)
-                .with_context(|| "Failed to create working directory").unwrap();
+                .with_context(|| "Failed to create working directory")
+                .unwrap();
         }
         log::info!("Created working directory - {:?}", working_dir);
         working_dir
@@ -223,7 +219,7 @@ mod test {
 
         assert_eq!(initial_size + 19, modified_size);
         assert_eq!(initial_size, final_size);
-        
+
         Ok(())
     }
 

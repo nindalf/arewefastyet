@@ -45,7 +45,7 @@ fn exec() -> Result<()> {
 
     for repo in repos {
         repo.clone_repo()?;
-        
+
         let profile = profiles
             .entry(repo.name.clone())
             .or_insert(profile::Profile::new());

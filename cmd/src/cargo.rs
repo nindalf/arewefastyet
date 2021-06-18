@@ -9,14 +9,38 @@ use serde::{Deserialize, Serialize};
 
 use crate::repo::Repo;
 
-#[derive(Debug, Copy, Clone, Hash, Eq, Ord, PartialEq, PartialOrd, Serialize, Deserialize, IntoEnumIterator)]
+#[derive(
+    Debug,
+    Copy,
+    Clone,
+    Hash,
+    Eq,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    Serialize,
+    Deserialize,
+    IntoEnumIterator,
+)]
 pub(crate) enum CompilerMode {
     Check,
     Debug,
     Release,
 }
 
-#[derive(Debug, Copy, Clone, Hash, Eq, Ord, PartialEq, PartialOrd, Serialize, Deserialize, IntoEnumIterator)]
+#[derive(
+    Debug,
+    Copy,
+    Clone,
+    Hash,
+    Eq,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    Serialize,
+    Deserialize,
+    IntoEnumIterator,
+)]
 pub(crate) enum ProfileMode {
     Clean,
     Incremental,
@@ -126,9 +150,8 @@ fn cargo_release(repo: &Repo) -> Result<Milliseconds> {
 }
 
 fn parse_run_time(stderr: &str) -> Option<Milliseconds> {
-    let re = Lazy::new(|| {
-        regex::Regex::new(r#"Finished .* target\(s\) in ([0-9\.ms ]*)"#).unwrap()
-    });
+    let re =
+        Lazy::new(|| regex::Regex::new(r#"Finished .* target\(s\) in ([0-9\.ms ]*)"#).unwrap());
     re.captures(stderr)
         .and_then(|capture| capture.get(1))
         .map(|m| m.as_str())
@@ -154,7 +177,6 @@ fn get_file_size(repo: &Repo, compiler_mode: CompilerMode) -> Result<Bytes> {
     let metadata = file.metadata()?;
     Ok(Bytes(metadata.len()))
 }
-
 
 impl std::str::FromStr for CompilerMode {
     type Err = &'static str;
@@ -195,9 +217,7 @@ mod test {
 
         for compiler_mode in CompilerMode::into_enum_iter() {
             for profile_mode in ProfileMode::into_enum_iter() {
-                let result_times = compile_times
-                    .get(&(compiler_mode, profile_mode))
-                    .unwrap();
+                let result_times = compile_times.get(&(compiler_mode, profile_mode)).unwrap();
                 assert_eq!(result_times.len(), times);
                 assert!(result_times[0] > Milliseconds(0));
             }
@@ -244,14 +264,23 @@ mod test {
     #[test]
     fn parse_compile_times() -> Result<()> {
         let inputs = [
-            ("Finished dev [unoptimized + debuginfo] target(s) in 4m 26s", Milliseconds(266000)),
-            ("Finished dev [unoptimized + debuginfo] target(s) in 0.86s", Milliseconds(860)),
-            ("Finished release [optimized] target(s) in 1.33s", Milliseconds(1330)),
+            (
+                "Finished dev [unoptimized + debuginfo] target(s) in 4m 26s",
+                Milliseconds(266000),
+            ),
+            (
+                "Finished dev [unoptimized + debuginfo] target(s) in 0.86s",
+                Milliseconds(860),
+            ),
+            (
+                "Finished release [optimized] target(s) in 1.33s",
+                Milliseconds(1330),
+            ),
         ];
 
         for (input, expected) in inputs.iter() {
-            let output = super::parse_run_time(input)
-                .ok_or(anyhow!("Failed to parse {}", input))?;
+            let output =
+                super::parse_run_time(input).ok_or(anyhow!("Failed to parse {}", input))?;
             assert_eq!(&output, expected);
         }
         Ok(())

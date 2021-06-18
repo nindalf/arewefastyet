@@ -21,16 +21,15 @@ impl SystemInfo {
 
     // Only works on Linux
     fn cpu_model() -> Result<String> {
-        let re = Lazy::new(|| {
-            regex::Regex::new("model name.*: (.*)").unwrap()
-        });
+        let re = Lazy::new(|| regex::Regex::new("model name.*: (.*)").unwrap());
         SystemInfo::read_file("/proc/cpuinfo", &re)
     }
 
     fn read_file(file_name: &str, re: &regex::Regex) -> Result<String> {
         let all_info: String = std::fs::read_to_string(file_name)
             .with_context(|| anyhow!("Unable to open file - {}", file_name))?;
-        let m = re.captures(&all_info)
+        let m = re
+            .captures(&all_info)
             .ok_or_else(|| anyhow!("failed to capture"))?
             .get(1)
             .ok_or_else(|| anyhow!("unable to find text"))?;
@@ -40,8 +39,8 @@ impl SystemInfo {
 
 #[cfg(test)]
 mod test {
-    use anyhow::Result;
     use super::*;
+    use anyhow::Result;
     #[test]
     fn test_fill_system_info() -> Result<()> {
         println!("{:?}", SystemInfo::new()?);

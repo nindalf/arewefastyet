@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use enum_iterator::IntoEnumIterator;
-use serde::{Deserialize, Serialize, de::Visitor, Serializer, Deserializer};
+use serde::{de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::cargo::{Bytes, CompilerMode, Milliseconds, ProfileMode};
 use crate::rustup::Version;
@@ -95,11 +95,10 @@ impl<'de> Visitor<'de> for CKeyVisitor {
         let version: Version = parts[0].parse().map_err(serde::de::Error::custom)?;
         let compiler_mode: CompilerMode = parts[1].parse().map_err(serde::de::Error::custom)?;
         let profile_mode: ProfileMode = parts[2].parse().map_err(serde::de::Error::custom)?;
-        
+
         Ok(CompileTimeProfileKey(version, compiler_mode, profile_mode))
     }
 }
-
 
 struct SKeyVisitor;
 
@@ -117,11 +116,10 @@ impl<'de> Visitor<'de> for SKeyVisitor {
         let parts: Vec<&str> = value.split(",").collect();
         let version: Version = parts[0].parse().map_err(serde::de::Error::custom)?;
         let compiler_mode: CompilerMode = parts[1].parse().map_err(serde::de::Error::custom)?;
-        
+
         Ok(SizeProfileKey(version, compiler_mode))
     }
 }
-
 
 impl<'de> Deserialize<'de> for CompileTimeProfileKey {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
@@ -132,7 +130,6 @@ impl<'de> Deserialize<'de> for CompileTimeProfileKey {
     }
 }
 
-
 impl<'de> Deserialize<'de> for SizeProfileKey {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -141,7 +138,6 @@ impl<'de> Deserialize<'de> for SizeProfileKey {
         deserializer.deserialize_str(SKeyVisitor)
     }
 }
-
 
 impl Serialize for CompileTimeProfileKey {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
