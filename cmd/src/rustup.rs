@@ -36,6 +36,8 @@ pub(crate) enum Version {
     V1_49 = 49,
     V1_50 = 50,
     V1_51 = 51,
+    V1_52 = 52,
+    V1_53 = 53,
 }
 
 pub(crate) fn set_profile_minimal() -> Result<()> {
@@ -86,6 +88,8 @@ impl Version {
             Version::V1_49 => "1.49.0",
             Version::V1_50 => "1.50.0",
             Version::V1_51 => "1.51.0",
+            Version::V1_52 => "1.52.0",
+            Version::V1_53 => "1.53.0",
         }
     }
 }
@@ -113,6 +117,8 @@ impl std::str::FromStr for Version {
             "1.49.0" => Ok(Version::V1_49),
             "1.50.0" => Ok(Version::V1_50),
             "1.51.0" => Ok(Version::V1_51),
+            "1.52.0" => Ok(Version::V1_52),
+            "1.53.0" => Ok(Version::V1_53),
             _ => Err("unknown version"),
         }
     }
